@@ -15,13 +15,14 @@ const Layout = () => {
   );
 };
 function App() {
+  console.log(process.env.API_URL);
   return (
     <Container>
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<MainPage />} />
-          <Route path="signup" element={<SignupPage />} />
-          <Route path="login" element={<LoginPage />} />
+          <Route index path="/signup" element={<SignupPage />} />
+          <Route index path="/login" element={<LoginPage />} />
         </Route>
       </Routes>
     </Container>

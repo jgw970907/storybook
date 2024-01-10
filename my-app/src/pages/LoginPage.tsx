@@ -16,12 +16,20 @@ const LoginPage = () => {
       if (id === "" || password === "") {
         return alert("아이디와 비밀번호를 입력해주세요.");
       }
-
-      const res = await postLogin(id, password);
-      console.log(res);
+      console.log(process.env.REACT_APP_API_URL);
+      const res = await fetch(
+        `${process.env.REACT_APP_API_URL}/auth/login/email`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "aplication/json",
+            Authorization: `Basic ${btoa(`${id}:${password}`)}`,
+          },
+        }
+      );
       if (res) {
-        const { accessToken, refreshToken } = res;
-        console.log(accessToken, refreshToken);
+        res.json();
+        console.log(res);
       }
     } catch (e) {
       console.log(e);
