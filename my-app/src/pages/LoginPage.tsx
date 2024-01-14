@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { setToken } from "../utils/token";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { postLogin, postRegister } from "../api";
@@ -6,6 +8,7 @@ import { postLogin, postRegister } from "../api";
 import Input from "../components/UIElements/Input";
 import Button from "../components/UIElements/Button";
 const LoginPage = () => {
+  const navigate = useNavigate();
   const [Inputs, setInputs] = useState({
     id: "",
     password: "",
@@ -16,20 +19,14 @@ const LoginPage = () => {
       if (id === "" || password === "") {
         return alert("아이디와 비밀번호를 입력해주세요.");
       }
-      console.log(process.env.REACT_APP_API_URL);
-      const res = await fetch(
-        `${process.env.REACT_APP_API_URL}/auth/login/email`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "aplication/json",
-            Authorization: `Basic ${btoa(`${id}:${password}`)}`,
-          },
-        }
-      );
+      const res = await postLogin(id, password);
+      console.log(res);
       if (res) {
-        res.json();
-        console.log(res);
+        const { accessToken, refreshToken } = res;
+        accessToken && setToken("access_token", accessToken);
+        refreshToken && setToken("refresh_token", refreshToken);
+        console.log(accessToken, refreshToken);
+        navigate("/");
       }
     } catch (e) {
       console.log(e);
