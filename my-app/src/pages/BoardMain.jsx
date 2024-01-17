@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import { useGetBoards } from 'pages/admin/dev5/queries';
-import BoardList from '../components/BoardList';
-import BoardEmpty from '../components/BoardEmpty';
+import React from "react";
+import styled from "styled-components";
+import { useGetBoards } from "pages/admin/dev5/queries";
+import BoardList from "../components/BoardList";
+import BoardEmpty from "../components/BoardEmpty";
 
 const BoardMain = () => {
   const { data, error, isLoading } = useGetBoards();
@@ -13,6 +13,9 @@ const BoardMain = () => {
   }
   if (!data || data.length === 0) {
     return <BoardEmpty />;
+  }
+  if (error) {
+    return <div>{error.message}</div>;
   }
   return (
     <>
