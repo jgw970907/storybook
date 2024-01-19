@@ -1,6 +1,6 @@
-import React from 'react';
-import styled from 'styled-components';
-import SidebarMenuItem from './SidebarMenuItem';
+import React from "react";
+import styled from "styled-components";
+import SidebarMenuItem from "./SidebarMenuItem";
 
 const SidebarMenu = () => {
   return (
