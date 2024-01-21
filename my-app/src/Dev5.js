@@ -10,13 +10,15 @@ import { Hamburger } from "./context/useContext";
 import { refreshAccessToken, userMe } from "./api/auth";
 import Sidebar from "./dev5components/Sidebar";
 import Navigation from "./dev5components/Navigation";
-import AdminBoardWrite from "./pages/AdminBoardWrite";
+
 import AdminMain from "./pages/AdminMain";
 import AdminBoardUpdate from "./pages/AdminBoardUpdate";
 import AdminBoardWrote from "./pages/AdminBoardWrote";
 import AdminAccountManage from "./pages/AdminAccountManage";
-import Login from "./pages/Login";
-import Signup from "./pages/Signup";
+import BoardDetail from "pages/user/dev5/pages/BoardDetail";
+import BoardMain from "pages/user/dev5/pages/BoardMain";
+import LoginPage from "./pages/LoginPage";
+import SignupPage from "./pages/SignupPage";
 import AuthRoutes from "./dev5components/AuthRoutes";
 import NotAuthRoutes from "./dev5components/NotAuthRoutes";
 import * as S from "styles/LoginStyled";
@@ -39,29 +41,41 @@ export default function Dev5() {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation(); // 현재 위치 정보 가져오기
-  console.log("location", location);
   async function initializeAuth() {
     const currentPath = location.pathname;
     const refreshToken = secureLocalStorage.getItem(StorageKeys.REFRESH_TOKEN);
-    if (refreshToken) {
+    if (!refreshToken) {
+      navigate("/admin/dev5/login");
+      return;
+    }
+
+    try {
       const newAccessToken = await refreshAccessToken(refreshToken);
-      console.log("newAccessToken", newAccessToken);
       useUserStore.getState().setAccessToken(newAccessToken);
       const user = await userMe();
       useUserStore.getState().setUser(user);
-      if (currentPath === "/admin/dev5/admin/login") {
-        navigate("/"); // 로그인 페이지에서 인증 후 메인 페이지로 이동
-      } else {
-        navigate(currentPath); // 다른 페이지에서 인증 후 현재 페이지로 복원
-      }
+    } catch (error) {
+      console.error("Authentication failed:", error);
+      // 에러 처리 로직, 예를 들어 로그인 페이지로 리디렉션
+      navigate("/admin/dev5/login");
+    } finally {
       setIsLoading(false);
-    } else {
-      navigate("/admin/dev5/admin/login");
     }
   }
   useEffect(() => {
-    initializeAuth();
-  }, []);
+    const path = location.pathname;
+    const isLoginRequired = path.startsWith("/admin/dev5/admin");
+    if (
+      location.pathname !== ("/admin/dev5/login" || "/admin/dev5/signup") &&
+      isLoginRequired &&
+      !user
+    ) {
+      initializeAuth();
+    } else {
+      setIsLoading(false);
+    }
+  }, [location.pathname]);
+
   if (isLoading) {
     return (
       <S.Body>
@@ -74,14 +88,11 @@ export default function Dev5() {
     <Hamburger.Provider value={{ open, setOpen }}>
       <Routes>
         <Route path="/" element={<Layout open={open} />}>
+          <Route path="/board" element={<BoardMain />} />
+          <Route path="/board/board/:boardId" element={<BoardDetail />} />
           {/* 로그인된 유저 입장 가능 */}
           <Route element={<AuthRoutes user={user} />}>
             <Route exact path="/" element={<AdminMain />} />
-            <Route
-              exact
-              path="/admin/board-new"
-              element={<AdminBoardWrite />}
-            />
             <Route
               exact
               path="/admin/board-update/:boardId"
@@ -100,8 +111,8 @@ export default function Dev5() {
           </Route>
           {/* 로그아웃된 유저 입장 가능 */}
           <Route element={<NotAuthRoutes user={user} />}>
-            <Route exact path="/admin/login" element={<Login />} />
-            <Route exact path="/admin/signup" element={<Signup />} />
+            <Route exact path="/login" element={<LoginPage />} />
+            <Route exact path="/signup" element={<SignupPage />} />
           </Route>
         </Route>
       </Routes>
