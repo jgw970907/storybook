@@ -1,6 +1,6 @@
-import styled from 'styled-components';
-import { Link } from 'react-router-dom';
-import { pixelToRem } from 'utils';
+import styled from "styled-components";
+import { Link } from "react-router-dom";
+import { pixelToRem } from "utils";
 
 const Body = styled.div`
   display: flex;
@@ -13,8 +13,8 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: ${({ $gap }) => ($gap ? $gap + 'px' : '')};
-  margin-top: ${({ $marginTop }) => ($marginTop ? $marginTop + 'px' : '')};
+  gap: ${({ $gap }) => ($gap ? $gap + "px" : "")};
+  margin-top: ${({ $marginTop }) => ($marginTop ? $marginTop + "px" : "")};
 `;
 const Layout = styled.div`
   width: 100%;
@@ -29,7 +29,7 @@ const Label = styled.label`
 `;
 const InputField = styled.div`
   width: 100%;
-  margin-top: ${({ $marginTop }) => ($marginTop ? $marginTop + 'px' : '')};
+  margin-top: ${({ $marginTop }) => ($marginTop ? $marginTop + "px" : "")};
 
   input {
     margin-top: 10px;
@@ -77,7 +77,7 @@ const Divider = styled.div`
 
   &::before,
   &::after {
-    content: '';
+    content: "";
     flex: 1;
     border-bottom: 1px solid ${({ theme }) => theme.colors.G_500};
   }
