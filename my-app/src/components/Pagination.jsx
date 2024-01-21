@@ -4,8 +4,7 @@ import styled from "styled-components";
 import { getStyledColor } from "utils";
 import { IoIosArrowForward } from "react-icons/io";
 import { IoIosArrowBack } from "react-icons/io";
-const Pagination = () => {
-  const { currentPage, setCurrentPage, totalPages } = usePaginationStore();
+const Pagination = ({ currentPage, setCurrentPage, totalPages }) => {
   console.log("currentPage", currentPage);
   console.log("totalPages", totalPages);
   const nextPage = Math.min(currentPage + 1, totalPages);

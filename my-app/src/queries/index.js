@@ -11,9 +11,15 @@ import {
   getBoardComments,
   createBoardComment,
   patchBoardComment,
+  deleteBoardComment,
 } from "../api/replyApi";
 import usePaginationStore from "../store/pagenationStore";
-const { setTotalPages, totalPages } = usePaginationStore.getState();
+const {
+  setAdminBoardTotalPages,
+  adminBoardTotalPages,
+  setUserBoardTotalPages,
+  userBoardTotalPages,
+} = usePaginationStore.getState();
 export const useGetBoard = (id) => {
   const { data, error, isLoading, refetch } = useQuery({
     queryKey: [queryKeys.ADMIN, "board", `${id}`],
@@ -23,19 +29,30 @@ export const useGetBoard = (id) => {
   return { data, error, isLoading, refetch };
 };
 
-export const useGetBoards = ({ take, page, order, search }) => {
+export const useGetBoardsFive = ({ page, order, search }) => {
   return useQuery({
-    queryKey: [queryKeys.ADMIN, "boards", page, order, search],
-    queryFn: () => getBoards(take, page, order, search),
+    queryKey: [queryKeys.ADMIN, "boards", { take: 5, page, order, search }],
+    queryFn: () => getBoards(5, page, order, search),
     select: (res) => res.data,
     onSuccess: (data) => {
-      setTotalPages(Math.ceil(data?.total / take));
-      console.log("Total Pages111", totalPages);
+      setAdminBoardTotalPages(Math.ceil(data?.total / 5));
+      console.log("Total Pages111", adminBoardTotalPages);
       console.log("data", data);
     },
   });
 };
-
+export const useGetBoardsTen = ({ page, order, search }) => {
+  return useQuery({
+    queryKey: [queryKeys.ADMIN, "boards", { take: 10, page, order, search }],
+    queryFn: () => getBoards(10, page, order, search),
+    select: (res) => res.data,
+    onSuccess: (data) => {
+      setUserBoardTotalPages(Math.ceil(data?.total / 10));
+      console.log("Total Pages111", userBoardTotalPages);
+      console.log("data", data);
+    },
+  });
+};
 export const useCreateBoard = () => {
   const queryClient = useQueryClient();
 
@@ -122,7 +139,7 @@ export const usePatchBoardComment = (boardId) => {
       patchBoardComment(
         commentData.boardId,
         commentData.commentId,
-        commentData.comment
+        commentData.data
       ),
     select: (res) => res.data,
     onSuccess: async (data) => {
@@ -141,11 +158,7 @@ export const useDeleteBoardComment = (boardId) => {
   return useMutation({
     queryKey: [queryKeys.USER, "BoardComments", `${boardId}`],
     mutationFn: (commentData) =>
-      patchBoardComment(
-        commentData.boardId,
-        commentData.commentId,
-        commentData.comment
-      ),
+      deleteBoardComment(commentData.boardId, commentData.commentId),
     slelect: (res) => res.data,
     onSuccess: async (data) => {
       await queryClient.invalidateQueries([
