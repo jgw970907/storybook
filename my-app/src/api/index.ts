@@ -1,25 +1,66 @@
-import { LoginRes, RegisterReq } from "../types/AuthType/AuthRes";
+import { getAxiosInstance as Axios } from "./axios/index";
 
-import Axios from "./axios";
+import {
+  BookisLikeRes,
+  LikesBooklistParams,
+  MyFavorites,
+  UserPatchReq,
+  Countlist,
+  RepliesList,
+} from "types";
 
-// 클라이언트 유저 로그인
-export const postLogin = async (
-  id: string,
-  password: string
-): Promise<LoginRes> => {
-  const auth = btoa(`${id}:${password}`);
+export const patchUser = async (params: UserPatchReq) => {
+  const res = await Axios("users/update").patch(params);
 
-  const res = await Axios("/auth/login/email").post(
-    {},
-    { headers: { Authorization: `Basic ${auth}` } }
-  );
+  return res;
+};
+export const getBooksLike = async (params: LikesBooklistParams) => {
+  const { authorId, take, page } = params;
+
+  const res = await Axios(
+    `/users/${authorId}/like2s?take=${take}&page=${page}&order__updatedAt=DESC`
+  ).get<MyFavorites>();
+  return res;
+};
+
+export const getBookIsLike = async ({
+  bookId,
+  userId,
+}: {
+  bookId: number;
+  userId: number;
+}) => {
+  const res = await Axios(
+    `/api2s/${bookId}/${userId}/is-like`
+  ).get<BookisLikeRes>();
+  return res;
+};
+
+export const postBookLike = async (bookId: number) => {
+  const res = await Axios(`/api2s/${bookId}/like2s`).post();
+  return res;
+};
+
+export const deleteBookLike = async ({
+  bookId,
+  likeId,
+}: {
+  bookId: number;
+  likeId: number | undefined;
+}) => {
+  if (!likeId) return;
+  const res = await Axios(`/api2s/${bookId}/like2s/${likeId}`).remove();
+  return res;
+};
+
+export const getCount = async () => {
+  const res = await Axios(`/api2s/count`).get<Countlist>();
 
   return res;
 };
 
-// 회원가입
-export const postRegister = async (params: RegisterReq) => {
-  const res = await Axios("/auth/register/email").post({ ...params });
-  console.log(res);
+export const getReplies = async () => {
+  const res = await Axios(`/api2s/replies`).get<RepliesList>();
+
   return res;
 };
