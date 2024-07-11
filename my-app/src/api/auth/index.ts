@@ -2,20 +2,20 @@ import { StorageKeys } from 'constant';
 import Axios from '../axios';
 import secureLocalStorage from 'react-secure-storage';
 import { useUserStore } from 'store/useUserStore';
-import { LoginResponse, SignUpRes, SignUpReq, LoginParams } from 'types';
+import { LoginResponse, SignUpRes, SignUpReq, LoginParams, UserType } from 'types';
 
 export const login = async (user: LoginParams) => {
   const auth = btoa(`${user.email}:${user.password}`);
 
-  const res = await Axios('/auth/login/email').post<LoginResponse>(
-    {},
+  const res = await Axios('/auth/login').post<LoginResponse>(
+    { ...user },
     { headers: { Authorization: `Basic ${auth}` } },
   );
   return res;
 };
 
 export const signUp = async (params: SignUpReq) => {
-  const res = await Axios('/auth/register/email').post<SignUpRes>({
+  const res = await Axios('/auth/signup').post<SignUpRes>({
     ...params,
   });
 
@@ -30,14 +30,13 @@ export const logout = () => {
 };
 
 export const getUser = async () => {
-  const res = await Axios('/users/me').get<LoginResponse>();
-
+  const res = await Axios('/auth/me').get<UserType>();
   return res;
 };
 
-export const getAccessToken = async () => {
+export const getAccessWithApi = async () => {
   const refreshToken = secureLocalStorage.getItem(StorageKeys.REFRESH_TOKEN);
-  const res = await Axios('/auth/token/access').post<{ accessToken: string }>(
+  const res = await Axios('/auth/token').post<{ accessToken: string }>(
     {},
     { headers: { Authorization: `Bearer ${refreshToken}` } },
   );

@@ -1,8 +1,7 @@
-import qs from "qs";
-import { AxiosError, AxiosInstance, InternalAxiosRequestConfig } from "axios";
-import secureLocalStorage from "react-secure-storage";
-import { StorageKeys } from "constant";
-import { useUserStore } from "store/useUserStore";
+import qs from 'qs';
+import { AxiosError, AxiosInstance, InternalAxiosRequestConfig } from 'axios';
+import secureLocalStorage from 'react-secure-storage';
+import { StorageKeys } from 'constant';
 
 const injectInterceptors = (instance: AxiosInstance): AxiosInstance => {
   instance.defaults.paramsSerializer = (params) => {
@@ -12,22 +11,22 @@ const injectInterceptors = (instance: AxiosInstance): AxiosInstance => {
   instance.interceptors.request.use(
     (config: InternalAxiosRequestConfig) => {
       if (config.data instanceof FormData) {
-        config.headers["Content-Type"] = "multipart/form-data";
+        config.headers['Content-Type'] = 'multipart/form-data';
       } else {
-        config.headers["Content-Type"] = "application/json";
+        config.headers['Content-Type'] = 'application/json';
       }
       if (config.headers.Authorization) return config;
 
-      const { accessToken } = useUserStore.getState();
+      const accessToken = secureLocalStorage.getItem(StorageKeys.ACCESS_TOKEN) as string;
       if (accessToken) {
-        config.headers["Authorization"] = `Bearer ${accessToken}`;
+        config.headers['Authorization'] = `Bearer ${accessToken}`;
       }
       return config;
     },
     (error: AxiosError) => {
       console.error(error);
       return Promise.reject(error);
-    }
+    },
   );
 
   instance.interceptors.response.use(
@@ -39,7 +38,7 @@ const injectInterceptors = (instance: AxiosInstance): AxiosInstance => {
       let isRefreshing = false;
       if (response?.status === 401 || response?.status === 404) {
         if (!isRefreshing) {
-          const { accessToken } = useUserStore.getState();
+          const accessToken = secureLocalStorage.getItem(StorageKeys.ACCESS_TOKEN) as string;
           const token = secureLocalStorage.getItem(StorageKeys.REFRESH_TOKEN);
           const refreshToken = token as string;
 
@@ -50,22 +49,22 @@ const injectInterceptors = (instance: AxiosInstance): AxiosInstance => {
             }
 
             if (accessToken) {
-              config.headers["Authorization"] = `Bearer ${accessToken}`;
+              config.headers['Authorization'] = `Bearer ${accessToken}`;
             }
 
             isRefreshing = true;
             return instance.request(config);
           } catch (refreshError) {
             isRefreshing = false;
-            alert("다시 로그인 해주세요.");
+            alert('다시 로그인 해주세요.');
             secureLocalStorage.removeItem(StorageKeys.REFRESH_TOKEN);
-            window.location.replace("/user");
+            window.location.replace('/user');
             return Promise.reject(refreshError);
           }
         }
       }
       return Promise.reject(error);
-    }
+    },
   );
 
   return instance;

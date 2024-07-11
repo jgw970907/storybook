@@ -1,5 +1,8 @@
-const StorageKeys = {
-  REFRESH_TOKEN: 'refreshToken',
-} as const;
+const REFRESH_TOKEN = 'refreshToken';
+const ACCESS_TOKEN = 'accessToken';
 
-export default StorageKeys;
+const StorageKeys = {
+  REFRESH_TOKEN,
+  ACCESS_TOKEN,
+};
+export { StorageKeys };
