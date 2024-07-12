@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig } from 'axios';
+import axios, { AxiosRequestConfig, AxiosError } from 'axios';
 import injectInterceptors from './interceptors';
 
 const BASE_URL = process.env.REACT_APP_SERVER_URL;
@@ -13,27 +13,39 @@ export const getAxiosInstance = (endpoint: string) => {
       const { data, status } = res;
       return { ...data, status };
     } catch (error) {
-      console.error(error);
+      if (axios.isAxiosError(error)) {
+        throw error;
+      }
+      throw new Error('An unexpected error occurred');
     }
   };
+
   const post = async <T>(params: object = {}, config?: AxiosRequestConfig) => {
     try {
       const res = await instance.post<T>(endpoint, params, config);
       const { data, status } = res;
       return { ...data, status };
     } catch (error) {
-      console.error(error);
+      if (axios.isAxiosError(error)) {
+        throw error;
+      }
+      throw new Error('An unexpected error occurred');
     }
   };
+
   const patch = async <T>(params: object = {}, config?: AxiosRequestConfig) => {
     try {
       const res = await instance.patch<T>(endpoint, params, config);
       const { data, status } = res;
       return { ...data, status };
     } catch (error) {
-      console.error(error);
+      if (axios.isAxiosError(error)) {
+        throw error;
+      }
+      throw new Error('An unexpected error occurred');
     }
   };
+
   const remove = async <T>(params: object = {}) => {
     try {
       const res = await instance.delete<T>(endpoint, {
@@ -42,9 +54,13 @@ export const getAxiosInstance = (endpoint: string) => {
       const { data, status } = res;
       return { ...data, status };
     } catch (error) {
-      console.error(error);
+      if (axios.isAxiosError(error)) {
+        throw error;
+      }
+      throw new Error('An unexpected error occurred');
     }
   };
+
   return { get, post, patch, remove };
 };
 

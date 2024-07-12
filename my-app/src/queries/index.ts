@@ -33,6 +33,7 @@ import secureLocalStorage from 'react-secure-storage';
 import { useNavigate } from 'react-router-dom';
 import { useUserStore } from 'store/useUserStore';
 import { patchUser } from 'api/user';
+import { AxiosError } from 'axios';
 
 export const useGetBooks = (queries?: BooklistParams) => {
   const key = [QueryKeys.USER, 'books'];
@@ -259,6 +260,13 @@ export const usePostComment = (bookId: string, user: UserType | null) => {
     onSuccess: () => {
       queryClient.invalidateQueries([QueryKeys.USER, 'comments', bookId]);
     },
+    onError: (error: AxiosError) => {
+      if (error.response && error.response.status === 400) {
+        alert('댓글에 부적절한 내용이 포함되어 있습니다.');
+      } else {
+        alert('댓글을 작성하는 도중 에러가 발생했습니다.');
+      }
+    },
   });
 };
 export const useDeleteCommentByRole = () => {
@@ -315,7 +323,7 @@ export const useInfinityScroll = (
     queryFn: ({ pageParam = 1 }) => {
       const queryParameters: BooklistParams = {
         page: pageParam,
-        take: 8,
+        take: 10,
       };
       if (search) {
         queryParameters.where__title__i_like = search;
@@ -387,7 +395,11 @@ export const useAddLike = ({ bookId }: { bookId: string }) => {
     mutationFn: addLike,
     onMutate: async () => {
       await queryClient.cancelQueries([QueryKeys.USER, 'likes', bookId]);
-      const previousLikes = queryClient.getQueryData([QueryKeys.USER, 'likes', bookId]);
+      const previousLikes = queryClient.getQueryData<BookisLikeRes>([
+        QueryKeys.USER,
+        'likes',
+        bookId,
+      ]);
 
       queryClient.setQueryData([QueryKeys.USER, 'likes', bookId], (old?: BookisLikeRes) => {
         if (!old) return;
@@ -427,7 +439,11 @@ export const useRemoveLike = ({ bookId }: { bookId: string }) => {
     mutationFn: removeLike,
     onMutate: async () => {
       await queryClient.cancelQueries([QueryKeys.USER, 'likes', bookId]);
-      const previousLikes = queryClient.getQueryData([QueryKeys.USER, 'likes', bookId]);
+      const previousLikes = queryClient.getQueryData<BookisLikeRes>([
+        QueryKeys.USER,
+        'likes',
+        bookId,
+      ]);
 
       queryClient.setQueryData([QueryKeys.USER, 'likes', bookId], (old?: BookisLikeRes) => {
         if (!old) return;
