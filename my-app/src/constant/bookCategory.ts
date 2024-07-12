@@ -1,40 +1,37 @@
-// bookcategory.ts
-
-// 카테고리 타입 정의
 export type BookCategory =
-  | 'Fiction'
-  | 'NonFiction'
-  | 'Science'
-  | 'History'
-  | 'Biography'
-  | 'Fantasy'
-  | 'Romance'
-  | 'Horror'
-  | 'Mystery'
-  | 'SelfHelp'
-  | 'Technology'
-  | 'Health'
-  | 'Travel'
-  | 'Cooking'
-  | 'Art'
-  | 'Poetry';
+  | '소설'
+  | '비소설'
+  | '과학'
+  | '역사'
+  | '전기'
+  | '판타지'
+  | '로맨스'
+  | '공포'
+  | '추리'
+  | '자기계발'
+  | '기술'
+  | '건강'
+  | '여행'
+  | '요리'
+  | '예술'
+  | '시';
 
 // 카테고리 상수 정의
 export const BOOK_CATEGORIES: BookCategory[] = [
-  'Fiction',
-  'NonFiction',
-  'Science',
-  'History',
-  'Biography',
-  'Fantasy',
-  'Romance',
-  'Horror',
-  'Mystery',
-  'SelfHelp',
-  'Technology',
-  'Health',
-  'Travel',
-  'Cooking',
-  'Art',
-  'Poetry',
+  '소설',
+  '비소설',
+  '과학',
+  '역사',
+  '전기',
+  '판타지',
+  '로맨스',
+  '공포',
+  '추리',
+  '자기계발',
+  '기술',
+  '건강',
+  '여행',
+  '요리',
+  '예술',
+  '시',
 ];

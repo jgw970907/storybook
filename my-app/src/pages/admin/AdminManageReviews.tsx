@@ -52,6 +52,7 @@ const AdminManageReviews = () => {
                 <S.Tcolumn>책이름</S.Tcolumn>
                 <S.Tcolumn>댓글수</S.Tcolumn>
                 <S.Tcolumn>상세보기</S.Tcolumn>
+                <S.Tcolumn>삭제</S.Tcolumn>
               </S.Trow>
             </S.Theader>
             <S.Tbody>

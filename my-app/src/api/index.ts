@@ -14,7 +14,6 @@ import {
   BookisLikeRes,
   MyFavoritesParams,
   MyFavorites,
-  UserPatchReq,
   Countlist,
   CommentsGetRes,
   BookChangeLikeRes,

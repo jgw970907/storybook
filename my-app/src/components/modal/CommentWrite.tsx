@@ -36,7 +36,6 @@ const CommentWrite: React.FC<CommentWriteProps> = ({ bookId }) => {
         value={comment}
         onChange={onChangeComment}
       />
-      {status === 'error' && <div>{'에러가 발생했습니다.'}</div>}
       <S.buttonContainer>
         {isLogin && (
           <Button onClick={onHandleClick} color={'blue'} disabled={status === 'loading'}>
