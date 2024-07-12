@@ -3,6 +3,7 @@ import { addBannedWord, getBannedWords, deleteBannedWord } from 'api';
 
 import * as S from 'styles/AdminStyledTemp';
 import { BannedWord } from 'types';
+
 const AdminManageBannedWords = () => {
   const [bannedWords, setBannedWords] = useState<BannedWord[]>([]);
   const [newWord, setNewWord] = useState('');
@@ -10,8 +11,9 @@ const AdminManageBannedWords = () => {
   useEffect(() => {
     const fetchBannedWords = async () => {
       const response = await getBannedWords();
-      if (response) {
-        setBannedWords(response);
+      if (response && response.status === 200) {
+        const wordsArray = Object.values(response).filter((item) => typeof item === 'object');
+        setBannedWords(wordsArray);
       }
     };
     fetchBannedWords();
@@ -19,13 +21,19 @@ const AdminManageBannedWords = () => {
 
   const handleAddWord = async () => {
     const response = await addBannedWord(newWord);
-    if (response) setBannedWords(response); // Update state with the entire list of banned words
+    if (response && response.status === 200) {
+      const wordsArray = Object.values(response).filter((item) => typeof item === 'object');
+      setBannedWords(wordsArray);
+    }
     setNewWord('');
   };
 
   const handleDeleteWord = async (id: string) => {
     const response = await deleteBannedWord(id);
-    if (response) setBannedWords(response); // Update state with the entire list of banned words
+    if (response && response.status === 200) {
+      const wordsArray = Object.values(response).filter((item) => typeof item === 'object');
+      setBannedWords(wordsArray);
+    }
   };
 
   return (
@@ -50,15 +58,21 @@ const AdminManageBannedWords = () => {
             </S.Trow>
           </S.Theader>
           <S.Tbody>
-            {bannedWords.map((word, index) => (
-              <S.Trow key={word.id}>
-                <S.Tcell>{index + 1}</S.Tcell>
-                <S.Tcell>{word.word}</S.Tcell>
-                <S.Tcell>
-                  <S.Button onClick={() => handleDeleteWord(word.id)}>삭제</S.Button>
-                </S.Tcell>
+            {bannedWords.length > 0 ? (
+              bannedWords.map((data, index) => (
+                <S.Trow key={data.id}>
+                  <S.Tcell>{index + 1}</S.Tcell>
+                  <S.Tcell>{data.word}</S.Tcell>
+                  <S.Tcell>
+                    <S.Button onClick={() => handleDeleteWord(data.id)}>삭제</S.Button>
+                  </S.Tcell>
+                </S.Trow>
+              ))
+            ) : (
+              <S.Trow>
+                <S.Tcell colSpan={3}>등록된 금지어가 없습니다.</S.Tcell>
               </S.Trow>
-            ))}
+            )}
           </S.Tbody>
         </S.Table>
       </S.Container>
