@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { styled } from 'styled-components';
+import * as S from 'styles/SearchStyled';
 import { getStyledColor } from 'utils';
 import Book from '../../components/user/Book';
 import { useInfinityScroll } from 'queries';
@@ -8,11 +9,9 @@ import { CustomModal } from 'components/modal/CustomModal';
 import useIntersectionObserver from 'hooks/useIntersectionObserver';
 import Dropdown from 'components/shared/Dropdown';
 import Loader from 'components/shared/Loader';
-import * as S from 'styles/SearchStyled';
 import { useSearchStore } from 'store/useSearchStore';
 import NotFound from 'pages/NotFound';
 import { incrementClicks } from 'api';
-import Cookies from 'js-cookie';
 
 const UserPage = () => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -162,8 +161,13 @@ const Layout = styled.div`
   display: grid;
   grid-gap: 5px;
   grid-auto-flow: dense;
-  grid-auto-rows: minmax(500px, auto);
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-auto-rows: minmax(400px, auto);
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+
+  @media screen and (max-width: 1400px) {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-auto-rows: minmax(350px, auto);
+  }
 `;
 
 const LoaderContainer = styled.div`
@@ -197,5 +201,10 @@ const TotheTop = styled.button`
     color: ${getStyledColor('white', 'high')};
     border: 2px solid ${getStyledColor('teal', 600)};
     background-color: ${getStyledColor('teal', 600)};
+  }
+  @media screen and (max-width: 1400px) {
+    font-size: 10px;
+    padding: 10px 5px;
+    border: 1px solid rgb(210, 204, 193);
   }
 `;

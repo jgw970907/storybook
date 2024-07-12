@@ -24,6 +24,11 @@ export const SearchInput = styled.input`
   border-radius: 4px;
   padding: 0 10px;
   margin-right: 10px;
+  @media screen and (max-width: 1400px) {
+    width: 250px;
+    height: 35px;
+    font-size: ${pixelToRem(12)};
+  }
 `;
 
 export const SearchButton = styled.button`
@@ -49,6 +54,11 @@ export const SearchButton = styled.button`
     cursor: not-allowed;
     opacity: 0.7;
   }
+  @media screen and (max-width: 1400px) {
+    width: 80px;
+    height: 35px;
+    font-size: ${pixelToRem(12)};
+  }
 `;
 export const ResetButton = styled.button`
   width: 100px;
@@ -72,5 +82,10 @@ export const ResetButton = styled.button`
     color: ${getStyledColor('cool_gray', 200)};
     cursor: not-allowed;
     opacity: 0.7;
+  }
+  @media screen and (max-width: 1400px) {
+    width: 80px;
+    height: 35px;
+    font-size: ${pixelToRem(12)};
   }
 `;

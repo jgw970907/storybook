@@ -50,9 +50,14 @@ const NavigationWrapper = styled.div<{ $isVisible: boolean; $height: number }>`
   align-items: center;
   width: 100vw;
   height: ${({ $height }) => $height && `${$height}px`};
+  @media screen and (max-width: 1400px) {
+    height: ${({ $height }) => $height && `${$height - 15}px`};
+  }
   padding-left: 30px;
   padding-right: 10%;
-  transition: top 0.2s ease-in-out, opacity 0.2s ease-in-out;
+  transition:
+    top 0.2s ease-in-out,
+    opacity 0.2s ease-in-out;
   top: ${({ $isVisible, $height }) => ($isVisible ? '0' : `-${$height}px`)};
   opacity: ${({ $isVisible }) => ($isVisible ? '1' : '0')};
   background-color: ${getStyledColor('primary', 900)};
@@ -75,4 +80,7 @@ const Logo = styled.div`
 
 const Title = styled.h1`
   font-size: 32px;
+  @media screen and (max-width: 1400px) {
+    font-size: 20px;
+  }
 `;

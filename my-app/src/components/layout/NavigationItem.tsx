@@ -57,7 +57,7 @@ const Wrapper = styled.div`
   height: 100%;
   gap: 25px;
 
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: 1400px) {
     width: auto;
     gap: ${pixelToRem(10)};
   }
@@ -78,7 +78,7 @@ const Text = styled.div`
     color: ${getStyledColor('primary', 200)};
   }
 
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: 1400px) {
     font-size: ${pixelToRem(12)};
   }
 `;
@@ -95,7 +95,7 @@ const Logout = styled.button`
     color: ${getStyledColor('primary', 200)};
   }
 
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: 1400px) {
     font-size: ${pixelToRem(12)};
     align-self: flex-end;
   }

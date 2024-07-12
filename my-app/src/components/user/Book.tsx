@@ -45,17 +45,25 @@ const Title = styled.p`
   font-weight: 500;
   margin-top: 20px;
   position: relative;
+  @media screen and (max-width: 1400px) {
+    font-size: ${pixelToRem(10)};
+    margin-top: 10px;
+  }
 `;
 
 const Image = styled.img`
-  width: ${pixelToRem(200)};
-  height: ${pixelToRem(300)};
+  width: ${pixelToRem(180)};
+  height: ${pixelToRem(280)};
   border-radius: 4px;
   object-fit: cover;
   box-shadow:
     0px 5px 5px 0px rgba(0, 0, 0, 0.2),
     0px 3px 14px 0px rgba(0, 0, 0, 0.12),
     0px 8px 10px 0px rgba(0, 0, 0, 0.14);
+  @media screen and (max-width: 1400px) {
+    width: ${pixelToRem(150)};
+    height: ${pixelToRem(250)};
+  }
 `;
 
 const Container = styled.div<{ $isShow: boolean }>`

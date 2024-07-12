@@ -140,7 +140,9 @@ const StyledLink = styled(Link)<{ $selected: boolean }>`
   color: ${getStyledColor('teal', 900)};
   font-weight: 500;
   margin-left: 30px;
-
+  @media screen and (max-width: 1400px) {
+    font-size: ${pixelToRem(11)};
+  }
   ${({ $selected }) =>
     $selected
       ? css`
