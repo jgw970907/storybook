@@ -18,6 +18,7 @@ import {
   CommentsGetRes,
   BookChangeLikeRes,
   BannedWord,
+  BannedWordList,
 } from 'types';
 
 export const getBooks = async (queries?: BooklistParams) => {
@@ -167,8 +168,8 @@ export const patchComment = async (params: PatchCommentReq) => {
   });
   return res;
 };
-export const deleteCommentByRole = async (commentId: string) => {
-  const res = await Axios(`/comment/role/${commentId}`).remove();
+export const deleteCommentByRole = async (commentId: string, userId: string) => {
+  const res = await Axios(`/comment/role/${commentId}/${userId}`).remove();
   return res;
 };
 export const deleteComment = async (bookId: string, commentId: string) => {
@@ -207,15 +208,15 @@ export const getCount = async () => {
   return res;
 };
 export const addBannedWord = async (word: string) => {
-  const res = await Axios(`/bannedword`).post<BannedWord[]>({ word });
+  const res = await Axios(`/bannedword`).post<BannedWordList>({ word });
   return res;
 };
-export const getBannedWords = async () => {
-  const res = await Axios(`/bannedword`).get<BannedWord[]>();
+export const getBannedWords = async (take: number, page: number) => {
+  const res = await Axios(`/bannedword?take=${take}&page=${page}`).get<BannedWordList>();
   return res;
 };
 export const deleteBannedWord = async (id: string) => {
-  const res = await Axios(`/bannedword/${id}`).remove<BannedWord[]>();
+  const res = await Axios(`/bannedword/${id}`).remove<BannedWordList>();
   return res;
 };
 export const incrementClicks = async (bookId: string) => {

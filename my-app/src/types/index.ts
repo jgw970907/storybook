@@ -228,7 +228,10 @@ export type BannedWord = {
   id: string;
   word: string;
 };
-
+export type BannedWordList = {
+  data: BannedWord[];
+  total: number;
+};
 // 댓글 목록
 //댓글마다 고유 bookId 부여, 책과 댓글 관계는 1:N
 

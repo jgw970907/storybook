@@ -33,7 +33,7 @@ import secureLocalStorage from 'react-secure-storage';
 import { useNavigate } from 'react-router-dom';
 import { useUserStore } from 'store/useUserStore';
 import { patchUser } from 'api/user';
-import { AxiosError } from 'axios';
+import { Axios, AxiosError } from 'axios';
 
 export const useGetBooks = (queries?: BooklistParams) => {
   const key = [QueryKeys.USER, 'books'];
@@ -80,6 +80,10 @@ export const usePostBook = () => {
     onSuccess: () => {
       queryClient.invalidateQueries([QueryKeys.ADMIN, 'books']);
       queryClient.invalidateQueries([QueryKeys.USER, 'books']);
+      alert('책 등록에 성공했습니다.');
+    },
+    onError: (error: AxiosError) => {
+      alert(error.message);
     },
   });
 };
@@ -93,6 +97,10 @@ export const usePatchBook = () => {
     onSuccess: () => {
       queryClient.invalidateQueries([QueryKeys.ADMIN, 'books']);
       queryClient.invalidateQueries([QueryKeys.USER, 'books']);
+      alert('데이터 수정에 성공했습니다.');
+    },
+    onError: (error: AxiosError) => {
+      alert(error.message);
     },
   });
 };
@@ -105,6 +113,10 @@ export const usePatchUser = () => {
     mutationFn: patchUser,
     onSuccess: () => {
       queryClient.invalidateQueries([QueryKeys.USER_DATA]);
+      alert('유저데이터 수정을 성공했습니다.');
+    },
+    onError: (error: AxiosError) => {
+      alert(error.message);
     },
   });
 };
@@ -128,13 +140,15 @@ export const useDeleteBook = (page?: number) => {
       }
       return { previousBooks };
     },
-    onError: (err, _, context) => {
-      const key = [QueryKeys.ADMIN, 'books', page];
-      queryClient.setQueryData(key, context?.previousBooks);
-    },
-    onSettled: () => {
+    onSuccess: () => {
       queryClient.invalidateQueries([QueryKeys.ADMIN, 'books']);
       queryClient.invalidateQueries([QueryKeys.USER, 'books']);
+      alert('데이터 삭제 성공했습니다.');
+    },
+    onError: (err: AxiosError, _, context) => {
+      const key = [QueryKeys.ADMIN, 'books', page];
+      queryClient.setQueryData(key, context?.previousBooks);
+      alert(err.message);
     },
   });
 };
@@ -200,6 +214,10 @@ export const usePatchComment = (bookId: string) => {
     }) => patchComment({ bookId, commentId, comment }),
     onSuccess: () => {
       queryClient.invalidateQueries([QueryKeys.USER, 'comments', bookId]);
+      alert('댓글 수정 성공!');
+    },
+    onError: (error: AxiosError) => {
+      alert(`${error.message}`);
     },
   });
 };
@@ -269,14 +287,18 @@ export const usePostComment = (bookId: string, user: UserType | null) => {
     },
   });
 };
-export const useDeleteCommentByRole = () => {
+export const useDeleteCommentByRole = (userId: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationKey: [QueryKeys.ADMIN, 'comments'],
-    mutationFn: (commentId: string) => deleteCommentByRole(commentId),
+    mutationFn: (commentId: string) => deleteCommentByRole(commentId, userId),
     onSuccess: () => {
       queryClient.invalidateQueries([QueryKeys.ADMIN, 'comments']);
+      alert('댓글이 성공적으로 삭제되었습니다.');
+    },
+    onError: (error: AxiosError) => {
+      alert(`댓글 삭제 중 오류가 발생했습니다: ${error.message}`);
     },
   });
 };
@@ -304,10 +326,14 @@ export const useDeleteComment = (bookId: string) => {
       });
       return { previousComments };
     },
-    onError: (error, variables, context) => {
+    onSuccess: () => {
+      alert('삭제 성공!');
+    },
+    onError: (error: AxiosError, variables, context) => {
       if (context?.previousComments) {
         queryClient.setQueryData([QueryKeys.USER, 'comments', bookId], context.previousComments);
       }
+      alert(error.message);
     },
     onSettled: () => {
       queryClient.invalidateQueries([QueryKeys.USER, 'comments', bookId]);

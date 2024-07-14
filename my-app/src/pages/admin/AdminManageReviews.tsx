@@ -9,16 +9,20 @@ import { IoIosArrowDropupCircle, IoIosArrowDropdownCircle } from 'react-icons/io
 import { getDateStr } from 'utils';
 import { CommentsType } from 'types';
 import AdminManageBannedWords from 'components/admin/AdminManageBannedWords';
-
+import { useUserStore } from 'store/useUserStore';
 const take = 10;
 
 const AdminManageReviews = () => {
   const { currentPage, handleNextPage } = useAdminManage();
+  const { user } = useUserStore();
+  const userId = user?.id || '';
   const { data, status, isLoading } = useGetComments(currentPage, take);
-  const { mutate: deleteCommentByRole } = useDeleteCommentByRole();
+  const { mutate: deleteCommentByRole } = useDeleteCommentByRole(userId);
 
   const handleDelete = (commentId: string) => {
-    deleteCommentByRole(commentId);
+    if (userId) {
+      deleteCommentByRole(commentId);
+    }
   };
   const [selectedReviewId, setSelectedReviewId] = useState<string | null>(null);
 
@@ -38,7 +42,7 @@ const AdminManageReviews = () => {
   }
 
   return (
-    <>
+    <FlexAlign>
       <AdminManageBannedWords />
       <S.Layout>
         <S.Container>
@@ -52,7 +56,6 @@ const AdminManageReviews = () => {
                 <S.Tcolumn>책이름</S.Tcolumn>
                 <S.Tcolumn>댓글수</S.Tcolumn>
                 <S.Tcolumn>상세보기</S.Tcolumn>
-                <S.Tcolumn>삭제</S.Tcolumn>
               </S.Trow>
             </S.Theader>
             <S.Tbody>
@@ -76,9 +79,6 @@ const AdminManageReviews = () => {
                           />
                         )}
                       </S.Tcell>
-                      <S.Tcell>
-                        <S.Button onClick={() => handleDelete(comment?.commentId)}>Delete</S.Button>
-                      </S.Tcell>
                     </S.Trow>
                     {selectedReviewId === comment.commentId && (
                       <S.Trow>
@@ -88,6 +88,7 @@ const AdminManageReviews = () => {
                               <p>ID: {data.id}</p>
                               <p>내용: {data.content}</p>
                               <p>작성일: {getDateStr(data.createdAt)}</p>
+                              <S.Button onClick={() => handleDelete(data.id)}>Delete</S.Button>
                             </Wrapper>
                           ))}
                         </S.Tcell>
@@ -126,7 +127,7 @@ const AdminManageReviews = () => {
           </div>
         </S.Container>
       </S.Layout>
-    </>
+    </FlexAlign>
   );
 };
 
@@ -140,4 +141,8 @@ const Wrapper = styled.div`
   padding: 10px;
   margin: 10px 0;
   border-radius: 10px;
+`;
+const FlexAlign = styled.div`
+  display: flex;
+  gap: 10px;
 `;

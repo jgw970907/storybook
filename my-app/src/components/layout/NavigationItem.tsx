@@ -3,14 +3,10 @@ import { Link } from 'react-router-dom';
 import { logout } from 'api/auth';
 import { useUserStore } from 'store/useUserStore';
 import { getStyledColor, pixelToRem } from 'utils';
-import { useQueryClient } from '@tanstack/react-query';
-import { UserType } from 'types';
-import { QueryKeys } from 'constant';
 
 const NavigationItem = () => {
   const { isLogin } = useUserStore();
-  const queryClient = useQueryClient();
-  const data = queryClient.getQueryData<UserType>([QueryKeys.USER_DATA]);
+  const { user } = useUserStore();
 
   return (
     <Wrapper>
@@ -26,7 +22,7 @@ const NavigationItem = () => {
       )}
       {isLogin && (
         <>
-          {(data?.role === 'ADMIN' || 'MANAGER') && (
+          {(user?.role === 'ADMIN' || user?.role === 'MANAGER') && (
             <LinkStyle to="/admin">
               <Text>관리자</Text>
             </LinkStyle>

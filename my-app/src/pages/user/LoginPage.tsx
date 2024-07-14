@@ -7,7 +7,7 @@ import Loader from 'components/shared/Loader';
 
 const LoginPage = () => {
   const [email, setEmail] = useState<string>('Admin@tester.com');
-  const [password, setPassword] = useState<string>('Admin12345!');
+  const [password, setPassword] = useState<string>('@qwer1234');
 
   const [isEmpty, setIsEmpty] = useState(true);
   const { isLogin } = useUserStore();

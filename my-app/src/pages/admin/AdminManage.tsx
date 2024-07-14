@@ -87,12 +87,7 @@ const AdminManage = () => {
   };
 
   if (status === 'loading' || !books) {
-    return (
-      <S.Layout>
-        {status === 'loading' && <Loader />}
-        {!books && <div>데이터가 없습니다.</div>}
-      </S.Layout>
-    );
+    return <S.Layout>{status === 'loading' && <Loader />}</S.Layout>;
   }
 
   return (

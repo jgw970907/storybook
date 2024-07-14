@@ -5,12 +5,12 @@ import useAdminManage from 'hooks/useAdminManage';
 import { useDeleteUser, useGetUserlist } from 'queries/users';
 import { Fragment } from 'react';
 import { FaAngleLeft, FaAngleRight } from 'react-icons/fa6';
+import { useUserStore } from 'store/useUserStore';
 import * as S from 'styles/AdminStyledTemp';
-import { UserType } from 'types';
 
 const AdminManageUsers = () => {
-  const queryClient = useQueryClient();
-  const userRole = queryClient.getQueryData<UserType>([QueryKeys.USER_DATA])?.role;
+  const { user } = useUserStore();
+  const userRole = user?.role;
   const { data: users, status: usersStatus, isLoading } = useGetUserlist();
   const { mutate } = useDeleteUser();
   const { currentPage, handleNextPage } = useAdminManage();

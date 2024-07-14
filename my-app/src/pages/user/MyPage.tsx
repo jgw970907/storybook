@@ -198,6 +198,7 @@ const MyPage = () => {
                               <input
                                 onChange={(e) => setPassword(e.target.value)}
                                 type="password"
+                                disabled={true}
                               ></input>
                             </td>
                           </tr>
@@ -207,6 +208,7 @@ const MyPage = () => {
                               <input
                                 onChange={(e) => setConfirmPassword(e.target.value)}
                                 type="password"
+                                disabled={true}
                               ></input>
                             </td>
                           </tr>
@@ -215,7 +217,9 @@ const MyPage = () => {
                       <p style={{ color: 'red', padding: '8px' }}>
                         {pwalert ? null : '비밀번호가 일치하지 않습니다'}
                       </p>
-                      <button onClick={patchPassword}>비밀번호 변경</button>
+                      <button onClick={patchPassword} disabled={true}>
+                        비밀번호 변경
+                      </button>
                     </div>
                   </td>
                 </tr>
