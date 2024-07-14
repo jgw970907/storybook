@@ -21,12 +21,7 @@ export const WrapperModal = styled.div`
   height: 100%;
   align-items: center;
 
-  @media screen and (max-height: 768px) {
-    align-items: unset;
-    padding-top: 2rem;
-  }
-
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: 1400px) {
     padding: 0;
   }
 `;
@@ -82,7 +77,7 @@ export const Modal = styled.div`
     background: ${getStyledColor('teal', 700)}; /*스크롤바 뒷 배경 색상*/
   }
 
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: 1400px) {
     overflow-y: scroll !important;
   }
 `;
@@ -115,7 +110,14 @@ export const ImageBtn = styled.button`
   background-color: #f0f0f0;
   cursor: pointer;
   transition: background-color 0.3s ease;
-
+  @media screen and (max-width: 1400px) {
+    width: 40px;
+    height: 40px;
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
   &:hover {
     background-color: #d0d0d0;
   }
@@ -176,6 +178,11 @@ export const ModalPosterImg = styled.img`
     6px 6px ${getStyledColor('white', 'medium')},
     7px 7px ${getStyledColor('black', 700)},
     8px 8px ${getStyledColor('black', 700)};
+  @media screen and (max-width: 1400px) {
+    font-size: 14px;
+    width: 280px;
+    height: 360px;
+  }
 `;
 
 export const ModalContent = styled.div`
@@ -188,8 +195,8 @@ export const ModalOverview = styled.div`
   line-height: 2;
   font-weight: 300;
 
-  @media screen and (max-width: 768px) {
-    font-size: 16px;
+  @media screen and (max-width: 1400px) {
+    font-size: 14px;
   }
 `;
 
@@ -198,6 +205,9 @@ export const ModalTitle = styled.h2`
   font-size: 30px;
   margin: 60px 0 44px 0;
   white-space: nowrap;
+  @media screen and (max-width: 1400px) {
+    font-size: 22px;
+  }
 `;
 
 export const ModalSubject = styled.div`
@@ -208,12 +218,18 @@ export const ModalSubject = styled.div`
   font-weight: 500;
   color: white;
   margin: ${pixelToRem([20, 30, 0, 30])};
+  @media screen and (max-width: 1400px) {
+    font-size: 16px;
+  }
 `;
 
 export const ModalIntroduce = styled.div`
   line-height: 140%;
   color: white;
   margin: ${pixelToRem([20, 30, 0, 30])};
+  @media screen and (max-width: 1400px) {
+    font-size: 13px;
+  }
 `;
 
 export const CommentContainer = styled.div`

@@ -143,7 +143,7 @@ export default UserPage;
 
 const Main = styled.main`
   width: 100%;
-  min-height: 100vh;
+  min-height: 1500px;
   display: flex;
   flex-direction: column;
   padding-top: 10%;

@@ -55,14 +55,13 @@ export const Button = styled.button<{ $variant?: Variant; color?: string }>`
   min-width: ${pixelToRem(70)};
   min-height: ${pixelToRem(35)};
   padding: 0px 12px;
-  border-radius: 4px;
+  border-radius: 10px;
   font-weight: 500;
   white-space: nowrap;
   @media screen and (max-width: 1400px) {
     min-width: ${pixelToRem(60)};
     min-height: ${pixelToRem(30)};
     padding: 0px 6px;
-    border-radius: 4px;
     font-weight: 500;
   }
   ${({ $variant }) => {
@@ -96,7 +95,7 @@ export const Button = styled.button<{ $variant?: Variant; color?: string }>`
         return css`
           color: ${getStyledColor('black', 800)};
           background-color: ${getStyledColor('white', 'high')};
-          border: 1px solid ${getStyledColor('black', 800)};
+          border: 2px solid ${getStyledColor('gray', 800)};
         `;
     }
   }};
@@ -149,7 +148,7 @@ export const Input = styled.input`
   background-color: ${getStyledColor('gray', 500)};
   color: ${getStyledColor('gray', 1200)};
   border: 3px solid rgba(0, 0, 0, 0);
-  border-radius: 20px;
+  border-radius: 10px;
   transition: border 0.2s ease;
   margin: 0;
   @media screen and (max-width: 1400px) {

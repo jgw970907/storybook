@@ -13,7 +13,10 @@ interface InputFieldProps {
 const Body = styled.div`
   background-color: #282828;
   width: 100%;
-  height: 100vh;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  min-height: ${pixelToRem(1000)};
 `;
 
 const Title = styled.h2`
@@ -32,13 +35,11 @@ const Wrapper = styled.div<WrapperProps>`
 `;
 
 const Layout = styled.div`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   width: 100%;
-  max-width: ${pixelToRem(430)};
-  min-height: ${pixelToRem(200)}; /* 최소 높이 설정 */
+  height: 100%;
+  max-width: ${pixelToRem(500)};
+  min-height: ${pixelToRem(400)}; /* 최소 높이 설정 */
+  margin: 100px 0;
   display: flex;
   align-items: center;
   justify-content: center;
