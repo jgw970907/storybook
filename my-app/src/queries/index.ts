@@ -33,7 +33,7 @@ import secureLocalStorage from 'react-secure-storage';
 import { useNavigate } from 'react-router-dom';
 import { useUserStore } from 'store/useUserStore';
 import { patchUser } from 'api/user';
-import { Axios, AxiosError } from 'axios';
+import { AxiosError } from 'axios';
 
 export const useGetBooks = (queries?: BooklistParams) => {
   const key = [QueryKeys.USER, 'books'];
