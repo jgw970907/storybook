@@ -86,12 +86,12 @@ export const deleteBook = async (id: string) => {
 };
 
 export const deleteImage = async (bookId: string, imageId: string) => {
-  const res = await Axios(`/api/fb/image/temp/${bookId}/${imageId}`).remove<{ message: string }>();
+  const res = await Axios(`/api/image/temp/${bookId}/${imageId}`).remove<{ message: string }>();
   return res;
 };
 
 export const patchImages = async (bookId: string, imageIds: string[]) => {
-  const res = await Axios(`/api/fb/image/temp/${bookId}`).patch<BookAddImageRes>({
+  const res = await Axios(`/api/image/temp/${bookId}`).patch<BookAddImageRes>({
     imageIds: imageIds,
   });
   return res;
@@ -102,7 +102,7 @@ export const postImage = async (
   const formData = new FormData();
   formData.append('profileImage', imageFile);
   try {
-    const res = await Axios(`/api/fb/image/temp/profile`).post<{
+    const res = await Axios(`/api/image/temp/profile`).post<{
       imageId: string;
       imagePath: string;
     }>(formData);
