@@ -89,7 +89,7 @@ export const deleteImage = async (bookId: string, imageId: string) => {
   const res = await Axios(`/fb/image/temp/${bookId}/${imageId}`).remove<{ message: string }>();
   return res;
 };
-
+//dd
 export const patchImages = async (bookId: string, imageIds: string[]) => {
   const res = await Axios(`/fb/image/temp/${bookId}`).patch<BookAddImageRes>({
     imageIds: imageIds,
