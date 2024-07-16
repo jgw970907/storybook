@@ -200,7 +200,7 @@ export const useGetComments = (page: number, take = 10) => {
 
 export const usePatchComment = (bookId: string) => {
   const queryClient = useQueryClient();
-  //주석
+  //주석..
   return useMutation({
     mutationKey: [QueryKeys.USER, 'comments', bookId],
     mutationFn: ({
