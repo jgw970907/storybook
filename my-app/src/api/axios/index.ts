@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig, AxiosError } from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 import injectInterceptors from './interceptors';
 
 const BASE_URL = process.env.REACT_APP_SERVER_URL;

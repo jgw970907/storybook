@@ -6,7 +6,7 @@ import { getStyledColor } from 'utils';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
-  const { data: count, status, error } = useGetCount();
+  const { data: count } = useGetCount();
 
   return (
     <S.Layout style={{ flexWrap: 'wrap' }}>

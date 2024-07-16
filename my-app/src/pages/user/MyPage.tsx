@@ -1,7 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { QueryKeys } from 'constant';
 import { useGetBookLikes, usePatchUser } from 'queries';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { styled } from 'styled-components';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import { Book } from 'components/user';
@@ -20,7 +20,6 @@ const MyPage = () => {
   const [pwalert, setPwalert] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedBookId, setSelectedBookId] = useState<string | null>(null);
-  const [imageId, setImageId] = useState<string>('');
   const [imageSrc, setImageSrc] = useState<string>('');
   const { user } = useUserStore();
 
@@ -29,7 +28,7 @@ const MyPage = () => {
   const take = 4;
   const imageRef = useRef<ImageUploaderImperativeHandle>(null);
   const queryClient = useQueryClient();
-  const { mutate, status: patchStatus, error } = usePatchUser();
+  const { mutate, error } = usePatchUser();
 
   const {
     data: LikesBooks,
@@ -58,7 +57,6 @@ const MyPage = () => {
       {
         onSuccess: () => {
           alert('프로필 이미지가 성공적으로 변경되었습니다.');
-          setImageId('');
           setImageSrc('');
         },
       },
@@ -132,8 +130,6 @@ const MyPage = () => {
   const postProfileImg = async (fileData: File | null) => {
     if (fileData) {
       const res = await postImage(fileData);
-      //setUser로 유저 프로필 변경
-      setImageId(res.imageId);
       setImageSrc(res.imagePath);
     } else {
       alert('파일이 없습니다.');
@@ -388,13 +384,6 @@ const Container = styled.div`
 //     ${(props) => (props.btnState ? '#a8abba, #8c8f98' : '#fff, #f1f1f1')}
 //   );
 // `;
-
-const Wrapper = styled.div`
-  grid-template-columns: repeat(12, 1fr);
-  color: rgba(31, 31, 31, 0.7);
-  font-weight: 900;
-  padding-top: 80px;
-`;
 
 const Layout = styled.div`
   display: flex;

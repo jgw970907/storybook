@@ -10,14 +10,12 @@ import {
   CommentGetRes,
   CommentPostRes,
   PatchCommentReq,
-  // BookTakelistRes,
   BookisLikeRes,
   MyFavoritesParams,
   MyFavorites,
   Countlist,
   CommentsGetRes,
   BookChangeLikeRes,
-  BannedWord,
   BannedWordList,
 } from 'types';
 

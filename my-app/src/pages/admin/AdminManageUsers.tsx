@@ -1,6 +1,4 @@
-import { useQueryClient } from '@tanstack/react-query';
 import { Loader } from 'components/shared';
-import { QueryKeys } from 'constant';
 import useAdminManage from 'hooks/useAdminManage';
 import { useDeleteUser, useGetUserlist } from 'queries/users';
 import { Fragment } from 'react';

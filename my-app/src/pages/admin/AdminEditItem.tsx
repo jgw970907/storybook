@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import * as S from 'styles/AdminStyledTemp';
 import { usePatchBook, useDeleteBook, useGetBook } from 'queries';
 import ImageUploader, { ImageUploaderImperativeHandle } from 'components/shared/ImageUploader';
-import { postImages, patchImages, deleteImage } from 'api';
+import { postImages, deleteImage } from 'api';
 import Loader from 'components/shared/Loader';
 import { Button } from 'components/shared';
 import { styled } from 'styled-components';
@@ -31,7 +31,6 @@ const AdminEditItem = () => {
   const [category, setCategory] = useState('');
   const [authorName, setAuthorName] = useState('');
   const [newImagePaths, setNewImagePaths] = useState<string[]>([]);
-  const [allImagefbPaths, setAllImagefbPaths] = useState<string[]>([]);
   const { data: book, isLoading } = useGetBook(paramId);
   const { mutate, status: patchStatus } = usePatchBook();
   const { mutate: remove } = useDeleteBook();
@@ -44,7 +43,6 @@ const AdminEditItem = () => {
       setAuthorName(book.authorName || '');
       setImageIds(book.images?.map((data) => data.id));
       setImagesSrc(book.images?.map((data) => data.path));
-      // setAllImagefbPaths(book?.images?.map((data) => data.fbPath));
       console.log(imageIds);
       console.log(imagesSrc);
     }
@@ -82,7 +80,7 @@ const AdminEditItem = () => {
       const validImageIds = uploadedImageIds.flat();
       setImageIds((prev) => [...prev, ...validImageIds]);
       setNewImagePaths(validImagePaths);
-      setAllImagefbPaths((prev) => [...prev, ...validImagePaths]);
+
       console.log(imageIds);
       console.log(newImagePaths);
     } else {

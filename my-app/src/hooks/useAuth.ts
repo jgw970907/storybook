@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { jwtDecode } from 'jwt-decode';
 import { getAccessToken, fetchAccessToken } from '../utils/auth';
 import { getUser } from 'api/auth';
-import { UserType } from 'types';
 import { useUserStore } from 'store/useUserStore';
 interface DecodedToken {
   id: string;

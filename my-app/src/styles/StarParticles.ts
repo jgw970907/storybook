@@ -1,4 +1,4 @@
-import styled, { css, keyframes } from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
 const multipleBoxShadow = (n: number) => {
   let value = `${Math.floor(Math.random() * 2000)}px ${Math.floor(

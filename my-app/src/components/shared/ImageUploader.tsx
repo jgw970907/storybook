@@ -202,18 +202,6 @@ const ImageData = styled.div`
   font-size: ${pixelToRem(10)};
   padding: 2px;
 `;
-const Cancel = styled(FaFileExcel)`
-  align-self: flex-end;
-  cursor: pointer;
-  transition: color 0.15s ease;
-  color: ${getStyledColor('cool_gray', 700)};
-  &:hover {
-    color: ${getStyledColor('red', 900)};
-  }
-  &:active {
-    color: ${getStyledColor('red', 1000)};
-  }
-`;
 
 const Upload = styled.div`
   display: flex;
