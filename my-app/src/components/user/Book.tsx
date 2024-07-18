@@ -45,6 +45,7 @@ const Title = styled.p`
   font-weight: 500;
   margin-top: 20px;
   position: relative;
+  text-overflow: ellipsis;
   @media screen and (max-width: 1400px) {
     font-size: ${pixelToRem(10)};
     margin-top: 10px;
