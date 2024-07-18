@@ -55,7 +55,7 @@ const AdminManageUsers = () => {
                       <S.Tcell>{user.email}</S.Tcell>
                       <S.Tcell>{user.role}</S.Tcell>
                       <S.Tcell>
-                        {userRole === 'ADMIN' ? (
+                        {userRole === 'ADMIN' && user.role === 'USER' ? (
                           <S.TrashIcon
                             onClick={() => handleRemove(user.id, user.name, user.role)}
                           />

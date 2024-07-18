@@ -17,7 +17,8 @@ const SignupPage = () => {
   const [name, setName] = useState<string>('');
   const [nickname, setNickname] = useState<string>('');
   const [code, setCode] = useState<string>('');
-
+  const [message, setMessage] = useState<string | null>('');
+  const [error, setError] = useState<string | null>(null);
   const [isVerify, setIsVerify] = useState<boolean>(false);
   const { timer, setTimer } = useTimer('sec');
 
@@ -55,23 +56,27 @@ const SignupPage = () => {
   };
 
   const handleSendToEmail = async () => {
-    const res = await fetch(`${process.env.REACT_APP_SERVER_URL}/mail/send-code`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email }),
-    });
-    const data = await res.json();
+    try {
+      const res = await fetch(`${process.env.REACT_APP_SERVER_URL}/mail/send-code`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+      const data = await res.json();
 
-    if (data.statusCode === 404) {
-      alert(`${data.message}`);
-    } else {
-      alert(`${data.message} \n ${data.expirationTime}`);
-
-      // TODO: 요청 성공 시 true로 변경
-      setIsVerify(true);
-      setTimer(600);
+      if (res.ok) {
+        setMessage(data.message);
+        setError(null);
+        setTimer(600); // assuming setTimer is a function that starts a countdown timer
+      } else {
+        setError(data.message);
+        setMessage(null);
+      }
+    } catch (err) {
+      setError('다시 시도해주세요.');
+      setMessage(null);
     }
   };
 
@@ -85,10 +90,16 @@ const SignupPage = () => {
         body: JSON.stringify({ email, code }),
       });
       const data = await res.json();
-      setIsVerify(false);
-      alert(`인증이 완료되었습니다. ${data}`);
-    } catch (error) {
-      console.log(error);
+
+      if (res.ok) {
+        setMessage(data.message);
+        setError(null);
+        setIsVerify(true);
+      } else {
+        setError(data.message);
+      }
+    } catch (err) {
+      setError('다시 시도해주세요.');
     }
   };
 
@@ -126,7 +137,8 @@ const SignupPage = () => {
               <AuthButton onClick={handleVerifyCode}>확인</AuthButton>
             </EmailField>
           )}
-
+          {message && <Message error={false}>{message}</Message>}
+          {error && <Message error={true}>{error}</Message>}
           <S.InputField>
             <S.Label>비밀번호 </S.Label>
             <S.Input
@@ -214,4 +226,9 @@ const AuthButton = styled.button`
 const EmailField = styled.div`
   width: 100%;
   display: flex;
+`;
+const Message = styled.p<{ error: boolean }>`
+  color: ${(error) => (error ? 'red' : 'green')};
+  font-size: 14px;
+  margin-top: 10px;
 `;
