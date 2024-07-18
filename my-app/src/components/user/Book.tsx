@@ -40,8 +40,10 @@ const Effect = keyframes`
     transform: translateY(0);
   }
 `;
-const Title = styled.p`
+const Title = styled.div`
   font-size: ${pixelToRem(16)};
+  width: ${pixelToRem(180)};
+  height: ${pixelToRem(40)};
   font-weight: 500;
   margin-top: 20px;
   position: relative;
@@ -51,6 +53,7 @@ const Title = styled.p`
   overflow: hidden;
   @media screen and (max-width: 1400px) {
     font-size: ${pixelToRem(10)};
+    width: ${pixelToRem(150)};
     margin-top: 10px;
   }
 `;
