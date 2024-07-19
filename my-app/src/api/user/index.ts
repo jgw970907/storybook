@@ -13,8 +13,8 @@ export const getUserlist = async () => {
   return res;
 };
 
-export const deleteUser = async (id: string | string) => {
-  const res = await Axios(`/users/delete/${id}`).get<Response>();
+export const deleteUser = async (id: string) => {
+  const res = await Axios(`/users/delete/${id}`).remove<Response>();
 
   return res;
 };
