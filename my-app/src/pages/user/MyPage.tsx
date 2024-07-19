@@ -125,8 +125,6 @@ const MyPage = () => {
     return LikesBooks?.books.flatMap((data) => data).find((data) => data?.id === selectedBookId);
   };
   const selectedBook = findSelectedBook();
-
-  console.log('LikesBooks', LikesBooks);
   const postProfileImg = async (fileData: File | null) => {
     if (fileData) {
       const res = await postImage(fileData);
@@ -239,7 +237,6 @@ const MyPage = () => {
                       </ArrowButton>
                       {LikesBooks.books.map((data) => {
                         const { id, title, images, ...spread } = data;
-                        console.log(data);
                         return (
                           <div key={id}>
                             <Book

@@ -179,7 +179,6 @@ export const deleteComment = async (bookId: string, commentId: string) => {
 //vercel 참고, like 데이터베이스에서 userId를 이용해 like데이터와 book데이터 묶어서 return
 export const getMyFavorites = async (params: MyFavoritesParams) => {
   const { userId, take, page } = params;
-  console.log(userId);
   const res = await Axios(
     `/myfavorites/${userId}?take=${take}&page=${page}&order__updatedAt=DESC`,
   ).get<MyFavorites>();

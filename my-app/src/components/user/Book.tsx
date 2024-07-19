@@ -13,7 +13,6 @@ const Book = (
 ) => {
   const [isShow, setIsShow] = useState(false);
   const imageUrl = images && images.length > 0 ? images[0]?.path : null;
-  console.log(imageUrl, images);
   useEffect(() => {
     setIsShow(true);
   }, []);

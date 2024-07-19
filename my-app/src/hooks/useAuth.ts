@@ -17,7 +17,6 @@ export const useAuth = () => {
     const initializeAuth = async () => {
       try {
         let accessToken = getAccessToken();
-        console.log(accessToken);
         if (!accessToken) {
           accessToken = await fetchAccessToken();
         }

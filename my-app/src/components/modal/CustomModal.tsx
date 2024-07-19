@@ -74,13 +74,9 @@ export const CustomModal = ({
     if (imagesCount) {
       if (currentIndex < imagesCount - 1) {
         setCurrentIndex((prev) => prev + 1);
-        console.log(currentIndex);
       } else {
-        console.log(currentIndex);
-        console.log(imagesCount);
         setCurrentIndex(0);
       }
-      console.log(currentIndex);
     }
   };
   const handleOutsideClick = (e: React.MouseEvent<HTMLDivElement>) => {

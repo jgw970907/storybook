@@ -43,8 +43,6 @@ const AdminEditItem = () => {
       setAuthorName(book.authorName || '');
       setImageIds(book.images?.map((data) => data.id));
       setImagesSrc(book.images?.map((data) => data.path));
-      console.log(imageIds);
-      console.log(imagesSrc);
     }
   }, [book]);
   // id를 숫자로 변환
@@ -72,7 +70,6 @@ const AdminEditItem = () => {
   const handleSetImage = async (fileData: File[] | null) => {
     if (fileData && fileData.length > 0) {
       const result = await postImages(fileData);
-      console.log(result);
       const uploadedImagePaths = result.imagePaths;
       const uploadedImageIds = result.imageIds;
       // 배열의 배열을 평탄화(flatten)하여 단일 배열로 변환
@@ -80,9 +77,6 @@ const AdminEditItem = () => {
       const validImageIds = uploadedImageIds.flat();
       setImageIds((prev) => [...prev, ...validImageIds]);
       setNewImagePaths(validImagePaths);
-
-      console.log(imageIds);
-      console.log(newImagePaths);
     } else {
       console.log('이미지 업로드가 취소되었거나 이미지가 선택되지 않았습니다.');
     }

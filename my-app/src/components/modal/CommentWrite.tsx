@@ -13,7 +13,6 @@ const CommentWrite: React.FC<CommentWriteProps> = ({ bookId }) => {
   if (bookId === undefined) return null;
 
   const { isLogin, user } = useUserStore();
-  console.log(isLogin);
   const [comment, setComment] = useState<string>('');
   const { mutate, status } = usePostComment(bookId, user);
   const onChangeComment = (e: ChangeEvent<HTMLTextAreaElement>) => {
