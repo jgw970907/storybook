@@ -9,7 +9,6 @@ import * as S from 'styles/LoginStyled';
 import { getStyledColor } from 'utils';
 import useTimer from 'hooks/useTimer';
 import formatTime from 'utils/formatTime';
-import { click } from '@testing-library/user-event/dist/click';
 
 const SignupPage = () => {
   const [email, setEmail] = useState<string>('');
