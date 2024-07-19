@@ -75,18 +75,21 @@ const SignupPage = () => {
         body: JSON.stringify({ email }),
       });
       const data = await res.json();
-      setClickedVerify(true);
+
       if (res.ok) {
+        setClickedVerify(true);
         setMessage(data.message);
         setError(null);
         setTimer(600); // assuming setTimer is a function that starts a countdown timer
       } else {
         setError(data.message);
         setMessage(null);
+        setTimer(0); // 타이머를 초기화
       }
     } catch (err) {
       setError('다시 시도해주세요.');
       setMessage(null);
+      setTimer(0); // 타이머를 초기화
     }
   };
 
