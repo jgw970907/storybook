@@ -9,6 +9,7 @@ import * as S from 'styles/LoginStyled';
 import { getStyledColor } from 'utils';
 import useTimer from 'hooks/useTimer';
 import formatTime from 'utils/formatTime';
+import { click } from '@testing-library/user-event/dist/click';
 
 const SignupPage = () => {
   const [email, setEmail] = useState<string>('');
@@ -20,6 +21,7 @@ const SignupPage = () => {
   const [message, setMessage] = useState<string | null>('');
   const [error, setError] = useState<string | null>(null);
   const [isVerify, setIsVerify] = useState<boolean>(false);
+  const [clickedVerify, setClickedVerify] = useState<boolean>(false);
   const { timer, setTimer } = useTimer('sec');
 
   const navigate = useNavigate();
@@ -31,6 +33,12 @@ const SignupPage = () => {
       navigate('/admin/main');
     }
   });
+  useEffect(() => {
+    if (timer === 0 && clickedVerify) {
+      setError('인증 시간이 초과되었습니다. 다시 시도해주세요.');
+      setClickedVerify(false);
+    }
+  }, [timer, clickedVerify]);
   const { mutate } = useMutation({
     mutationFn: () => signUp({ email, password, name, nickname }),
 
@@ -44,6 +52,9 @@ const SignupPage = () => {
   });
 
   const handleSignup = () => {
+    if (!isVerify) {
+      alert('이메일 인증을 완료하세요');
+    }
     if (password !== passwordConfirm) {
       alert('비밀번호가 일치하지 않습니다.');
       return;
@@ -65,7 +76,7 @@ const SignupPage = () => {
         body: JSON.stringify({ email }),
       });
       const data = await res.json();
-
+      setClickedVerify(true);
       if (res.ok) {
         setMessage(data.message);
         setError(null);
@@ -95,6 +106,8 @@ const SignupPage = () => {
         setMessage(data.message);
         setError(null);
         setIsVerify(true);
+        setClickedVerify(false);
+        setTimer(0);
       } else {
         setError(data.message);
       }
@@ -120,7 +133,7 @@ const SignupPage = () => {
             </S.InputField>
             <AuthButton onClick={handleSendToEmail}>인증하기</AuthButton>
           </EmailField>
-          {isVerify && (
+          {clickedVerify && (
             <EmailField>
               <S.InputField>
                 <S.Label>인증번호</S.Label>
