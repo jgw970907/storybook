@@ -185,16 +185,6 @@ export const CustomModal = ({
                     {book?.category ? `카테고리: ${book?.category}` : ''}
                   </S.ModalOverview>
                   <S.ModalOverview>클릭수: {book?.clicks}</S.ModalOverview>
-                  <S.ModalOverview>
-                    좋아요:{' '}
-                    {status === 'loading' && isLogin ? (
-                      <StyledLoader $size={'10px'} />
-                    ) : isLogin ? (
-                      bookIsLikeData?.likeCount
-                    ) : (
-                      book?.likeCount
-                    )}
-                  </S.ModalOverview>
 
                   <S.ModalOverview>
                     등록날짜: {'  '}

@@ -7,12 +7,11 @@ const DropdownObject: { [key: string]: string } = {
   DESC: '최신순',
   ASC: '오래된순',
   CLICKS: '조회순',
-  LIKECOUNT: '좋아요순',
 };
 
 interface DropdownProps {
   order: string;
-  setOrder: React.Dispatch<React.SetStateAction<'DESC' | 'ASC' | 'CLICKS' | 'LIKECOUNT'>>;
+  setOrder: React.Dispatch<React.SetStateAction<'DESC' | 'ASC' | 'CLICKS'>>;
   status: string;
 }
 
@@ -31,7 +30,7 @@ const Dropdown: React.FC<DropdownProps> = ({ order, setOrder, status }) => {
 
   const handleItemClick = (item: string) => {
     setSelectedItem(DropdownObject[item]);
-    setOrder(item as 'DESC' | 'ASC' | 'CLICKS' | 'LIKECOUNT');
+    setOrder(item as 'DESC' | 'ASC' | 'CLICKS');
     setIsOpen(false);
   };
 

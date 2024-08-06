@@ -15,7 +15,6 @@ export type BookInfoType = {
   title: string;
   content: string;
   clicks: number;
-  likeCount: number;
   isSecret: boolean;
   images: ImagesType[];
   user: UserType;

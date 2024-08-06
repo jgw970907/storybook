@@ -100,7 +100,6 @@ const AdminManage = () => {
               <S.Tcolumn>제목</S.Tcolumn>
               <S.Tcolumn>생성자</S.Tcolumn>
               <S.Tcolumn>조회수</S.Tcolumn>
-              <S.Tcolumn>좋아요</S.Tcolumn>
               <S.Tcolumn>댓글</S.Tcolumn>
               <S.Tcolumn>생성일</S.Tcolumn>
               <S.Tcolumn />
@@ -118,8 +117,6 @@ const AdminManage = () => {
                       </S.Tcell>
                       <S.Tcell width={120}>{book.user.name}</S.Tcell>
                       <S.Tcell>{book.clicks}</S.Tcell>
-                      <S.Tcell>{book.likeCount}</S.Tcell>
-                      {/* <S.Tcell>{book.}</S.Tcell> */}
                       <S.Tcell>{getDateStr(book.createdAt)}</S.Tcell>
                       <S.Tcell>
                         <S.EditIcon onClick={() => handleEdit(book.id)} />

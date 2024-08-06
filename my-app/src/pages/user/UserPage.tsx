@@ -17,7 +17,7 @@ const UserPage = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [searchState, setSearchState] = useState('');
   const [selectedBookId, setSelectedBookId] = useState<string | null>(null);
-  const [order, setOrder] = useState<'DESC' | 'ASC' | 'CLICKS' | 'LIKECOUNT'>('DESC');
+  const [order, setOrder] = useState<'DESC' | 'ASC' | 'CLICKS'>('DESC');
   const { search, setSearch } = useSearchStore();
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } = useInfinityScroll(
     order,

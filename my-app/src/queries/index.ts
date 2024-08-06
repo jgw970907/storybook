@@ -340,10 +340,7 @@ export const useDeleteComment = (bookId: string) => {
     },
   });
 };
-export const useInfinityScroll = (
-  order: 'DESC' | 'ASC' | 'CLICKS' | 'LIKECOUNT',
-  search: string,
-) => {
+export const useInfinityScroll = (order: 'DESC' | 'ASC' | 'CLICKS', search: string) => {
   return useInfiniteQuery({
     queryKey: [QueryKeys.USER, 'books', 'infinity', order, search],
     queryFn: ({ pageParam = 1 }) => {
@@ -358,8 +355,6 @@ export const useInfinityScroll = (
       // Set order parameters based on the order value
       if (order === 'CLICKS') {
         queryParameters.order__clicks = 'DESC';
-      } else if (order === 'LIKECOUNT') {
-        queryParameters.order__likeCount = 'DESC';
       } else {
         queryParameters.order__createdAt = order; // Include only for ASC or DESC
       }
