@@ -1,4 +1,4 @@
-import { useGetCount } from 'queries';
+import { useGetCount } from 'queries/statistics';
 import { useNavigate } from 'react-router-dom';
 import * as S from 'styles/AdminStyledTemp';
 import { styled } from 'styled-components';

@@ -1,15 +1,16 @@
 import { useState, useEffect, ChangeEvent as ReactChangeEvent, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import * as S from 'styles/AdminStyledTemp';
-import { usePatchBook, useDeleteBook, useGetBook } from 'queries';
+import { bookQueries } from 'queries';
 import ImageUploader, { ImageUploaderImperativeHandle } from 'components/shared/ImageUploader';
-import { postImages, deleteImage } from 'api';
+import { postImages, deleteImage } from 'api/imageapi';
 import Loader from 'components/shared/Loader';
 import { Button } from 'components/shared';
 import { styled } from 'styled-components';
 import { getDateStr } from 'utils';
 import { BOOK_CATEGORIES } from 'constant';
 
+const { usePatchBook, useDeleteBook, useGetBook } = bookQueries;
 const AdminEditItem = () => {
   const { id } = useParams();
   const paramId = id ? id : null;

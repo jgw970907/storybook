@@ -1,7 +1,7 @@
-import { CommentGetRes, CommentType } from 'types';
+import { CommentGetRes, CommentType } from 'types/commentTypes';
 import * as S from 'styles/CommentStyled';
 import * as P from 'styles/ProfileStyled';
-import { useDeleteComment, usePatchComment } from 'queries';
+import { useDeleteComment, usePatchComment } from 'queries/comment';
 import { Button } from 'components/shared';
 import { getDateStr } from 'utils';
 import { useUserStore } from 'store/useUserStore';

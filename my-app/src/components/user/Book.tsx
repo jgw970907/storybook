@@ -1,6 +1,6 @@
 import { forwardRef, useEffect, useState } from 'react';
 import { css, keyframes, styled } from 'styled-components';
-import { BookInfoType } from 'types';
+import { BookInfoType } from 'types/bookTypes';
 import { getStyledColor } from 'utils';
 import pixelToRem from 'utils/pixelToRem';
 interface Props extends BookInfoType {

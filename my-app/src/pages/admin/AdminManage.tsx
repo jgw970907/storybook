@@ -2,17 +2,18 @@ import { Fragment, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaAngleLeft, FaAngleRight } from 'react-icons/fa6';
 import * as S from 'styles/AdminStyledTemp';
-import { useDeleteBook, useGetBooksAdmin } from 'queries';
+import { bookQueries } from 'queries';
 import { useSelectedBook } from 'store/useSelectedBooks';
 import { getDateStr } from 'utils';
-import { BookInfoType } from 'types';
+import { BookInfoType } from 'types/bookTypes';
 import { useQueryClient } from '@tanstack/react-query';
-import { getNextBooks } from 'api';
+import { getNextBooks } from 'api/book';
 import { CustomModal } from 'components/modal/CustomModal';
 import Loader from 'components/shared/Loader';
 import { QueryKeys } from 'constant';
 
 const AdminManage = () => {
+  const { useDeleteBook, useGetBooksAdmin } = bookQueries;
   const [currentPage, setCurrentPage] = useState(1);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedBookId, setSelectedBookId] = useState<string | null>(null);

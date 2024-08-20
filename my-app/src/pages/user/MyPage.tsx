@@ -1,6 +1,6 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { QueryKeys } from 'constant';
-import { useGetBookLikes, usePatchUser } from 'queries';
+import { userQueries, likeQueries } from 'queries';
 import React, { useState, useRef } from 'react';
 import { styled } from 'styled-components';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
@@ -9,7 +9,7 @@ import { Loader } from 'components/shared';
 import CustomModal from 'components/modal/CustomModal';
 import { ImageUploader } from 'components/shared';
 import { ImageUploaderImperativeHandle } from 'components/shared/ImageUploader';
-import { postImage } from 'api';
+import { postImage } from 'api/imageapi';
 import { useUserStore } from 'store/useUserStore';
 const MyPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -24,7 +24,8 @@ const MyPage = () => {
   const { user } = useUserStore();
 
   const userId: string = user?.id || '';
-
+  const { usePatchUser } = userQueries;
+  const { useGetBookLikes } = likeQueries;
   const take = 4;
   const imageRef = useRef<ImageUploaderImperativeHandle>(null);
   const queryClient = useQueryClient();

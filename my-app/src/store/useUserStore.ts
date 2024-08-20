@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { UserType } from 'types';
+import { UserType } from 'types/userTypes';
 interface UserStore {
   isLogin: boolean;
   isInit: boolean;

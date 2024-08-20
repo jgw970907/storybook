@@ -1,6 +1,6 @@
 import { ChangeEvent as ReactChangeEvent, useEffect, useRef, useState } from 'react';
 import * as S from 'styles/AdminStyledTemp';
-import { usePostBook } from 'queries';
+import { usePostBook } from 'queries/book';
 import useBookInfo from 'hooks/useBookInfo';
 import ImageUploader, { ImageUploaderImperativeHandle } from 'components/shared/ImageUploader';
 import Button from 'components/shared/Button';

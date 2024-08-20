@@ -2,7 +2,7 @@ import React, { useState, ChangeEvent } from 'react';
 import styled from 'styled-components';
 import Button from 'components/shared/Button';
 import { getStyledColor } from 'utils';
-import { usePostComment } from 'queries';
+import { usePostComment } from 'queries/comment';
 import { useUserStore } from 'store/useUserStore';
 
 interface CommentWriteProps {

@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { BookReq } from 'types';
+import { BookReq } from 'types/bookTypes';
 
 const InitData: BookReq = {
   title: '',

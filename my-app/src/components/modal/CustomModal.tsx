@@ -1,17 +1,13 @@
 import { Fragment, useRef, useState } from 'react';
 import * as S from 'styles/ModalStyled';
 import * as P from 'styles/ProfileStyled';
-import {
-  useAddLike,
-  useRemoveLike,
-  useGetBook,
-  useGetBookIsLike,
-  useGetCommentsForBook,
-} from 'queries';
+import { useGetBook } from 'queries/book';
+import { useGetCommentsForBook } from 'queries/comment';
+import { useAddLike, useGetBookIsLike, useRemoveLike } from 'queries/like';
 import { useNavigate } from 'react-router-dom';
 import useOnclickOutside from 'hooks/useOnclickOutside';
 import { FcNext, FcPrevious } from 'react-icons/fc';
-import { BookInfoType } from 'types';
+import { BookInfoType } from 'types/bookTypes';
 import CommentWrite from 'components/modal/CommentWrite';
 import CommentsDisplay from 'components/modal/CommentsDisplay';
 import { IoIosClose } from 'react-icons/io';

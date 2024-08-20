@@ -2,7 +2,8 @@ import { StorageKeys } from 'constant';
 import Axios from '../axios';
 import secureLocalStorage from 'react-secure-storage';
 import { useUserStore } from 'store/useUserStore';
-import { LoginResponse, SignUpRes, SignUpReq, LoginParams, UserType } from 'types';
+import { LoginResponse, SignUpRes, SignUpReq, LoginParams } from 'types/authTypes';
+import { UserType } from 'types/userTypes';
 
 export const login = async (user: LoginParams) => {
   const auth = btoa(`${user.email}:${user.password}`);

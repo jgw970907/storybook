@@ -1,5 +1,5 @@
 import { getAxiosInstance as Axios } from 'api/axios';
-import { UserPatchReq, UserType } from 'types';
+import { UserPatchReq, UserType } from 'types/userTypes';
 
 type Response = {
   [key: number]: UserType;

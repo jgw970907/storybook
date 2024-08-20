@@ -2,7 +2,7 @@ import { useEffect, useState, ChangeEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUserStore } from 'store/useUserStore';
 import * as S from '../../styles/LoginStyled';
-import { useLogin } from 'queries';
+import { useLogin } from 'queries/auth';
 import Loader from 'components/shared/Loader';
 
 const LoginPage = () => {

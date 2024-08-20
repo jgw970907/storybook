@@ -3,7 +3,7 @@ import { styled } from 'styled-components';
 import * as S from 'styles/SearchStyled';
 import { getStyledColor } from 'utils';
 import Book from '../../components/user/Book';
-import { useInfinityScroll } from 'queries';
+import { bookQueries } from 'queries';
 import { Stars, Stars2, Stars3 } from 'styles/StarParticles';
 import { CustomModal } from 'components/modal/CustomModal';
 import useIntersectionObserver from 'hooks/useIntersectionObserver';
@@ -11,9 +11,10 @@ import Dropdown from 'components/shared/Dropdown';
 import Loader from 'components/shared/Loader';
 import { useSearchStore } from 'store/useSearchStore';
 import NotFound from 'pages/NotFound';
-import { incrementClicks } from 'api';
+import { incrementClicks } from 'api/book';
 
 const UserPage = () => {
+  const { useInfinityScroll } = bookQueries;
   const [modalOpen, setModalOpen] = useState(false);
   const [searchState, setSearchState] = useState('');
   const [selectedBookId, setSelectedBookId] = useState<string | null>(null);

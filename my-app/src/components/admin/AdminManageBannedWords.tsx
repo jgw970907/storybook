@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { addBannedWord, getBannedWords, deleteBannedWord } from 'api';
+import { addBannedWord, getBannedWords, deleteBannedWord } from 'api/bannedword';
 
 import * as S from 'styles/AdminStyledTemp';
 import { BannedWord } from 'types';
