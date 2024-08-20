@@ -46,6 +46,20 @@ export const getAxiosInstance = (endpoint: string) => {
     }
   };
 
+  const patchWithoutToken = async <T>(params: object = {}, config?: AxiosRequestConfig) => {
+    try {
+      const axiosInstance = axios.create({ baseURL: BASE_URL, withCredentials: true });
+      const res = await axiosInstance.patch<T>(endpoint, params, config);
+      const { data, status } = res;
+      return { ...data, status };
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        throw error;
+      }
+      throw new Error('An unexpected error occurred');
+    }
+  };
+
   const remove = async <T>(params: object = {}) => {
     try {
       const res = await instance.delete<T>(endpoint, {
@@ -61,7 +75,7 @@ export const getAxiosInstance = (endpoint: string) => {
     }
   };
 
-  return { get, post, patch, remove };
+  return { get, post, patch, patchWithoutToken, remove };
 };
 
 export default getAxiosInstance;
