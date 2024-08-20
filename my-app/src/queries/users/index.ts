@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { deleteUser, getUserlist } from 'api/user';
+import { deleteUser, getUserlist, patchUser } from 'api/user';
+import { AxiosError } from 'axios';
 import { QueryKeys } from 'constant';
 import { useUserStore } from 'store/useUserStore';
 
@@ -28,6 +29,21 @@ export const useDeleteUser = () => {
     mutationFn: deleteUser,
     onSuccess: () => {
       queryClient.invalidateQueries(KEY);
+    },
+  });
+};
+export const usePatchUser = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationKey: [QueryKeys.USER, 'userInfo'],
+    mutationFn: patchUser,
+    onSuccess: () => {
+      queryClient.invalidateQueries([QueryKeys.USER_DATA]);
+      alert('유저데이터 수정을 성공했습니다.');
+    },
+    onError: (error: AxiosError) => {
+      alert(error.message);
     },
   });
 };
