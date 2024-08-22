@@ -1,28 +1,32 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import styled from 'styled-components';
 import NavigationItem from './NavigationItem';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { getStyledColor } from 'utils';
+import { NavbarReadonly } from 'types';
 
-const HEIGHT = 56;
+const NavbarSize: NavbarReadonly = {
+  HEIGHT: 56,
+};
 
 const Navigation = () => {
   const navigate = useNavigate();
-  const [prevScrollPos, setPrevScrollPos] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
+  const prevScrollPosRef = useRef(0);
+
+  const handleScroll = useCallback(() => {
+    const currentScrollPos = window.scrollY;
+    const prevScrollPos = prevScrollPosRef.current;
+    setIsVisible(prevScrollPos > currentScrollPos || currentScrollPos < NavbarSize.HEIGHT * 2);
+    prevScrollPosRef.current = currentScrollPos;
+  }, []);
 
   useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollPos = window.pageYOffset;
-      setIsVisible(prevScrollPos > currentScrollPos || currentScrollPos < HEIGHT * 2);
-      setPrevScrollPos(currentScrollPos);
-    };
-
     window.addEventListener('scroll', handleScroll);
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [prevScrollPos]);
+  }, [handleScroll]);
 
   const logoClick = () => {
     navigate('/');
@@ -30,7 +34,7 @@ const Navigation = () => {
 
   return (
     <>
-      <NavigationWrapper $isVisible={isVisible} $height={HEIGHT}>
+      <NavigationWrapper $isVisible={isVisible} $height={NavbarSize.HEIGHT}>
         <Logo>
           <Title onClick={logoClick}>BOOKK</Title>
         </Logo>

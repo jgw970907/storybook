@@ -18,3 +18,7 @@ export type BannedWordList = {
   data: BannedWord[];
   total: number;
 };
+
+export type NavbarReadonly = {
+  readonly HEIGHT: number;
+};
