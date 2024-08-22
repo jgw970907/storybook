@@ -12,10 +12,9 @@ const DropdownObject: { [key: string]: string } = {
 interface DropdownProps {
   order: string;
   setOrder: React.Dispatch<React.SetStateAction<'DESC' | 'ASC' | 'CLICKS'>>;
-  status: string;
 }
 
-const Dropdown: React.FC<DropdownProps> = ({ order, setOrder, status }) => {
+const Dropdown: React.FC<DropdownProps> = ({ order, setOrder }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [selectedItem, setSelectedItem] = useState<string | null>(DropdownObject[order]);
   const ref = useRef<HTMLDivElement | null>(null);
