@@ -4,7 +4,6 @@ import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 
 import { PrivateRoutes } from 'pages';
 import { UserPage, LoginPage, SignupPage, MyPage } from 'pages/user';
-
 import { Loader } from 'components/shared';
 import { styled } from 'styled-components';
 import { useAuth } from 'hooks/useAuth';
@@ -16,6 +15,7 @@ const AdminMain = React.lazy(() => import('../src/pages/admin/AdminMain'));
 const AdminDashboard = React.lazy(() => import('../src/pages/admin/AdminDashboard'));
 const AdminManageUsers = React.lazy(() => import('../src/pages/admin/AdminManageUsers'));
 const AdminManageReviews = React.lazy(() => import('../src/pages/admin/AdminManageReviews'));
+const GptPage = React.lazy(() => import('../src/pages/user/GptPage'));
 
 function App() {
   const { loading } = useAuth();
@@ -30,6 +30,7 @@ function App() {
           <Routes>
             <Route element={<Navigation />}>
               <Route path="/" element={<UserPage />} />
+              <Route path="/gptpage" element={<GptPage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/signup" element={<SignupPage />} />
               <Route path="/mypage" element={<MyPage />} />
