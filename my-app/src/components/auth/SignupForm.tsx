@@ -1,7 +1,5 @@
 import { useState } from 'react';
-import styled from 'styled-components';
-import * as S from 'styles/LoginStyled';
-import { getStyledColor } from 'utils';
+import * as S from 'styles/auth/authStyled';
 import formatTime from 'utils/formatTime';
 import useEmailVerification from '../../hooks/useEmailVerification';
 
@@ -47,7 +45,7 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSubmit }) => {
 
   return (
     <S.Wrapper $gap={25}>
-      <EmailField>
+      <S.EmailField>
         <S.InputField>
           <S.Label>이메일 </S.Label>
           <S.Input
@@ -57,10 +55,10 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSubmit }) => {
             onChange={(e) => setEmail(e.target.value)}
           />
         </S.InputField>
-        <AuthButton onClick={handleSendToEmail}>인증하기</AuthButton>
-      </EmailField>
+        <S.AuthButton onClick={handleSendToEmail}>인증하기</S.AuthButton>
+      </S.EmailField>
       {isClickedVerification && (
-        <EmailField>
+        <S.EmailField>
           <S.InputField>
             <S.Label>인증번호</S.Label>
             <S.Input
@@ -73,11 +71,11 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSubmit }) => {
             />
             <div style={{ position: 'absolute', color: '#fff' }}>{formatTime(timer)}</div>
           </S.InputField>
-          <AuthButton onClick={handleVerifyCode}>확인</AuthButton>
-        </EmailField>
+          <S.AuthButton onClick={handleVerifyCode}>확인</S.AuthButton>
+        </S.EmailField>
       )}
-      {message && <Message error={false}>{message}</Message>}
-      {error && <Message error={true}>{error}</Message>}
+      {message && <S.Message error={false}>{message}</S.Message>}
+      {error && <S.Message error={true}>{error}</S.Message>}
       <S.InputField>
         <S.Label>비밀번호 </S.Label>
         <S.Input
@@ -123,40 +121,3 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSubmit }) => {
   );
 };
 export default SignupForm;
-const AuthButton = styled.button`
-  color: ${getStyledColor('primary', 200)};
-  border: 2px solid ${getStyledColor('primary', 500)};
-  border-radius: 6px;
-  background-color: inherit;
-  font-weight: 500;
-  margin-left: 30px;
-  margin-bottom: 6px;
-  white-space: nowrap;
-  height: 42px;
-  align-self: flex-end;
-  padding: 6px 12px;
-
-  transition:
-    color 0.2s ease,
-    background-color 0.2s ease;
-
-  &:hover {
-    background-color: ${getStyledColor('primary', 400)};
-    color: #fff;
-  }
-
-  &:active {
-    background-color: ${getStyledColor('primary', 700)};
-    color: #fff;
-    border-color: ${getStyledColor('primary', 700)};
-  }
-`;
-const EmailField = styled.div`
-  width: 100%;
-  display: flex;
-`;
-const Message = styled.p<{ error: boolean }>`
-  color: ${(props) => (props.error ? 'red' : 'green')};
-  font-size: 14px;
-  margin-top: 10px;
-`;
