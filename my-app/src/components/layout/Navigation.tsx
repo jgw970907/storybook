@@ -36,7 +36,7 @@ const Navigation = () => {
     <>
       <NavigationWrapper $isVisible={isVisible} $height={NavbarSize.HEIGHT}>
         <Logo>
-          <Title onClick={logoClick}>BOOKK</Title>
+          <Title onClick={logoClick}>StoryBook</Title>
         </Logo>
         <NavigationItem />
       </NavigationWrapper>

@@ -1,4 +1,4 @@
-import { useEffect, useState, ChangeEvent } from 'react';
+import { useEffect, useState, ChangeEvent, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUserStore } from 'store/useUserStore';
 import * as S from '../../styles/LoginStyled';
@@ -8,50 +8,44 @@ import Loader from 'components/shared/Loader';
 const LoginPage = () => {
   const [email, setEmail] = useState<string>('Admin@tester.com');
   const [password, setPassword] = useState<string>('@qwer1234');
-
-  const [isEmpty, setIsEmpty] = useState(true);
+  const [isEmpty, setIsEmpty] = useState(false);
   const { isLogin } = useUserStore();
 
   const navigate = useNavigate();
+  const { mutate, isLoading } = useLogin();
+
   useEffect(() => {
     if (isLogin) {
       navigate('/user');
     }
   }, [isLogin, navigate]);
 
-  const { mutate, isLoading } = useLogin();
-
   useEffect(() => {
     setIsEmpty(email.length === 0 || password.length === 0);
   }, [email, password]);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    switch (name) {
-      case 'email':
-        setEmail(value);
-        break;
-      case 'password':
-        setPassword(value);
-        break;
-      default:
-        break;
-    }
-  };
+    if (name === 'email') setEmail(value);
+    if (name === 'password') setPassword(value);
+  }, []);
 
-  const handleLogin = () => {
-    if (!email || !password) {
+  const handleLogin = useCallback(() => {
+    if (isEmpty) {
       alert('이메일과 비밀번호를 입력해주세요.');
       return;
     }
     mutate({ email, password });
-  };
+  }, [email, password, isEmpty, mutate]);
 
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (!isEmpty && e.key === 'Enter') {
-      handleLogin();
-    }
-  };
+  const handleKeyPress = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (!isEmpty && e.key === 'Enter') {
+        handleLogin();
+      }
+    },
+    [isEmpty, handleLogin],
+  );
 
   if (isLoading) {
     return (
@@ -98,7 +92,6 @@ const LoginPage = () => {
           <S.Divider>
             <div>OR</div>
           </S.Divider>
-
           <div>
             <S.RegistText>아직 회원이 아니신가요?</S.RegistText>
             <S.StyledLink to="/signup">회원가입</S.StyledLink>

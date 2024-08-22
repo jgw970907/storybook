@@ -3,7 +3,8 @@ import Navigation from './components/layout/Navigation';
 import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 
 import { PrivateRoutes } from 'pages';
-import { UserPage, LoginPage, SignupPage, MyPage } from 'pages/user';
+import { UserPage, MyPage } from 'pages/user';
+import { LoginPage, SignupPage } from 'pages/auth';
 import { Loader } from 'components/shared';
 import { styled } from 'styled-components';
 import { useAuth } from 'hooks/useAuth';

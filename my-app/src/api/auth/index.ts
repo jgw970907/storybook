@@ -45,3 +45,11 @@ export const getAccessWithApi = async () => {
   );
   return res?.accessToken;
 };
+export const sendToEmail = async (email: string) => {
+  const res = await Axios('/mail/send-code').post<{ message: string }>({ email });
+  return res;
+};
+export const sendVerificationCode = async (email: string, code: string) => {
+  const res = await Axios('/mail/verify-code').post<{ message: string }>({ email, code });
+  return res;
+};
