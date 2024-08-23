@@ -1,7 +1,7 @@
 import { CommentGetRes, CommentType } from 'types/commentTypes';
 import * as S from 'styles/CommentStyled';
 import * as P from 'styles/ProfileStyled';
-import { useDeleteComment, usePatchComment } from 'queries/comment';
+import { DeleteComment, PatchComment } from 'queries/comment';
 import { Button } from 'components/shared';
 import { getDateStr } from 'utils';
 import { useUserStore } from 'store/useUserStore';
@@ -16,8 +16,8 @@ interface CommentToggleProps {
 
 const CommentToggle = ({ comments, bookId, page, take, setPage }: CommentToggleProps) => {
   const { user } = useUserStore();
-  const { mutate: deleteComment, status: deleteStatus } = useDeleteComment(bookId);
-  const { mutate: patchComment, status: patchStatus } = usePatchComment(bookId);
+  const { mutate: deleteComment, status: deleteStatus } = DeleteComment(bookId);
+  const { mutate: patchComment, status: patchStatus } = PatchComment(bookId);
   const totalPages = Math.ceil((comments?.total || 0) / take);
   const handleChangeClick = (commentId: string, oldComment: string) => {
     const newComment = prompt('댓글을 수정하세요', oldComment);

@@ -2,7 +2,7 @@ import React, { useState, ChangeEvent } from 'react';
 import styled from 'styled-components';
 import Button from 'components/shared/Button';
 import { getStyledColor } from 'utils';
-import { usePostComment } from 'queries/comment';
+import { PostComment } from 'queries/comment';
 import { useUserStore } from 'store/useUserStore';
 
 interface CommentWriteProps {
@@ -10,11 +10,11 @@ interface CommentWriteProps {
 }
 
 const CommentWrite: React.FC<CommentWriteProps> = ({ bookId }) => {
-  if (bookId === undefined) return null;
-
   const { isLogin, user } = useUserStore();
   const [comment, setComment] = useState<string>('');
-  const { mutate, status } = usePostComment(bookId, user);
+  if (bookId === undefined) return null;
+  const { mutate, status } = PostComment(bookId, user);
+
   const onChangeComment = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setComment(e.target.value);
   };

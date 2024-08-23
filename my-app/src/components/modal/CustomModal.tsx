@@ -1,9 +1,9 @@
 import { Fragment, useRef, useState } from 'react';
 import * as S from 'styles/ModalStyled';
 import * as P from 'styles/ProfileStyled';
-import { useGetBook } from 'queries/book';
-import { useGetCommentsForBook } from 'queries/comment';
-import { useAddLike, useGetBookIsLike, useRemoveLike } from 'queries/like';
+import { GetBook } from 'queries/book';
+import { GetCommentsForBook } from 'queries/comment';
+import { AddLike, GetBookIsLike, RemoveLike } from 'queries/like';
 import { useNavigate } from 'react-router-dom';
 import useOnclickOutside from 'hooks/useOnclickOutside';
 import { FcNext, FcPrevious } from 'react-icons/fc';
@@ -28,27 +28,32 @@ export const CustomModal = ({
   showScroll: () => void;
 }) => {
   const ref = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [page, setPage] = useState(1);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const { user } = useUserStore();
   useOnclickOutside(ref, () => {
     setModalOpen(false);
     showScroll();
   });
-  if (!bookId) return <div>loading...</div>;
-  const { isLogin, user } = useUserStore();
 
-  const navigate = useNavigate();
-  const [isUpdating, setIsUpdating] = useState(false);
+  if (!bookId)
+    return (
+      <div>
+        <StyledLoader $size="100px" />
+      </div>
+    );
   const take = 5;
-  const [page, setPage] = useState(1);
   const imagesCount = book?.images.length;
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const { data: comments, status: commentStatus } = useGetCommentsForBook(bookId, {
+  const { data: comments, status: commentStatus } = GetCommentsForBook(bookId, {
     page,
     take,
   });
-  useGetBook(bookId);
-  const { data: bookIsLikeData, status } = useGetBookIsLike(bookId, user?.id || '');
-  const { mutate: addLike } = useAddLike({ bookId: bookId });
-  const { mutate: removeLike } = useRemoveLike({ bookId: bookId });
+  GetBook(bookId);
+  const { data: bookIsLikeData, status } = GetBookIsLike(bookId, user?.id || '');
+  const { mutate: addLike } = AddLike({ bookId: bookId });
+  const { mutate: removeLike } = RemoveLike({ bookId: bookId });
   function formatDate(timestamp: string) {
     const dateObject = new Date(timestamp);
     const year = dateObject.getFullYear();

@@ -1,6 +1,6 @@
 import { Loader } from 'components/shared';
 import useAdminManage from 'hooks/useAdminManage';
-import { useDeleteUser, useGetUserlist } from 'queries/users';
+import { DeleteUser, GetUserlist } from 'queries/users';
 import { Fragment } from 'react';
 import { FaAngleLeft, FaAngleRight } from 'react-icons/fa6';
 import { useUserStore } from 'store/useUserStore';
@@ -9,8 +9,8 @@ import * as S from 'styles/AdminStyledTemp';
 const AdminManageUsers = () => {
   const { user } = useUserStore();
   const userRole = user?.role;
-  const { data: users, status: usersStatus, isLoading } = useGetUserlist();
-  const { mutate } = useDeleteUser();
+  const { data: users, status: usersStatus, isLoading } = GetUserlist();
+  const { mutate } = DeleteUser();
   const { currentPage, handleNextPage } = useAdminManage();
 
   if (!users || isLoading) {

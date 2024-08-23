@@ -13,7 +13,7 @@ import { AxiosError } from 'axios';
 import { CommentGetRes } from 'types/commentTypes';
 import { UserType } from 'types/userTypes';
 
-export const useGetCommentsForBook = (bookId: string, params: { page: number; take: number }) => {
+export const GetCommentsForBook = (bookId: string, params: { page: number; take: number }) => {
   const key = [QueryKeys.USER, 'comments', bookId, params.page];
   const isBookIdValid = bookId !== null && bookId !== '';
   return useQuery({
@@ -24,7 +24,7 @@ export const useGetCommentsForBook = (bookId: string, params: { page: number; ta
   });
 };
 //admin페이지 댓글 불러오기
-export const useGetComments = (page: number, take = 10) => {
+export const GetComments = (page: number, take = 10) => {
   return useQuery({
     queryKey: [QueryKeys.ADMIN, 'commentAdMin', page, take],
     queryFn: () => getComments({ page, take }), // API 함수에 페이지와 take 파라미터를 전달
@@ -33,7 +33,7 @@ export const useGetComments = (page: number, take = 10) => {
   });
 };
 
-export const usePatchComment = (bookId: string) => {
+export const PatchComment = (bookId: string) => {
   const queryClient = useQueryClient();
   //주석..
   return useMutation({
@@ -56,7 +56,7 @@ export const usePatchComment = (bookId: string) => {
     },
   });
 };
-export const usePostComment = (bookId: string, user: UserType | null) => {
+export const PostComment = (bookId: string, user: UserType | null) => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -122,7 +122,7 @@ export const usePostComment = (bookId: string, user: UserType | null) => {
     },
   });
 };
-export const useDeleteCommentByRole = (userId: string) => {
+export const DeleteCommentByRole = (userId: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -137,7 +137,7 @@ export const useDeleteCommentByRole = (userId: string) => {
     },
   });
 };
-export const useDeleteComment = (bookId: string) => {
+export const DeleteComment = (bookId: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({

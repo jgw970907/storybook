@@ -13,16 +13,16 @@ import Loader from 'components/shared/Loader';
 import { QueryKeys } from 'constant';
 
 const AdminManage = () => {
-  const { useDeleteBook, useGetBooksAdmin } = bookQueries;
+  const { DeleteBook, GetBooksAdmin } = bookQueries;
   const [currentPage, setCurrentPage] = useState(1);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedBookId, setSelectedBookId] = useState<string | null>(null);
   const navigate = useNavigate();
 
   const { setSelectedBook } = useSelectedBook();
-  const { mutate: remove } = useDeleteBook(currentPage);
+  const { mutate: remove } = DeleteBook(currentPage);
 
-  const { data: books, status } = useGetBooksAdmin({
+  const { data: books, status } = GetBooksAdmin({
     take: 10,
     page: currentPage,
     order__createdAt: 'DESC',

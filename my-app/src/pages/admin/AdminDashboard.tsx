@@ -11,13 +11,13 @@ const AdminDashboard = () => {
   return (
     <S.Layout style={{ flexWrap: 'wrap' }}>
       <Wrap>
-        <S.Container onClick={() => navigate('books')}>
+        <S.Container onClick={() => navigate('users')}>
           <S.ContainerHeader>
             <S.ContainerTitle>총 관리자 수</S.ContainerTitle>
           </S.ContainerHeader>
           <Text>{count?.totalAdmins}개</Text>
         </S.Container>
-        <S.Container onClick={() => navigate('books')}>
+        <S.Container onClick={() => navigate('users')}>
           <S.ContainerHeader>
             <S.ContainerTitle>총 유저 수</S.ContainerTitle>
           </S.ContainerHeader>

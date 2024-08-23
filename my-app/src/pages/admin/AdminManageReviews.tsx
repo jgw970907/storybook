@@ -2,7 +2,7 @@ import { Fragment, useState } from 'react';
 import { FaAngleLeft, FaAngleRight } from 'react-icons/fa6';
 import useAdminManage from 'hooks/useAdminManage';
 import * as S from 'styles/AdminStyledTemp';
-import { useDeleteCommentByRole, useGetComments } from 'queries/comment';
+import { DeleteCommentByRole, GetComments } from 'queries/comment';
 import styled from 'styled-components';
 import { Loader } from 'components/shared';
 import { IoIosArrowDropupCircle, IoIosArrowDropdownCircle } from 'react-icons/io';
@@ -16,8 +16,8 @@ const AdminManageReviews = () => {
   const { currentPage, handleNextPage } = useAdminManage();
   const { user } = useUserStore();
   const userId = user?.id || '';
-  const { data, status, isLoading } = useGetComments(currentPage, take);
-  const { mutate: deleteCommentByRole } = useDeleteCommentByRole(userId);
+  const { data, status, isLoading } = GetComments(currentPage, take);
+  const { mutate: deleteCommentByRole } = DeleteCommentByRole(userId);
 
   const handleDelete = (commentId: string) => {
     if (userId) {

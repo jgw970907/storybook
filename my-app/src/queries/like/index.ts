@@ -5,7 +5,7 @@ import { BookisLikeRes, MyFavorites, MyFavoritesParams } from 'types/likeTypes';
 import { useUserStore } from 'store/useUserStore';
 import { getMyFavorites } from 'api/like';
 
-export const useGetBookIsLike = (bookId: string, userId: string) => {
+export const GetBookIsLike = (bookId: string, userId: string) => {
   const key = [QueryKeys.USER, 'likes', bookId];
   const { isLogin } = useUserStore.getState();
   const isUserIdValid = userId !== null && userId !== '';
@@ -18,7 +18,7 @@ export const useGetBookIsLike = (bookId: string, userId: string) => {
   });
 };
 
-export const useAddLike = ({ bookId }: { bookId: string }) => {
+export const AddLike = ({ bookId }: { bookId: string }) => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -62,7 +62,7 @@ export const useAddLike = ({ bookId }: { bookId: string }) => {
     },
   });
 };
-export const useRemoveLike = ({ bookId }: { bookId: string }) => {
+export const RemoveLike = ({ bookId }: { bookId: string }) => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -107,7 +107,7 @@ export const useRemoveLike = ({ bookId }: { bookId: string }) => {
   });
 };
 
-export const useGetBookLikes = (queries: MyFavoritesParams) => {
+export const GetBookLikes = (queries: MyFavoritesParams) => {
   const queryClient = useQueryClient();
   const { isLogin } = useUserStore.getState();
 

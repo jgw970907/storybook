@@ -1,4 +1,4 @@
-import { useState, useEffect, ChangeEvent as ReactChangeEvent, useRef } from 'react';
+import { useState, useEffect, ChangeEvent as ReactChangeEvent, useRef, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import * as S from 'styles/AdminStyledTemp';
 import { bookQueries } from 'queries';
@@ -10,20 +10,12 @@ import { styled } from 'styled-components';
 import { getDateStr } from 'utils';
 import { BOOK_CATEGORIES } from 'constant';
 
-const { usePatchBook, useDeleteBook, useGetBook } = bookQueries;
+const { PatchBook, DeleteBook, GetBook } = bookQueries;
 const AdminEditItem = () => {
   const { id } = useParams();
-  const paramId = id ? id : null;
-  if (paramId === null || paramId === '') {
-    return <div>유효하지 않은 ID입니다.</div>;
-  }
-
   const navigate = useNavigate();
-  if (!id) {
-    navigate(-1);
-  }
   const imageRef = useRef<ImageUploaderImperativeHandle>(null);
-  /** states */
+
   const [title, setTitle] = useState('');
   const [patchLoading, setPatchLoading] = useState(false);
   const [content, setContent] = useState('');
@@ -32,9 +24,11 @@ const AdminEditItem = () => {
   const [category, setCategory] = useState('');
   const [authorName, setAuthorName] = useState('');
   const [newImagePaths, setNewImagePaths] = useState<string[]>([]);
-  const { data: book, isLoading } = useGetBook(paramId);
-  const { mutate, status: patchStatus } = usePatchBook();
-  const { mutate: remove } = useDeleteBook();
+
+  const paramId = id ?? '';
+  const { data: book, isLoading } = GetBook(paramId);
+  const { mutate, status: patchStatus } = PatchBook();
+  const { mutate: remove } = DeleteBook();
 
   useEffect(() => {
     if (book) {
@@ -42,33 +36,34 @@ const AdminEditItem = () => {
       setContent(book.content || '');
       setCategory(book.category || '');
       setAuthorName(book.authorName || '');
-      setImageIds(book.images?.map((data) => data.id));
-      setImagesSrc(book.images?.map((data) => data.path));
+      setImageIds(book.images?.map((data) => data.id) ?? []);
+      setImagesSrc(book.images?.map((data) => data.path) ?? []);
     }
   }, [book]);
-  // id를 숫자로 변환
 
-  /** fallback */
-  if (isLoading || patchLoading) {
-    return <Loader />;
-  }
-  if (!book) {
-    return <div>책 정보를 찾을 수 없습니다.</div>;
-  }
+  useEffect(() => {
+    if (paramId === '') {
+      navigate(-1);
+    }
+  }, [paramId, navigate]);
 
-  const handleChangeTitle = (e: ReactChangeEvent<HTMLInputElement>) => {
+  const handleChangeTitle = useCallback((e: ReactChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
-  };
-  const handleChangeContent = (e: ReactChangeEvent<HTMLTextAreaElement>) => {
+  }, []);
+
+  const handleChangeContent = useCallback((e: ReactChangeEvent<HTMLTextAreaElement>) => {
     setContent(e.target.value);
-  };
-  const handleChangeCategory = (e: ReactChangeEvent<HTMLSelectElement>) => {
+  }, []);
+
+  const handleChangeCategory = useCallback((e: ReactChangeEvent<HTMLSelectElement>) => {
     setCategory(e.target.value);
-  };
-  const handleChangeAuthorName = (e: ReactChangeEvent<HTMLInputElement>) => {
+  }, []);
+
+  const handleChangeAuthorName = useCallback((e: ReactChangeEvent<HTMLInputElement>) => {
     setAuthorName(e.target.value);
-  };
-  const handleSetImage = async (fileData: File[] | null) => {
+  }, []);
+
+  const handleSetImage = useCallback(async (fileData: File[] | null) => {
     if (fileData && fileData.length > 0) {
       const result = await postImages(fileData);
       const uploadedImagePaths = result.imagePaths;
@@ -81,16 +76,16 @@ const AdminEditItem = () => {
     } else {
       console.log('이미지 업로드가 취소되었거나 이미지가 선택되지 않았습니다.');
     }
-  };
-  const handleDeleteImage = async (bookId: string, imageId: string) => {
+  }, []);
+  const handleDeleteImage = useCallback(async (bookId: string, imageId: string) => {
     try {
       const res = await deleteImage(bookId, imageId);
       alert(res?.message);
     } catch (error) {
       console.log(error);
     }
-  };
-  const handleFinalUpdate = async () => {
+  }, []);
+  const handleFinalUpdate = useCallback(async () => {
     try {
       setPatchLoading(true);
       if (newImagePaths.length > 0) {
@@ -102,23 +97,7 @@ const AdminEditItem = () => {
           authorName,
           images: imageIds,
         });
-        // if (addImageResponse && addImageResponse.images && addImageResponse.images.length > 0) {
-        //   const newImageIds = addImageResponse.images.map((data) => data.id);
-        //   updatedImageIds = [...newImageIds];
-        // }
       }
-
-      // // 업데이트된 images 배열로 책 정보
-      // if (updatedImageIds) {
-      //   await mutate({
-      //     id: paramId,
-      //     title,
-      //     content,
-      //     category,
-      //     authorName,
-      //     images: updatedImageIds,
-      //   });
-      // }
     } catch (error) {
       console.error('Error during the update process:', error);
       // 에러 발생 시 처리할 로직 추가 가능
@@ -128,13 +107,24 @@ const AdminEditItem = () => {
     }
 
     navigate(`/admin`);
-  };
+  }, [mutate, paramId, title, content, category, authorName, imageIds, newImagePaths, navigate]);
 
-  const handleRemove = () => {
+  const handleRemove = useCallback(() => {
     remove(paramId);
     navigate(`/admin`);
-  };
+  }, [remove, paramId, navigate]);
 
+  if (paramId === '') {
+    return <div>유효하지 않은 ID입니다.</div>;
+  }
+
+  if (isLoading || patchLoading) {
+    return <Loader />;
+  }
+
+  if (!book) {
+    return <div>책 정보를 찾을 수 없습니다.</div>;
+  }
   return (
     <Layout>
       <ContainerWrap>
