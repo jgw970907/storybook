@@ -1,8 +1,8 @@
+import AdminPagination from 'components/admin/AdminPagination';
 import { Loader } from 'components/shared';
-import useAdminManage from 'hooks/useAdminManage';
+import useAdminPagination from 'hooks/useAdminPagination';
 import { useDeleteUser, useGetUserlist } from 'queries/users';
 import { Fragment } from 'react';
-import { FaAngleLeft, FaAngleRight } from 'react-icons/fa6';
 import { useUserStore } from 'store/useUserStore';
 import * as S from 'styles/AdminStyledTemp';
 
@@ -11,7 +11,7 @@ const AdminManageUsers = () => {
   const userRole = user?.role;
   const { data: users, status: usersStatus, isLoading } = useGetUserlist();
   const { mutate } = useDeleteUser();
-  const { currentPage, handleNextPage } = useAdminManage();
+  const { currentPage, setCurrentPage, handleNextPage, handlePrevPage } = useAdminPagination();
 
   if (!users || isLoading) {
     return <Loader />;
@@ -76,25 +76,13 @@ const AdminManageUsers = () => {
             marginTop: '16px',
           }}
         >
-          <S.Pagination>
-            <S.PaginationButton disabled={currentPage === 1}>
-              <FaAngleLeft onClick={() => handleNextPage(currentPage - 1)} />
-            </S.PaginationButton>
-            <div>
-              {Array.from({ length: Math.ceil(users?.length / 10) }, (_, index) => (
-                <S.PaginationNumber
-                  key={index}
-                  onClick={() => handleNextPage(index + 1)}
-                  $isCurrentPage={currentPage === index + 1}
-                >
-                  {index + 1}
-                </S.PaginationNumber>
-              ))}
-            </div>
-            <S.PaginationButton disabled={currentPage >= Math.ceil(users.length) / 10}>
-              <FaAngleRight onClick={() => handleNextPage(currentPage + 1)} />
-            </S.PaginationButton>
-          </S.Pagination>
+          <AdminPagination
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+            total={users.length}
+            handleNextPage={handleNextPage}
+            handlePrevPage={handlePrevPage}
+          />
         </div>
       </S.Container>
     </S.Layout>

@@ -9,7 +9,7 @@ import { Loader } from 'components/shared';
 import { styled } from 'styled-components';
 import { useAuth } from 'hooks/useAuth';
 
-const AdminManage = React.lazy(() => import('../src/pages/admin/AdminManage'));
+const AdminManageBooks = React.lazy(() => import('../src/pages/admin/AdminManageBooks'));
 const AdminCreateItem = React.lazy(() => import('../src/pages/admin/AdminCreateItem'));
 const AdminEditItem = React.lazy(() => import('../src/pages/admin/AdminEditItem'));
 const AdminMain = React.lazy(() => import('../src/pages/admin/AdminMain'));
@@ -42,7 +42,7 @@ function App() {
               <Route path="/admin" element={<AdminMain />}>
                 <Route path="" element={<AdminDashboard />} />
                 <Route path="create" element={<AdminCreateItem />} />
-                <Route path="books" element={<AdminManage />} />
+                <Route path="books" element={<AdminManageBooks />} />
                 <Route path="books/detail/:id" element={<AdminEditItem />} />
                 <Route path="users" element={<AdminManageUsers />} />
                 <Route path="reviews" element={<AdminManageReviews />} />

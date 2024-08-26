@@ -1,6 +1,5 @@
-import { Fragment, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { FaAngleLeft, FaAngleRight } from 'react-icons/fa6';
+import { Fragment, useCallback, useEffect, useState } from 'react';
+
 import * as S from 'styles/AdminStyledTemp';
 import { bookQueries } from 'queries';
 import { useSelectedBook } from 'store/useSelectedBooks';
@@ -11,10 +10,12 @@ import { getNextBooks } from 'api/book';
 import { CustomModal } from 'components/modal/CustomModal';
 import Loader from 'components/shared/Loader';
 import { QueryKeys } from 'constant';
-import useAdminManage from 'hooks/useAdminManage';
+import useAdminPagination from 'hooks/useAdminPagination';
+import AdminPagination from 'components/admin/AdminPagination';
 const AdminManage = () => {
   const { useDeleteBook, useGetBooksAdmin } = bookQueries;
-  const { currentPage, setCurrentPage, handleNavigate } = useAdminManage();
+  const { currentPage, setCurrentPage, handleNavigate, handlePrevPage, handleNextPage } =
+    useAdminPagination();
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedBookId, setSelectedBookId] = useState<string | null>(null);
 
@@ -52,9 +53,9 @@ const AdminManage = () => {
   const showScroll = () => {
     document.body.style.overflow = 'unset';
   };
-  const findSelectedBook = () => {
+  const findSelectedBook = useCallback(() => {
     return books?.data.find((book) => book?.id === selectedBookId);
-  };
+  }, [books, selectedBookId]);
   const selectedBook = findSelectedBook();
   const handleClick = (id: string) => {
     setModalOpen(true);
@@ -74,16 +75,6 @@ const AdminManage = () => {
 
   const handleRemove = (id: string) => {
     remove(id);
-  };
-  const handlePageClick = (pageNum: number) => {
-    if (status !== 'success') return;
-    if (!books) return;
-
-    const totalPages = Math.ceil(books.total / 10);
-
-    if (pageNum < 1 || pageNum > totalPages) return;
-
-    setCurrentPage(pageNum);
   };
 
   if (status === 'loading' || !books) {
@@ -143,25 +134,13 @@ const AdminManage = () => {
             marginTop: '16px',
           }}
         >
-          <S.Pagination>
-            <S.PaginationButton disabled={currentPage === 1}>
-              <FaAngleLeft onClick={() => handlePageClick(currentPage - 1)} />
-            </S.PaginationButton>
-            <div>
-              {Array.from({ length: Math.ceil(books?.total / 10) }, (_, index) => (
-                <S.PaginationNumber
-                  key={index}
-                  onClick={() => handlePageClick(index + 1)}
-                  $isCurrentPage={currentPage === index + 1}
-                >
-                  {index + 1}
-                </S.PaginationNumber>
-              ))}
-            </div>
-            <S.PaginationButton disabled={currentPage >= Math.ceil(books.total / 10)}>
-              <FaAngleRight onClick={() => handlePageClick(currentPage + 1)} />
-            </S.PaginationButton>
-          </S.Pagination>
+          <AdminPagination
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+            total={books.total}
+            handlePrevPage={handlePrevPage}
+            handleNextPage={handleNextPage}
+          />
         </div>
       </S.Container>
     </S.Layout>

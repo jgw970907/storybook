@@ -1,6 +1,6 @@
 import { Fragment, useState } from 'react';
 import { FaAngleLeft, FaAngleRight } from 'react-icons/fa6';
-import useAdminManage from 'hooks/useAdminManage';
+import useAdminPagination from 'hooks/useAdminPagination';
 import * as S from 'styles/AdminStyledTemp';
 import { DeleteCommentByRole, GetComments } from 'queries/comment';
 import styled from 'styled-components';
@@ -10,10 +10,11 @@ import { getDateStr } from 'utils';
 import { CommentsType } from 'types/commentTypes';
 import AdminManageBannedWords from 'components/admin/AdminManageBannedWords';
 import { useUserStore } from 'store/useUserStore';
+import AdminPagination from 'components/admin/AdminPagination';
 const take = 10;
 
 const AdminManageReviews = () => {
-  const { currentPage, handleNextPage } = useAdminManage();
+  const { currentPage, setCurrentPage, handleNextPage, handlePrevPage } = useAdminPagination();
   const { user } = useUserStore();
   const userId = user?.id || '';
   const { data, status, isLoading } = GetComments(currentPage, take);
@@ -100,25 +101,13 @@ const AdminManageReviews = () => {
           </S.Table>
           <div style={{ display: 'flex', justifyContent: 'center', marginTop: '16px' }}>
             {totalComments ? (
-              <S.Pagination>
-                <S.PaginationButton disabled={currentPage === 1}>
-                  <FaAngleLeft onClick={() => handleNextPage(currentPage - 1)} />
-                </S.PaginationButton>
-                <div>
-                  {Array.from({ length: Math.ceil(totalComments / take) }, (_, index) => (
-                    <S.PaginationNumber
-                      key={index}
-                      onClick={() => handleNextPage(index + 1)}
-                      $isCurrentPage={currentPage === index + 1}
-                    >
-                      {index + 1}
-                    </S.PaginationNumber>
-                  ))}
-                </div>
-                <S.PaginationButton disabled={currentPage >= Math.ceil(totalComments / take)}>
-                  <FaAngleRight onClick={() => handleNextPage(currentPage + 1)} />
-                </S.PaginationButton>
-              </S.Pagination>
+              <AdminPagination
+                currentPage={currentPage}
+                setCurrentPage={setCurrentPage}
+                total={totalComments}
+                handleNextPage={handleNextPage}
+                handlePrevPage={handlePrevPage}
+              />
             ) : (
               <>
                 <div>댓글이 없습니다.</div>
