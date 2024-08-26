@@ -36,7 +36,7 @@ export const useInfinityScroll = (order: 'DESC' | 'ASC' | 'CLICKS', search: stri
   });
 };
 
-export const GetBooks = (queries?: BooklistParams) => {
+export const useGetBooks = (queries?: BooklistParams) => {
   const key = [QueryKeys.USER, 'books'];
   if (queries?.page) key.push(queries.page.toString());
 
@@ -49,7 +49,7 @@ export const GetBooks = (queries?: BooklistParams) => {
   });
 };
 
-export const GetBooksAdmin = (queries: BooklistParams) => {
+export const useGetBooksAdmin = (queries: BooklistParams) => {
   const key = [QueryKeys.ADMIN, 'books'];
 
   if (queries?.page) key.push(queries.page.toString());
@@ -62,7 +62,7 @@ export const GetBooksAdmin = (queries: BooklistParams) => {
   });
 };
 
-export const GetBook = (id: string) => {
+export const useGetBook = (id: string) => {
   const key = [QueryKeys.ADMIN, 'books', id];
 
   return useQuery({
@@ -72,7 +72,7 @@ export const GetBook = (id: string) => {
   });
 };
 
-export const PostBook = () => {
+export const usePostBook = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -89,7 +89,7 @@ export const PostBook = () => {
   });
 };
 
-export const PatchBook = () => {
+export const usePatchBook = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -105,7 +105,7 @@ export const PatchBook = () => {
     },
   });
 };
-export const DeleteBook = (page?: number) => {
+export const useDeleteBook = (page?: number) => {
   const queryClient = useQueryClient();
 
   return useMutation({

@@ -10,7 +10,7 @@ import { styled } from 'styled-components';
 import { getDateStr } from 'utils';
 import { BOOK_CATEGORIES } from 'constant';
 
-const { PatchBook, DeleteBook, GetBook } = bookQueries;
+const { usePatchBook, useDeleteBook, useGetBook } = bookQueries;
 const AdminEditItem = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -26,9 +26,9 @@ const AdminEditItem = () => {
   const [newImagePaths, setNewImagePaths] = useState<string[]>([]);
 
   const paramId = id ?? '';
-  const { data: book, isLoading } = GetBook(paramId);
-  const { mutate, status: patchStatus } = PatchBook();
-  const { mutate: remove } = DeleteBook();
+  const { data: book, isLoading } = useGetBook(paramId);
+  const { mutate, status: patchStatus } = usePatchBook();
+  const { mutate: remove } = useDeleteBook();
 
   useEffect(() => {
     if (book) {

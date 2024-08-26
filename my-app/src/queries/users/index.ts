@@ -6,7 +6,7 @@ import { useUserStore } from 'store/useUserStore';
 
 const KEY = [QueryKeys.USER, 'userlist'];
 
-export const GetUserlist = () => {
+export const useGetUserlist = () => {
   const { isLogin } = useUserStore.getState();
 
   return useQuery({
@@ -21,7 +21,7 @@ export const GetUserlist = () => {
   });
 };
 
-export const DeleteUser = () => {
+export const useDeleteUser = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -32,7 +32,7 @@ export const DeleteUser = () => {
     },
   });
 };
-export const PatchUser = () => {
+export const usePatchUser = () => {
   const queryClient = useQueryClient();
 
   return useMutation({

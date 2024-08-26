@@ -11,18 +11,17 @@ import { getNextBooks } from 'api/book';
 import { CustomModal } from 'components/modal/CustomModal';
 import Loader from 'components/shared/Loader';
 import { QueryKeys } from 'constant';
-
+import useAdminManage from 'hooks/useAdminManage';
 const AdminManage = () => {
-  const { DeleteBook, GetBooksAdmin } = bookQueries;
-  const [currentPage, setCurrentPage] = useState(1);
+  const { useDeleteBook, useGetBooksAdmin } = bookQueries;
+  const { currentPage, setCurrentPage, handleNavigate } = useAdminManage();
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedBookId, setSelectedBookId] = useState<string | null>(null);
-  const navigate = useNavigate();
 
   const { setSelectedBook } = useSelectedBook();
-  const { mutate: remove } = DeleteBook(currentPage);
+  const { mutate: remove } = useDeleteBook(currentPage);
 
-  const { data: books, status } = GetBooksAdmin({
+  const { data: books, status } = useGetBooksAdmin({
     take: 10,
     page: currentPage,
     order__createdAt: 'DESC',
@@ -30,10 +29,10 @@ const AdminManage = () => {
   });
 
   const queryClient = useQueryClient();
-  const key = [QueryKeys.ADMIN, 'books', (currentPage + 1).toString()];
 
   useEffect(() => {
     if (currentPage) {
+      const key = [QueryKeys.ADMIN, 'books', (currentPage + 1).toString()];
       queryClient.prefetchQuery({
         queryKey: key,
         queryFn: () =>
@@ -45,7 +44,7 @@ const AdminManage = () => {
           }),
       });
     }
-  }, [currentPage]);
+  }, [currentPage, queryClient]);
 
   const unshowScroll = () => {
     document.body.style.overflow = 'hidden';
@@ -70,7 +69,7 @@ const AdminManage = () => {
     const { images, title, content, authorName, category } = selectedBook;
 
     setSelectedBook({ title, content, images, authorName, category });
-    navigate(`/admin/books/detail/${id}`);
+    handleNavigate('BookTakelistRes', id);
   };
 
   const handleRemove = (id: string) => {

@@ -24,18 +24,18 @@ const MyPage = () => {
   const { user } = useUserStore();
 
   const userId: string = user?.id || '';
-  const { PatchUser } = userQueries;
-  const { GetBookLikes } = likeQueries;
+  const { usePatchUser } = userQueries;
+  const { useGetBookLikes } = likeQueries;
   const take = 4;
   const imageRef = useRef<ImageUploaderImperativeHandle>(null);
   const queryClient = useQueryClient();
-  const { mutate, error } = PatchUser();
+  const { mutate, error } = usePatchUser();
 
   const {
     data: LikesBooks,
     status,
     isSuccess,
-  } = GetBookLikes({ userId: userId, take: take, page: currentPage });
+  } = useGetBookLikes({ userId: userId, take: take, page: currentPage });
 
   const handlePageClick = (pageNum: number) => {
     if (status !== 'success') return;

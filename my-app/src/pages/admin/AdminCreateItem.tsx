@@ -1,13 +1,13 @@
 import { ChangeEvent as ReactChangeEvent, useEffect, useRef, useState } from 'react';
 import * as S from 'styles/AdminStyledTemp';
-import { PostBook } from 'queries/book';
+import { usePostBook } from 'queries/book';
 import useBookInfo from 'hooks/useBookInfo';
 import ImageUploader, { ImageUploaderImperativeHandle } from 'components/shared/ImageUploader';
 import Button from 'components/shared/Button';
 import { FaBook } from 'react-icons/fa6';
 import { BOOK_CATEGORIES } from 'constant';
 const AdminCreateItem = () => {
-  const { mutate, status } = PostBook();
+  const { mutate, status } = usePostBook();
   const { bookInfo, setBookInfo, resetBookInfo } = useBookInfo();
   const [isInvalid, setIsInvalid] = useState(true);
 

@@ -14,16 +14,19 @@ const useAdminManage = () => {
     setCurrentPage(pageNum);
   }, []);
 
-  const handleNavigate = useCallback((type: keyof AllowDataType, id: string | string) => {
-    switch (type) {
-      case 'BookTakelistRes':
-        navigate(`/admin/books/detail/${id}`);
-        break;
+  const handleNavigate = useCallback(
+    (type: keyof AllowDataType, id: string) => {
+      switch (type) {
+        case 'BookTakelistRes':
+          navigate(`/admin/books/detail/${id}`);
+          break;
 
-      default:
-        break;
-    }
-  }, []);
+        default:
+          break;
+      }
+    },
+    [navigate],
+  );
 
   return { currentPage, setCurrentPage, handleNextPage, handleNavigate };
 };

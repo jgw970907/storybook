@@ -1,9 +1,8 @@
 import { Fragment, useRef, useState } from 'react';
 import * as S from 'styles/ModalStyled';
 import * as P from 'styles/ProfileStyled';
-import { GetBook } from 'queries/book';
 import { GetCommentsForBook } from 'queries/comment';
-import { AddLike, GetBookIsLike, RemoveLike } from 'queries/like';
+import { useAddLike, useGetBookIsLike as getBookIsLike, useRemoveLike } from 'queries/like';
 import { useNavigate } from 'react-router-dom';
 import useOnclickOutside from 'hooks/useOnclickOutside';
 import { FcNext, FcPrevious } from 'react-icons/fc';
@@ -16,6 +15,7 @@ import { FaHeart } from 'react-icons/fa';
 import NotFoundComment from 'components/shared/NotFoundComment';
 import { Loader } from 'components/shared';
 import { StyledLoader } from 'styles/LoginStyled';
+
 export const CustomModal = ({
   bookId,
   book,
@@ -33,27 +33,27 @@ export const CustomModal = ({
   const [page, setPage] = useState(1);
   const [currentIndex, setCurrentIndex] = useState(0);
   const { user } = useUserStore();
+  const take = 5;
+
   useOnclickOutside(ref, () => {
     setModalOpen(false);
     showScroll();
   });
 
-  if (!bookId)
-    return (
-      <div>
-        <StyledLoader $size="100px" />
-      </div>
-    );
-  const take = 5;
+  const { data: comments, status: commentStatus } = bookId
+    ? GetCommentsForBook(bookId, { page, take })
+    : { data: undefined, status: 'loading' };
+
+  // const { data: bookData } = bookId ? getBook(bookId) : { data: undefined };
+
+  const { data: bookIsLikeData, status } =
+    bookId && user?.id ? getBookIsLike(bookId, user.id) : { data: undefined, status: 'loading' };
+
+  const { mutate: addLike } = useAddLike({ bookId: bookId || '' });
+  const { mutate: removeLike } = useRemoveLike({ bookId: bookId || '' });
+
   const imagesCount = book?.images.length;
-  const { data: comments, status: commentStatus } = GetCommentsForBook(bookId, {
-    page,
-    take,
-  });
-  GetBook(bookId);
-  const { data: bookIsLikeData, status } = GetBookIsLike(bookId, user?.id || '');
-  const { mutate: addLike } = AddLike({ bookId: bookId });
-  const { mutate: removeLike } = RemoveLike({ bookId: bookId });
+
   function formatDate(timestamp: string) {
     const dateObject = new Date(timestamp);
     const year = dateObject.getFullYear();
@@ -62,6 +62,7 @@ export const CustomModal = ({
     const formattedDate = `${year}${month}${day}`;
     return formattedDate;
   }
+
   const handlePrevClick = () => {
     if (imagesCount) {
       if (currentIndex > 0) {
@@ -71,6 +72,7 @@ export const CustomModal = ({
       }
     }
   };
+
   const handleNextClick = () => {
     if (imagesCount) {
       if (currentIndex < imagesCount - 1) {
@@ -80,14 +82,16 @@ export const CustomModal = ({
       }
     }
   };
+
   const handleOutsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
       setModalOpen(false);
       showScroll();
     }
   };
+
   const toggleLike = () => {
-    if (!user?.id) {
+    if (!user?.id || !bookId) {
       alert('사용자 정보를 불러오지 못했습니다. 다시 로그인해주세요.');
       setModalOpen(false);
       showScroll();
@@ -117,7 +121,15 @@ export const CustomModal = ({
     }
   };
 
+  if (!bookId)
+    return (
+      <div>
+        <StyledLoader $size="100px" />
+      </div>
+    );
+
   if (status === 'error') return <div>error...</div>;
+
   return (
     <S.Presentation>
       <S.WrapperModal onClick={handleOutsideClick}>
