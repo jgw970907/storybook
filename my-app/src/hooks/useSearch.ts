@@ -3,14 +3,25 @@ import { useSearchStore } from 'store/useSearchStore';
 
 export const useSearch = () => {
   const [searchState, setSearchState] = useState('');
-  const { search, setSearch } = useSearchStore();
+  const {
+    searchTitle,
+    setSearchTitle,
+    searchAuthorName,
+    setSearchAuthorName,
+    category,
+    setCategory,
+  } = useSearchStore();
   const [order, setOrder] = useState<'DESC' | 'ASC' | 'CLICKS'>('DESC');
 
   return {
     searchState,
     setSearchState,
-    search,
-    setSearch,
+    searchTitle,
+    setSearchTitle,
+    searchAuthorName,
+    setSearchAuthorName,
+    category,
+    setCategory,
     order,
     setOrder,
   };
