@@ -3,11 +3,12 @@ import Navigation from './components/layout/Navigation';
 import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 
 import { PrivateRoutes } from 'pages';
-import { UserPage, MyPage } from 'pages/user';
+import { ReviewPage, MyPage } from 'pages/user';
 import { LoginPage, SignupPage } from 'pages/auth';
 import { Loader } from 'components/shared';
 import { styled } from 'styled-components';
 import { useAuth } from 'hooks/useAuth';
+import { LoaderScreen } from 'styles/LoaderWrapper';
 
 const AdminManageBooks = React.lazy(() => import('../src/pages/admin/AdminManageBooks'));
 const AdminCreateItem = React.lazy(() => import('../src/pages/admin/AdminCreateItem'));
@@ -17,24 +18,41 @@ const AdminDashboard = React.lazy(() => import('../src/pages/admin/AdminDashboar
 const AdminManageUsers = React.lazy(() => import('../src/pages/admin/AdminManageUsers'));
 const AdminManageReviews = React.lazy(() => import('../src/pages/admin/AdminManageReviews'));
 const GptPage = React.lazy(() => import('../src/pages/user/GptPage'));
-
+const GptPromptPage = React.lazy(() => import('../src/pages/user/GptPromptPage'));
+const GptStoryDetail = React.lazy(() => import('../src/pages/user/GptStoryDetail'));
+const GptUserPage = React.lazy(() => import('../src/pages/user/GptUserPage'));
 function App() {
   const { loading } = useAuth();
 
   if (loading) {
-    return <Loader />;
+    return (
+      <LoaderScreen>
+        <Loader />
+      </LoaderScreen>
+    );
   }
   return (
     <AppWrapper>
-      <Suspense fallback={<Loader />}>
+      <Suspense
+        fallback={
+          <LoaderScreen>
+            <Loader />
+          </LoaderScreen>
+        }
+      >
         <BrowserRouter>
           <Routes>
             <Route element={<Navigation />}>
-              <Route path="/" element={<UserPage />} />
+              <Route path="/" element={<GptPage />} />
+              <Route path="/review" element={<ReviewPage />} />
               <Route path="/gptpage" element={<GptPage />} />
+              <Route path="/gptpage/prompt/:storyId" element={<GptPromptPage />} />
+              <Route path="/gptpage/detail/:storyId" element={<GptStoryDetail />} />
+              <Route path="/gptpage/user/:userId" element={<GptUserPage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/signup" element={<SignupPage />} />
               <Route path="/mypage" element={<MyPage />} />
+
               <Route path="*" element={<Navigate to="/" />} />
             </Route>
 
