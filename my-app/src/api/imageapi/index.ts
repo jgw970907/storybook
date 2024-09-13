@@ -1,8 +1,8 @@
 import { getAxiosInstance as Axios } from '../axios/index';
 import { BookAddImageRes } from 'types/imageTypes';
 
-export const deleteImage = async (bookId: string, imageId: string) => {
-  const res = await Axios(`/fb/image/temp/${bookId}/${imageId}`).remove<{ message: string }>();
+export const deleteImage = async (type: string, id: string, imageId: string) => {
+  const res = await Axios(`/fb/image/temp/${type}/${id}/${imageId}`).remove<{ message: string }>();
   return res;
 };
 //dd
