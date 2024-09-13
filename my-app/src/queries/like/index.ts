@@ -116,15 +116,13 @@ export const useGetBookLikes = (queries: MyFavoritesParams) => {
   return useQuery({
     queryKey: key,
     queryFn: () => getMyFavorites(queries),
-    enabled: isLogin && !!queries.userId,
+    enabled: isLogin,
     onSuccess: async (res: MyFavorites) => {
       if (res.totalPages * queries.take <= queries.take * queries.page) return;
 
       await queryClient.prefetchQuery({
         queryKey: [QueryKeys.USER, 'likes', (queries.page + 1).toString()],
         queryFn: () => getMyFavorites({ ...queries, page: queries.page + 1 }),
-        staleTime: 1000 * 60 * 3,
-        cacheTime: 1000 * 60 * 5,
       });
     },
   });

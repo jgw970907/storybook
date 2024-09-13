@@ -3,19 +3,28 @@ import { getBooks, postBooks, patchBook, deleteBook, getBook } from 'api/book';
 import { AxiosError } from 'axios';
 import { QueryKeys } from 'constant';
 import { BookTakelistRes, BooklistParams } from 'types/bookTypes';
-
-export const useInfinityScroll = (order: 'DESC' | 'ASC' | 'CLICKS', search: string) => {
-  return useInfiniteQuery({
-    queryKey: [QueryKeys.USER, 'books', 'infinity', order, search],
+export const useInfinityScroll = (
+  order: 'DESC' | 'ASC' | 'CLICKS',
+  searchTitle?: string,
+  searchAuthorName?: string,
+  genre?: string | null,
+) => {
+  return useInfiniteQuery<BookTakelistRes>({
+    queryKey: [QueryKeys.USER, 'books', 'infinity', order, searchTitle, searchAuthorName, genre],
     queryFn: ({ pageParam = 1 }) => {
       const queryParameters: BooklistParams = {
         page: pageParam,
         take: 10,
       };
-      if (search) {
-        queryParameters.where__title__i_like = search;
+      if (searchTitle) {
+        queryParameters.where__title__i_like = searchTitle;
       }
-
+      if (searchAuthorName) {
+        queryParameters.where__author__i_like = searchAuthorName;
+      }
+      if (genre) {
+        queryParameters.where__category = genre;
+      }
       // Set order parameters based on the order value
       if (order === 'CLICKS') {
         queryParameters.order__clicks = 'DESC';
@@ -44,7 +53,7 @@ export const useGetBooks = (queries?: BooklistParams) => {
     queryKey: key,
     queryFn: () => getBooks(queries),
     keepPreviousData: true,
-    staleTime: 1000 * 60 * 3,
+    staleTime: 1000 * 60 * 5,
     cacheTime: 1000 * 60 * 5,
   });
 };
@@ -57,8 +66,6 @@ export const useGetBooksAdmin = (queries: BooklistParams) => {
   return useQuery({
     queryKey: key,
     queryFn: () => getBooks(queries),
-    staleTime: 1000 * 60 * 3,
-    cacheTime: 1000 * 60 * 5,
   });
 };
 
