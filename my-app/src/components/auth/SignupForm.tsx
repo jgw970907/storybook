@@ -107,7 +107,7 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSubmit }) => {
         />
       </S.InputField>
       <S.InputField>
-        <S.Label>닉네임 </S.Label>
+        <S.Label>활동명 </S.Label>
         <S.Input
           type="text"
           placeholder="Nick Name"
