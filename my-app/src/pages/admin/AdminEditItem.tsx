@@ -9,6 +9,7 @@ import { Button } from 'components/shared';
 import { styled } from 'styled-components';
 import { getDateStr } from 'utils';
 import { BOOK_CATEGORIES } from 'constant';
+import { getBook } from 'api/book';
 
 const { usePatchBook, useDeleteBook, useGetBook } = bookQueries;
 const AdminEditItem = () => {
@@ -17,6 +18,9 @@ const AdminEditItem = () => {
   const imageRef = useRef<ImageUploaderImperativeHandle>(null);
 
   const [title, setTitle] = useState('');
+  const [username, setUsername] = useState('');
+  const [clicks, setClicks] = useState(0);
+  const [createdAt, setCreatedAt] = useState('');
   const [patchLoading, setPatchLoading] = useState(false);
   const [content, setContent] = useState('');
   const [imagesSrc, setImagesSrc] = useState<string[]>([]);
@@ -24,22 +28,43 @@ const AdminEditItem = () => {
   const [category, setCategory] = useState('');
   const [authorName, setAuthorName] = useState('');
   const [newImagePaths, setNewImagePaths] = useState<string[]>([]);
-
+  const [isLoading, setIsLoading] = useState(false);
   const paramId = id ?? '';
-  const { data: book, isLoading } = useGetBook(paramId);
+  // const { data: book, isLoading } = useGetBook(paramId);
   const { mutate, status: patchStatus } = usePatchBook();
   const { mutate: remove } = useDeleteBook();
 
   useEffect(() => {
-    if (book) {
-      setTitle(book.title || '');
-      setContent(book.content || '');
-      setCategory(book.category || '');
-      setAuthorName(book.authorName || '');
-      setImageIds(book.images?.map((data) => data.id) ?? []);
-      setImagesSrc(book.images?.map((data) => data.path) ?? []);
-    }
-  }, [book]);
+    // if (book) {
+    //   setTitle(book.title || '');
+    //   setContent(book.content || '');
+    //   setCategory(book.category || '');
+    //   setAuthorName(book.authorName || '');
+    //   setImageIds(book.images?.map((data) => data.id) ?? []);
+    //   setImagesSrc(book.images?.map((data) => data.path) ?? []);
+    // }
+    const fetchData = async () => {
+      try {
+        const book = await getBook(paramId);
+        if (book) {
+          setTitle(book.title || '');
+          setContent(book.content || '');
+          setCategory(book.category || '');
+          setAuthorName(book.authorName || '');
+          setImageIds(book.images?.map((data) => data.id) ?? []);
+          setImagesSrc(book.images?.map((data) => data.path) ?? []);
+          setCreatedAt(book.createdAt);
+          setUsername(book.user.name);
+          setClicks(book.clicks);
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchData();
+  }, [paramId]);
 
   useEffect(() => {
     if (paramId === '') {
@@ -77,9 +102,9 @@ const AdminEditItem = () => {
       console.log('이미지 업로드가 취소되었거나 이미지가 선택되지 않았습니다.');
     }
   }, []);
-  const handleDeleteImage = useCallback(async (bookId: string, imageId: string) => {
+  const handleDeleteImage = useCallback(async (type: string, bookId: string, imageId: string) => {
     try {
-      const res = await deleteImage(bookId, imageId);
+      const res = await deleteImage(type, bookId, imageId);
       alert(res?.message);
     } catch (error) {
       console.log(error);
@@ -122,31 +147,28 @@ const AdminEditItem = () => {
     return <Loader />;
   }
 
-  if (!book) {
-    return <div>책 정보를 찾을 수 없습니다.</div>;
-  }
   return (
     <Layout>
       <ContainerWrap>
         <S.SubContainer style={{ gridArea: 'data' }}>
           <Text>생성일</Text>
-          <Data>{getDateStr(book.createdAt)}</Data>
+          <Data>{getDateStr(createdAt)}</Data>
         </S.SubContainer>
         <S.SubContainer style={{ gridArea: 'data' }}>
           <Text>생성자</Text>
-          <Data>{book.user.name}</Data>
+          <Data>{username}</Data>
         </S.SubContainer>
         <S.SubContainer style={{ gridArea: 'data' }}>
           <Text>조회수</Text>
-          <Data>{book.clicks}</Data>
+          <Data>{clicks}</Data>
         </S.SubContainer>
         <S.SubContainer style={{ gridArea: 'data' }}>
           <Text>작가이름</Text>
-          <Data>{book.authorName}</Data>
+          <Data>{authorName}</Data>
         </S.SubContainer>
         <S.SubContainer style={{ gridArea: 'data' }}>
           <Text>카테고리</Text>
-          <Data>{book.category}</Data>
+          <Data>{category}</Data>
         </S.SubContainer>
       </ContainerWrap>
 
@@ -196,7 +218,7 @@ const AdminEditItem = () => {
               ref={imageRef}
               imageIds={imageIds}
               imagesSrc={imagesSrc}
-              bookId={book.id}
+              bookId={id}
               handleDeleteImage={handleDeleteImage}
               onChange={(fileData) => handleSetImage(fileData || [])}
             />

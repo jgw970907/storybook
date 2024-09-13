@@ -97,10 +97,17 @@ const AdminCreateItem = () => {
           </S.InputField>
           <S.InputField $marginTop={20}>
             <S.Label>카테고리</S.Label>
-            <S.Select name="category" value={bookInfo.category} onChange={handleChange}>
-              <S.Option value="">카테고리</S.Option>
+            <S.Select
+              size={'LARGE'}
+              name="category"
+              value={bookInfo.category}
+              onChange={handleChange}
+            >
+              <S.Option size={'LARGE'} value="">
+                카테고리
+              </S.Option>
               {BOOK_CATEGORIES.map((category) => (
-                <S.Option key={category} value={category}>
+                <S.Option size={'LARGE'} key={category} value={category}>
                   {category}
                 </S.Option>
               ))}
