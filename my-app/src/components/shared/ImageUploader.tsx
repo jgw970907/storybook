@@ -6,7 +6,9 @@ import ImagePreview from './ImagePreview';
 import { pixelToRem, getStyledColor } from 'utils';
 
 export type ImageUploaderImperativeHandle = {
-  handleCancel: () => void;
+  handleCancel: (index?: number) => void;
+  setPath: (path: string) => void;
+  setFileData: (data: { name: string; type: string; size: string }[]) => void;
 };
 
 interface Props {
@@ -14,11 +16,12 @@ interface Props {
   imageIds?: string[];
   imagesSrc?: string[];
   bookId?: string;
-  handleDeleteImage?: (bookId: string, imageId: string) => Promise<void>;
+  storyId?: string;
+  handleDeleteImage?: (type: 'book' | 'story', id: string, imageId: string) => Promise<void>;
 }
 
 const ImageUploader = (
-  { onChange, imageIds = [], bookId = '', imagesSrc = [], handleDeleteImage }: Props,
+  { onChange, imageIds = [], bookId = '', storyId = '', imagesSrc = [], handleDeleteImage }: Props,
   forwardedRef?: React.ForwardedRef<ImageUploaderImperativeHandle>,
 ) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -59,6 +62,12 @@ const ImageUploader = (
   };
   useImperativeHandle(forwardedRef, () => ({
     handleCancel: () => handleCancel(),
+    setPath: (path: string) => {
+      setPreviewUrls([path]);
+    },
+    setFileData: (data: { name: string; type: string; size: string }[]) => {
+      setFileData(data);
+    },
   }));
 
   // input data onChange
@@ -99,9 +108,9 @@ const ImageUploader = (
     setFileData((prevData) => [...(prevData || []), ...newFileData].slice(0, 4));
   };
 
-  const handleDelete = async (bookId: string, imageId: string) => {
-    if (handleDeleteImage && bookId) {
-      await handleDeleteImage(bookId, imageId);
+  const handleDelete = async (type: 'book' | 'story', id: string, imageId: string) => {
+    if (handleDeleteImage && id) {
+      await handleDeleteImage(type, id, imageId);
       // 이미지 삭제 후 상태 업데이트
       setPreviewUrls((prev) => prev.filter((url, index) => imageIds[index] !== imageId));
       setFileData((prev) => prev?.filter((data, index) => imageIds[index] !== imageId) || null);
@@ -134,20 +143,22 @@ const ImageUploader = (
             return (
               <ImageWrapper key={index}>
                 <img src={image} />
+                {fileData && (
+                  <ImageData>
+                    <div>Name: {fileData[index]?.name}</div>
+                    <div>Type: {fileData[index]?.type}</div>
+                    <div>Size: {fileData[index]?.size}</div>
+                  </ImageData>
+                )}
                 <DeleteButton
                   onClick={() => {
-                    imagesSrc[0] ? handleDelete(bookId, imageIds[index]) : handleCancel(index);
+                    imagesSrc[0]
+                      ? handleDelete(bookId ? 'book' : 'story', bookId || storyId, imageIds[index])
+                      : handleCancel(index);
                   }}
                 >
                   <FaTrashAlt />
                 </DeleteButton>
-                {fileData && (
-                  <ImageData>
-                    <div>Name: {fileData[index].name}</div>
-                    <div>Type: {fileData[index].type}</div>
-                    <div>Size: {fileData[index].size}</div>
-                  </ImageData>
-                )}
               </ImageWrapper>
             );
           })}
