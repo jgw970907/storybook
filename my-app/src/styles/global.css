@@ -1,0 +1,20 @@
+@font-face {
+  font-family: 'GoormSansMedium';
+  src: url('/fonts/goorm-sans-medium.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'GoormSansRegular';
+  src: url('/fonts/goorm-sans-regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'GoormSansBold';
+  src: url('/fonts/goorm-sans-bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+}

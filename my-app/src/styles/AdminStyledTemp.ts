@@ -149,35 +149,118 @@ export const Input = styled.input`
   color: ${getStyledColor('gray', 1200)};
   border: 3px solid rgba(0, 0, 0, 0);
   border-radius: 10px;
-  transition: border 0.2s ease;
+  transition:
+    border 0.2s ease,
+    box-shadow 0.2s ease;
   margin: 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
   @media screen and (max-width: 1400px) {
     max-width: ${pixelToRem(500)};
     padding: 10px 15px;
     border: 2px solid rgba(0, 0, 0, 0);
   }
+
+  @media screen and (max-width: 768px) {
+    max-width: ${pixelToRem(400)};
+    padding: 8px 12px;
+  }
+
+  @media screen and (max-width: 480px) {
+    max-width: ${pixelToRem(300)};
+    padding: 6px 10px;
+  }
+
   &:focus {
     border: 3px solid ${getStyledColor('teal', 600)};
+    box-shadow: 0 0 8px rgba(0, 128, 128, 0.2);
   }
 
   &::placeholder {
     color: ${getStyledColor('gray', 900)};
   }
 `;
-export const Select = styled.select`
-  width: 40%;
-  border-radius: 20px;
+
+const sizeStyles = {
+  SMALL: css`
+    max-width: ${pixelToRem(80)};
+    padding: 4px 10px;
+    font-size: ${pixelToRem(10)};
+  `,
+  MEDIUM: css`
+    max-width: ${pixelToRem(250)};
+    padding: 8px 16px;
+    font-size: ${pixelToRem(12)};
+  `,
+  LARGE: css`
+    max-width: ${pixelToRem(400)};
+    padding: 10px 20px;
+    font-size: ${pixelToRem(14)};
+  `,
+};
+
+interface SelectProps {
+  size: 'SMALL' | 'MEDIUM' | 'LARGE';
+}
+
+export const Select = styled.select<SelectProps>`
+  font-weight: 700;
+  width: 100%;
+  border-radius: 10px;
   color: ${getStyledColor('gray', 1200)};
   background-color: ${getStyledColor('gray', 500)};
-  padding: 10px 20px;
+  border: 2px solid ${getStyledColor('black', 400)};
+  transition:
+    border 0.2s ease,
+    box-shadow 0.2s ease;
+  margin-right: 1rem;
+  ${({ size }) => sizeStyles[size]}
+
+  @media screen and (max-width: 1400px) {
+    ${({ size }) => size === 'LARGE' && sizeStyles.MEDIUM}
+  }
+
+  @media screen and (max-width: 768px) {
+    ${({ size }) => size === 'LARGE' && sizeStyles.SMALL}
+    ${({ size }) => size === 'MEDIUM' && sizeStyles.SMALL}
+  }
+
+  @media screen and (max-width: 480px) {
+    ${({ size }) => sizeStyles.SMALL}
+  }
+
+  &:focus {
+    border: 2px solid ${getStyledColor('teal', 600)};
+    box-shadow: 0 0 8px rgba(0, 128, 128, 0.2);
+  }
 `;
-export const Option = styled.option`
+
+interface OptionProps {
+  size: 'SMALL' | 'MEDIUM' | 'LARGE';
+}
+
+export const Option = styled.option<OptionProps>`
   border-radius: 20px;
   color: ${getStyledColor('gray', 1200)};
-  font-size: ${pixelToRem(12)};
+
+  ${({ size }) => sizeStyles[size]}
+
+  @media screen and (max-width: 1400px) {
+    ${({ size }) => size === 'LARGE' && sizeStyles.MEDIUM}
+  }
+
+  @media screen and (max-width: 768px) {
+    ${({ size }) => size === 'LARGE' && sizeStyles.SMALL}
+    ${({ size }) => size === 'MEDIUM' && sizeStyles.SMALL}
+  }
+
+  @media screen and (max-width: 480px) {
+    ${({ size }) => sizeStyles.SMALL}
+  }
 `;
+
 export const Textarea = styled.textarea`
-  width: 500px;
+  width: 100%;
   max-width: ${pixelToRem(600)};
   min-height: 200px;
   padding: 15px 20px;
@@ -188,13 +271,30 @@ export const Textarea = styled.textarea`
   resize: none;
   outline: none;
   line-height: 150%;
+  transition:
+    border 0.2s ease,
+    box-shadow 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
   @media screen and (max-width: 1400px) {
     max-width: ${pixelToRem(500)};
     padding: 10px 15px;
     border: 2px solid rgba(0, 0, 0, 0);
   }
+
+  @media screen and (max-width: 768px) {
+    max-width: ${pixelToRem(400)};
+    padding: 8px 12px;
+  }
+
+  @media screen and (max-width: 480px) {
+    max-width: ${pixelToRem(300)};
+    padding: 6px 10px;
+  }
+
   &:focus {
     border: 3px solid ${getStyledColor('teal', 600)};
+    box-shadow: 0 0 8px rgba(0, 128, 128, 0.2);
   }
 
   &::placeholder {
@@ -202,7 +302,16 @@ export const Textarea = styled.textarea`
   }
 
   &::-webkit-scrollbar {
-    overflow: hidden;
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: ${getStyledColor('gray', 700)};
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: ${getStyledColor('gray', 500)};
   }
 `;
 
