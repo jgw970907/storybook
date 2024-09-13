@@ -1,5 +1,5 @@
-import { styled, keyframes, css } from 'styled-components';
-import { FaSpinner } from 'react-icons/fa';
+import { styled, css } from 'styled-components';
+import Spinner from './Spinner';
 import { getStyledColor } from 'utils';
 import * as S from 'styles/AdminStyledTemp';
 
@@ -28,14 +28,8 @@ const Button = (props: Props) => {
 
 export default Button;
 
-const spinAnimation = keyframes`
-  to {
-    transform: rotate(360deg);
-  }
-`;
-
 const StyledButton = styled(S.Button)<CssProps>`
-  background-color: ${getStyledColor('primary', 900)};
+  background-color: ${getStyledColor('orange', 700)};
   cursor: ${({ $status }) => ($status === 'loading' ? 'none' : 'pointer')};
 
   ${({ $status }) =>
@@ -54,9 +48,7 @@ const StyledButton = styled(S.Button)<CssProps>`
     background-color: ${({ $status }) =>
       $status === 'loading' ? getStyledColor('green', 800) : getStyledColor('gray', 900)};
   }
-`;
-
-const Spinner = styled(FaSpinner)`
-  animation: ${spinAnimation} 1s infinite linear;
-  margin-right: 12px;
+  &:hover {
+    background-color: ${getStyledColor('orange', 800)};
+  }
 `;

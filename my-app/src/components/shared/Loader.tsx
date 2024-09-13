@@ -6,15 +6,9 @@ interface Props extends Pick<React.SVGAttributes<SVGRectElement>, 'fill'> {
 
 const COLOR = '#00B3A6';
 
-const Loader = ({ fill = COLOR, custom = false }: Props) => {
+const Loader = ({ fill = COLOR }: Props) => {
   return (
-    <StyledSVG
-      width="24"
-      height="30"
-      viewBox="0 0 24 30"
-      xmlns="http://www.w3.org/2000/svg"
-      $custom={custom}
-    >
+    <StyledSVG width="24" height="30" viewBox="0 0 24 30" xmlns="http://www.w3.org/2000/svg">
       {[0, 8, 16].map((x, index) => (
         <rect key={index} x={x} y="10" width="4" height="10" fill={fill} opacity="0.2">
           <animate
@@ -49,9 +43,7 @@ const Loader = ({ fill = COLOR, custom = false }: Props) => {
 
 export default Loader;
 
-const StyledSVG = styled.svg<{ $custom: boolean }>`
-  position: ${({ $custom }) => ($custom ? 'relative' : 'absolute')};
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+const StyledSVG = styled.svg`
+  display: block;
+  margin: auto;
 `;
