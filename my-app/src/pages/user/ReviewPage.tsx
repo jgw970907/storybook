@@ -7,12 +7,23 @@ import SearchBar from 'components/shared/SearchBar';
 import { useBookData } from 'hooks/useBookData';
 import { useSearch } from 'hooks/useSearch';
 import { useMemo } from 'react';
+import Bottom from 'components/layout/Bottom';
 
-const UserPage = () => {
-  const { searchState, setSearchState, search, setSearch, order, setOrder } = useSearch();
+const ReviewPage = () => {
+  const {
+    searchTitle,
+    searchAuthorName,
+    setSearchTitle,
+    setSearchAuthorName,
+    order,
+    setOrder,
+    category,
+  } = useSearch();
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status, hasBooks } = useBookData(
     order,
-    search,
+    searchTitle,
+    searchAuthorName,
+    category,
   );
 
   const memoizedBookList = useMemo(
@@ -28,38 +39,40 @@ const UserPage = () => {
   );
 
   return (
-    <Main>
-      <Stars />
-      <Stars2 />
-      <Stars3 />
+    <>
+      <Main>
+        <Stars />
+        <Stars2 />
+        <Stars3 />
 
-      <SearchBar
-        searchState={searchState}
-        setSearchState={setSearchState}
-        setSearch={setSearch}
-        order={order}
-        setOrder={setOrder}
-      />
-      <LayoutContainer>
-        {status === 'loading' ? (
-          <LoaderContainer>
-            <Loader />
-          </LoaderContainer>
-        ) : hasBooks ? (
-          memoizedBookList
-        ) : (
-          <NotFound search={search} />
-        )}
-      </LayoutContainer>
-    </Main>
+        <SearchBar
+          setSearchTitle={setSearchTitle}
+          setSearchAuthorName={setSearchAuthorName}
+          order={order}
+          setOrder={setOrder}
+          backColorType="black"
+        />
+        <LayoutContainer>
+          {status === 'loading' ? (
+            <LoaderContainer>
+              <Loader />
+            </LoaderContainer>
+          ) : hasBooks ? (
+            memoizedBookList
+          ) : (
+            <NotFound search={searchTitle || searchAuthorName} />
+          )}
+        </LayoutContainer>
+      </Main>
+      <Bottom />
+    </>
   );
 };
 
-export default UserPage;
+export default ReviewPage;
 
 const Main = styled.main`
   width: 100%;
-  min-height: 1500px;
   display: flex;
   flex-direction: column;
   padding-top: 10%;

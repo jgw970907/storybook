@@ -1,18 +1,26 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { QueryKeys } from 'constant';
 import { userQueries, likeQueries } from 'queries';
+import { useGetMyStories } from 'queries/gpt';
 import React, { useState, useRef } from 'react';
 import { styled } from 'styled-components';
-import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import { Book } from 'components/user';
-import { Loader } from 'components/shared';
+import { Button, Loader } from 'components/shared';
 import CustomModal from 'components/modal/CustomModal';
 import { ImageUploader } from 'components/shared';
 import { ImageUploaderImperativeHandle } from 'components/shared/ImageUploader';
 import { postImage } from 'api/imageapi';
 import { useUserStore } from 'store/useUserStore';
+import { Card } from 'components/shared/Card';
+import { MdOutlinePublic, MdOutlinePublicOff } from 'react-icons/md';
+import AdminPagination from 'components/admin/AdminPagination';
+import { PaginationWrapper } from 'styles/AdminStyledTemp';
+import { usePatchDisclosure } from 'queries/gpt';
+import Bottom from 'components/layout/Bottom';
+import { LoaderWrapper } from 'styles/LoaderWrapper';
 const MyPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [storyPage, setStoryPage] = useState(1);
   const [nicknameBtn, setNicknameBtn] = useState(false);
   const [nickname, setNickname] = useState('');
   const [password, setPassword] = useState('');
@@ -26,26 +34,24 @@ const MyPage = () => {
   const userId: string = user?.id || '';
   const { usePatchUser } = userQueries;
   const { useGetBookLikes } = likeQueries;
-  const take = 4;
+
+  const take = 10;
   const imageRef = useRef<ImageUploaderImperativeHandle>(null);
   const queryClient = useQueryClient();
   const { mutate, error } = usePatchUser();
-
+  const { mutate: patchMutate } = usePatchDisclosure(currentPage.toString());
   const {
     data: LikesBooks,
     status,
     isSuccess,
-  } = useGetBookLikes({ userId: userId, take: take, page: currentPage });
-
-  const handlePageClick = (pageNum: number) => {
-    if (status !== 'success') return;
-
-    const totalPages = Math.ceil(LikesBooks.totalPages);
-
-    if (pageNum < 1 || pageNum > totalPages) return;
-
-    setCurrentPage(pageNum);
-  };
+  } = useGetBookLikes({ take: take, page: currentPage });
+  const { data: MyStories, status: storyStatus } = useGetMyStories(
+    {
+      take: take,
+      page: storyPage,
+    },
+    userId,
+  );
 
   const saveProfileImg = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -134,6 +140,9 @@ const MyPage = () => {
       alert('파일이 없습니다.');
     }
   };
+  const patchDisclosure = (id: string) => {
+    patchMutate(id);
+  };
   return (
     <Container>
       <section>
@@ -152,7 +161,7 @@ const MyPage = () => {
                       }
                     />
                     <ProfileImgBtnWrap>
-                      <button onClick={saveProfileImg}>프로필 이미지 변경</button>
+                      <Button onClick={() => saveProfileImg}>프로필 이미지 변경</Button>
                     </ProfileImgBtnWrap>
                   </td>
                 </tr>
@@ -161,20 +170,20 @@ const MyPage = () => {
                   <td>{user?.email}</td>
                 </tr>
                 <tr>
-                  <th>닉네임</th>
+                  <th>활동명</th>
                   <td>
                     <div>
                       <span>{user?.nickname ? user.nickname : nickname}</span>
-                      <button type="button" onClick={() => setNicknameBtn(!nicknameBtn)}>
-                        {nicknameBtn ? '닉네임 변경 취소' : '닉네임 변경'}
-                      </button>
+                      <Button type="button" onClick={() => setNicknameBtn(!nicknameBtn)}>
+                        {nicknameBtn ? '활동명 변경 취소' : '활동명 변경'}
+                      </Button>
                       <div style={{ display: nicknameBtn ? 'block' : 'none' }}>
                         <div className="changeNickname">
                           <input
                             placeholder="변경할 닉네임 입력"
                             onChange={(e) => setNickname(e.target.value)}
                           ></input>
-                          <button onClick={saveNickName}>닉네임 변경</button>
+                          <Button onClick={() => saveNickName}>닉네임 변경</Button>
                         </div>
                       </div>
                     </div>
@@ -212,9 +221,9 @@ const MyPage = () => {
                       <p style={{ color: 'red', padding: '8px' }}>
                         {pwalert ? null : '비밀번호가 일치하지 않습니다'}
                       </p>
-                      <button onClick={patchPassword} disabled={true}>
+                      <Button onClick={() => patchPassword} disabled={true}>
                         비밀번호 변경
-                      </button>
+                      </Button>
                     </div>
                   </td>
                 </tr>
@@ -222,59 +231,137 @@ const MyPage = () => {
             </table>
           </form>
           <div className="likesbook">
+            {/* 내가 좋아한 책같은 경우 한줄로 배치할 것이기 때문에 flex 사용 */}
             <h1>내가 좋아한 책</h1>
             {status === 'loading' ? (
-              <Loader custom={true} />
+              <LoaderWrapper>
+                <Loader />
+              </LoaderWrapper>
             ) : LikesBooks && LikesBooks.books.length > 0 ? (
-              <Layout>
-                <BookWrapper $isSuccess={isSuccess}>
-                  {status === 'success' && (
-                    <>
-                      <ArrowButton>
-                        <IoIosArrowBack
-                          size={60}
-                          onClick={() => handlePageClick(currentPage - 1)}
-                        />
-                      </ArrowButton>
-                      {LikesBooks.books.map((data) => {
-                        const { id, title, images, ...spread } = data;
-                        return (
-                          <div key={id}>
-                            <Book
-                              key={id}
-                              id={id}
-                              images={images}
-                              title={title}
-                              {...spread}
-                              onClick={() => handleClick(id)}
-                            />
-                            {modalOpen && (
-                              <CustomModal
-                                bookId={selectedBookId}
-                                book={selectedBook}
-                                setModalOpen={setModalOpen}
-                                showScroll={showScroll}
-                              ></CustomModal>
-                            )}
-                          </div>
-                        );
-                      })}
-                      <ArrowButton>
-                        <IoIosArrowForward
-                          size={60}
-                          onClick={() => handlePageClick(currentPage + 1)}
-                        />
-                      </ArrowButton>{' '}
-                    </>
-                  )}
-                </BookWrapper>
-              </Layout>
+              <>
+                <Layout>
+                  <BookWrapper $isSuccess={isSuccess}>
+                    {storyStatus === 'success' && (
+                      <>
+                        {LikesBooks.books.map((data) => {
+                          const { id, title, images, ...spread } = data;
+                          return (
+                            <div key={id}>
+                              <Book
+                                key={id}
+                                id={id}
+                                images={images}
+                                title={title}
+                                {...spread}
+                                onClick={() => handleClick(id)}
+                              />
+                              {modalOpen && (
+                                <CustomModal
+                                  bookId={selectedBookId}
+                                  book={selectedBook}
+                                  setModalOpen={setModalOpen}
+                                  showScroll={showScroll}
+                                ></CustomModal>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </>
+                    )}
+                  </BookWrapper>
+                </Layout>
+                <PaginationWrapper>
+                  <AdminPagination
+                    currentPage={currentPage}
+                    setCurrentPage={setCurrentPage}
+                    total={Number(LikesBooks.totalPages * take)}
+                    handleNextPage={(pageNum: number) => {
+                      if (LikesBooks.totalPages * take > currentPage * take) {
+                        setCurrentPage(pageNum + 1);
+                      }
+                    }}
+                    handlePrevPage={(pageNum: number) => {
+                      if (currentPage > 1) {
+                        setCurrentPage(pageNum - 1);
+                      }
+                    }}
+                  />
+                </PaginationWrapper>
+              </>
             ) : (
               <p>내가 좋아요한 책이 없습니다</p>
             )}
           </div>
+          <div className="likesbook">
+            {/* 나의 스토리는 두줄 이상으로 배치하기 때문에 grid를 사용 */}
+            <h1>나의 스토리</h1>
+            {storyStatus === 'loading' ? (
+              <LoaderWrapper>
+                <Loader />
+              </LoaderWrapper>
+            ) : MyStories && MyStories.data.stories.length > 0 ? (
+              <>
+                <Layout>
+                  <BookWrapper $isSuccess={true}>
+                    {storyStatus === 'success' && (
+                      <>
+                        {MyStories.data.stories.map((story) => {
+                          const { id, title, createdAt, updatedAt, isSecret, category, images } =
+                            story;
+                          return (
+                            <CardWrapper key={id}>
+                              <Card
+                                id={id}
+                                title={title}
+                                imageUrl={
+                                  images.length > 0
+                                    ? images[0].path
+                                    : 'https://picsum.photos/200/150'
+                                }
+                                createdAt={createdAt}
+                                updatedAt={updatedAt}
+                                isSecret={isSecret}
+                                category={category}
+                                isMyPage={true}
+                                userId={userId}
+                              />
+                              <Icon>
+                                <IconBtn onClick={() => patchDisclosure(id)}>
+                                  {isSecret ? <MdOutlinePublicOff /> : <MdOutlinePublic />}
+                                </IconBtn>
+                              </Icon>
+                            </CardWrapper>
+                          );
+                        })}
+                      </>
+                    )}
+                  </BookWrapper>
+                </Layout>
+                <PaginationWrapper>
+                  <AdminPagination
+                    currentPage={storyPage}
+                    setCurrentPage={setStoryPage}
+                    total={Number(MyStories.total)}
+                    handleNextPage={(pageNum: number) => {
+                      if (pageNum < Math.ceil(MyStories.total / take)) {
+                        setStoryPage(pageNum + 1);
+                      }
+                    }}
+                    handlePrevPage={(pageNum: number) => {
+                      if (storyPage > 1) {
+                        setStoryPage(pageNum - 1);
+                      }
+                    }}
+                  />
+                </PaginationWrapper>
+              </>
+            ) : (
+              <p>나의 스토리가 없습니다.</p>
+            )}{' '}
+          </div>
         </div>
       </section>
+      <Bottom />
     </Container>
   );
 };
@@ -324,16 +411,6 @@ const Container = styled.div`
     background-color: #f2f2f2; /* 헤더 배경색 설정 */
   }
 
-  button {
-    padding: 5px 10px;
-    margin: 0px 20px 0px;
-    border: 1px solid #bcbfc6;
-    color: #777;
-    background-color: #fafbf6;
-    background-image: linear-gradient(#fff, #f1f1f1);
-    font-size: 11px;
-  }
-
   .changeNickname {
     margin: 10px 0px;
     padding: 10px;
@@ -376,38 +453,36 @@ const Container = styled.div`
   }
 `;
 
-// const NicknameBtn = styled.button`
-//   background-image: linear-gradient(
-//     to right,
-//     ${(props) => (props.btnState ? '#a8abba, #8c8f98' : '#fff, #f1f1f1')}
-//   );
-// `;
-
 const Layout = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   margin: 40px 0;
+  width: 100%;
 `;
 
 const BookWrapper = styled.div<{ $isSuccess?: boolean }>`
-  display: flex;
-  justify-content: center;
+  display: grid;
+  flex-wrap: wrap;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 20px;
   width: 100%;
   transition: opacity 1s ease;
   opacity: ${({ $isSuccess }) => ($isSuccess ? 1 : 0)};
 `;
-
-const ArrowButton = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
+const CardWrapper = styled.div`
+  position: relative;
+`;
+const Icon = styled.div`
+  position: absolute;
+  top: -20px;
+  right: 10px;
+  font-size: 20px;
+`;
+const IconBtn = styled.button`
+  background-color: transparent;
+  border: none;
   cursor: pointer;
-  color: black;
-  cursor: pointer;
-  margin: 0 50px;
 `;
 const ProfileImgBtnWrap = styled.div`
   margin: 10px 0;

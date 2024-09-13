@@ -1,2 +1,3 @@
-export { default as UserPage } from './UserPage';
+export { default as ReviewPage } from './ReviewPage';
 export { default as MyPage } from './MyPage';
+export { default as GptUserPage } from './GptUserPage';
