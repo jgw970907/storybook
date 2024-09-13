@@ -12,7 +12,11 @@ export const getUserlist = async () => {
 
   return res;
 };
+export const getUser = async (id: string) => {
+  const res = await Axios(`/users/userinfo/${id}`).get<UserType>();
 
+  return res;
+};
 export const deleteUser = async (id: string) => {
   const res = await Axios(`/users/delete/${id}`).remove<Response>();
 
