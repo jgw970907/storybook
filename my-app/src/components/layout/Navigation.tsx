@@ -4,6 +4,7 @@ import NavigationItem from './NavigationItem';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { getStyledColor } from 'utils';
 import { NavbarReadonly } from 'types';
+import Bottom from './Bottom';
 
 const NavbarSize: NavbarReadonly = {
   HEIGHT: 56,
@@ -64,14 +65,14 @@ const NavigationWrapper = styled.div<{ $isVisible: boolean; $height: number }>`
     opacity 0.2s ease-in-out;
   top: ${({ $isVisible, $height }) => ($isVisible ? '0' : `-${$height}px`)};
   opacity: ${({ $isVisible }) => ($isVisible ? '1' : '0')};
-  background-color: ${getStyledColor('primary', 900)};
+  background-color: ${getStyledColor('orange', 700)};
   z-index: 2;
 `;
 
 const Logo = styled.div`
   font-size: 24px;
   font-weight: bold;
-  color: white;
+  color: ${getStyledColor('forest', 800)};
   cursor: pointer;
 
   img {
