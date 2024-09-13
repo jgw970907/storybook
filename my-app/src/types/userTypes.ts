@@ -11,4 +11,5 @@ export type UserType = {
   email: string;
   role: 'ADMIN' | 'MANAGER' | 'USER';
   profileImg: Array<string>;
+  createdAt: string;
 };

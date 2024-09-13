@@ -17,7 +17,6 @@ export type MyFavorites = {
   currentPage: number;
 };
 export type MyFavoritesParams = {
-  userId: string;
   take: number;
   page: number;
 };

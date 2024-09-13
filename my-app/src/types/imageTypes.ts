@@ -3,7 +3,9 @@ export type ImagesType = {
   updatedAt: string;
   createdAt: string;
   order: number;
-  type: number;
+  type: string;
+  size: string;
+  name: string;
   path: string;
   fbPath: string;
 };
@@ -15,6 +17,8 @@ export type BookAddImageRes = {
     createdAt: string;
     order: number;
     type: number;
+    size: number;
+    name: string;
     path: string;
     fbPath: string;
   }>;

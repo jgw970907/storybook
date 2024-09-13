@@ -80,8 +80,10 @@ export type BooklistParams = {
   page?: number;
   order__createdAt?: 'DESC' | 'ASC';
   where__title__i_like?: string;
+  where__author__i_like?: string;
   order__clicks?: 'DESC';
   order__likeCount?: 'DESC';
+  where__category?: string; // 장르 필터링을 위한 필드 추가
 };
 
 export type SelectedBookState = {
