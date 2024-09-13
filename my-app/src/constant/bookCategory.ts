@@ -9,6 +9,7 @@ export type BookCategory =
   | '공포'
   | '추리'
   | '자기계발'
+  | '블로그'
   | '기술'
   | '건강'
   | '여행'
@@ -28,6 +29,7 @@ export const BOOK_CATEGORIES: BookCategory[] = [
   '공포',
   '추리',
   '자기계발',
+  '블로그',
   '기술',
   '건강',
   '여행',

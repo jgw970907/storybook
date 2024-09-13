@@ -25,9 +25,6 @@ export const postBooks = async ({ title, content, images, authorName, category }
     const uploadResults = await postImages(images);
     console.log(uploadResults);
     imageIds = uploadResults.imageIds;
-    console.log(imageIds);
-    // iamgePaths = uploadResults.imagePaths
-    // Ensure all images are successfully uploaded
     if (imageIds.length === 0) {
       throw new Error('Image upload failed');
     }

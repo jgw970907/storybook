@@ -58,7 +58,7 @@ const injectInterceptors = (instance: AxiosInstance): AxiosInstance => {
             isRefreshing = false;
             alert('다시 로그인 해주세요.');
             secureLocalStorage.removeItem(StorageKeys.REFRESH_TOKEN);
-            window.location.replace('/user');
+            window.location.replace('/gptpage');
             return Promise.reject(refreshError);
           }
         }
