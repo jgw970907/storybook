@@ -37,6 +37,7 @@ const GptUserPage = () => {
       page: storyPage,
     },
     userId || '',
+    false,
   );
   const take = 10;
 

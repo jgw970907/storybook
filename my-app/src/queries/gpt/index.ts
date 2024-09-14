@@ -109,14 +109,14 @@ export const useStoriesInfinityScroll = (
     },
   });
 };
-export const useGetMyStories = (queries: GptMyStoriesParams, userId: string) => {
+export const useGetMyStories = (queries: GptMyStoriesParams, userId: string, ismypage: boolean) => {
   const { isLogin } = useUserStore.getState();
 
   const key = [QueryKeys.USER, 'mystories', queries.page.toString()];
 
   return useQuery({
     queryKey: key,
-    queryFn: () => getMyStories(queries, userId),
+    queryFn: () => getMyStories(queries, userId, ismypage),
     enabled: isLogin && !!userId,
   });
 };

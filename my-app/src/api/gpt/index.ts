@@ -51,10 +51,14 @@ export const getAppendContent = async ({
   });
   return res;
 };
-export const getMyStories = async (queries: GptMyStoriesParams, userId: string) => {
+export const getMyStories = async (
+  queries: GptMyStoriesParams,
+  userId: string,
+  ismypage: boolean,
+) => {
   const { take, page } = queries;
   const res = await Axios(
-    `/mystories/${userId}?take=${take}&page=${page}&order__createdAt=DESC`,
+    `/mystories/${userId}?take=${take}&page=${page}&order__createdAt=DESC&ismypage=${ismypage}`,
   ).get<GetMyGptStoriesResponse>({
     userId,
   });

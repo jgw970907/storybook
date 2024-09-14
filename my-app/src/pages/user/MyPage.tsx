@@ -54,6 +54,7 @@ const MyPage = () => {
       page: storyPage,
     },
     userId,
+    true,
   );
 
   const saveProfileImg = (e: React.MouseEvent<HTMLButtonElement>) => {
