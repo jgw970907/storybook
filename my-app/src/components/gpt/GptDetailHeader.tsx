@@ -85,7 +85,7 @@ const Header = ({
         )}
 
         {category && <S.Ptag>카테고리:{category}</S.Ptag>}
-        {/* {clicks !== undefined && <S.Ptag>{`조회수:${clicks}`}</S.Ptag>} */}
+        {clicks !== undefined && <S.Ptag>{`조회수:${clicks}`}</S.Ptag>}
       </S.InfoContainer>
       {isStorypage ? <S.Title>{title}</S.Title> : <S.Title>{user?.nickname}의 스토리</S.Title>}
     </S.Container>
