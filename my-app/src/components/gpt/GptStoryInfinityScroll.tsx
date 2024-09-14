@@ -74,6 +74,7 @@ export const GptStoryInfinityScroll = ({
                     authorName={story.authorName}
                     isMyPage={false}
                     userId={story.userId}
+                    clicks={story.clicks}
                   />
                 </Link>
               ))}

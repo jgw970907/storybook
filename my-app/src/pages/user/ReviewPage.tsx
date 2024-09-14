@@ -1,5 +1,5 @@
 import { styled } from 'styled-components';
-import { Stars, Stars2, Stars3 } from 'styles/StarParticles';
+
 import Loader from 'components/shared/Loader';
 import NotFound from 'pages/NotFound';
 import BookList from 'components/user/BookList';
@@ -8,6 +8,7 @@ import { useBookData } from 'hooks/useBookData';
 import { useSearch } from 'hooks/useSearch';
 import { useMemo } from 'react';
 import Bottom from 'components/layout/Bottom';
+import { LoaderScreen } from 'styles/LoaderWrapper';
 
 const ReviewPage = () => {
   const {
@@ -41,10 +42,6 @@ const ReviewPage = () => {
   return (
     <>
       <Main>
-        <Stars />
-        <Stars2 />
-        <Stars3 />
-
         <SearchBar
           setSearchTitle={setSearchTitle}
           setSearchAuthorName={setSearchAuthorName}
@@ -54,9 +51,9 @@ const ReviewPage = () => {
         />
         <LayoutContainer>
           {status === 'loading' ? (
-            <LoaderContainer>
+            <LoaderScreen>
               <Loader />
-            </LoaderContainer>
+            </LoaderScreen>
           ) : hasBooks ? (
             memoizedBookList
           ) : (
@@ -73,6 +70,7 @@ export default ReviewPage;
 
 const Main = styled.main`
   width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   padding-top: 10%;
@@ -81,12 +79,4 @@ const Main = styled.main`
 `;
 const LayoutContainer = styled.div`
   display: flex;
-`;
-
-const LoaderContainer = styled.div`
-  width: 100%;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  position: relative;
 `;

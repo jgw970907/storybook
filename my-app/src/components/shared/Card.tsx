@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 import { Link as RouterLink } from 'react-router-dom';
 import dateFormat from 'utils/getDateStr';
+import { incrementClicks } from 'api/gpt';
+import { pixelToRem } from 'utils';
 export const Card = ({
   id,
   title,
@@ -12,6 +14,7 @@ export const Card = ({
   isMyPage,
   authorName,
   userId,
+  clicks,
 }: {
   id: string;
   title: string;
@@ -23,28 +26,39 @@ export const Card = ({
   isMyPage?: boolean;
   authorName?: string;
   userId: string;
+  clicks?: number;
 }) => {
+  const handleClick = (id: string) => {
+    if (id) {
+      incrementClicks(id);
+    } else {
+      alert('책이 삭제되었거나 잘못된 경로입니다.');
+    }
+  };
   return (
     <CardStyle>
       <StyledLink
         to={isMyPage ? `/gptpage/prompt/${id}` : `/gptpage/detail/${id}`}
         style={{ width: '100%' }}
+        onClick={() => handleClick(id)}
       >
         <Image src={imageUrl} alt={title} />
         <Title>{title}</Title>
         <Text>{category}</Text>
+        {clicks !== undefined && <Text>{`조회수:${clicks}`}</Text>}
+        {createdAt && updatedAt && isMyPage && (
+          <Text>
+            {createdAt < updatedAt
+              ? ` 수정됨: ${dateFormat(updatedAt)}`
+              : `작성일: ${dateFormat(createdAt)}`}
+          </Text>
+        )}
         {!isMyPage && (
           <StyledLink to={`/gptpage/user/${userId}`}>
             <Author>{authorName}</Author>
           </StyledLink>
         )}
-        {createdAt && updatedAt && (
-          <Text>
-            {createdAt < updatedAt
-              ? ` (수정됨: ${dateFormat(updatedAt)})`
-              : `작성일: ${dateFormat(createdAt)}`}
-          </Text>
-        )}
+
         {isMyPage && <Status>{isSecret ? '비공개' : '공개'}</Status>}
       </StyledLink>
     </CardStyle>
@@ -60,6 +74,7 @@ const CardStyle = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  height: 330px;
   &:hover {
     background-color: #f5f5f5;
     transform: scale(1.03);
@@ -98,11 +113,14 @@ const Author = styled.p`
   }
 `;
 const Title = styled.p`
+  width: 100%;
+  height: ${pixelToRem(40)};
   text-align: center;
   padding: 10px;
   font-weight: bold;
   color: black;
   font-size: 1rem;
+  text-overflow: ellipsis;
 `;
 
 const Text = styled.p`

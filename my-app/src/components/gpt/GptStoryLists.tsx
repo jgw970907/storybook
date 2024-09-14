@@ -5,6 +5,8 @@ import { MdRecommend } from 'react-icons/md';
 import { FaRegSmile } from 'react-icons/fa';
 import Spinner from 'components/shared/Spinner';
 import { useGetBestStories, useGetRandomStories } from 'queries/gpt';
+const cardHeight = '340px'; // 카드의 높이와 동일하게 설정
+
 const SectionTitle = styled.h2`
   display: inline-block;
   display: flex;
@@ -20,12 +22,12 @@ const SectionTitle = styled.h2`
   color: ${getStyledColor('forest', 700)};
   background-color: ${getStyledColor('forest', 300)};
 `;
-const SpinnerWrap = styled.div`
+const SpinnerWrap = styled.div<{ $height: string }>`
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 10rem;
+  height: ${({ $height }) => $height};
 `;
 export const GptStoryLists = () => {
   const { data: bestStories, status: bestloading } = useGetBestStories();
@@ -37,7 +39,7 @@ export const GptStoryLists = () => {
         <FaRegSmile />
       </SectionTitle>
       {bestloading === 'loading' ? (
-        <SpinnerWrap>
+        <SpinnerWrap $height={cardHeight}>
           <Spinner width="3rem" />{' '}
         </SpinnerWrap>
       ) : (
@@ -49,7 +51,7 @@ export const GptStoryLists = () => {
         <MdRecommend />
       </SectionTitle>
       {recommendloading === 'loading' ? (
-        <SpinnerWrap>
+        <SpinnerWrap $height={cardHeight}>
           <Spinner width="3rem" />{' '}
         </SpinnerWrap>
       ) : (

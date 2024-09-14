@@ -60,7 +60,7 @@ const NavigationItem = () => {
                 to="/"
                 $isActive={location.pathname === '/' || location.pathname.startsWith('/gptpage')}
               >
-                스토리북
+                <Text>스토리북</Text>
               </LinkStyle>
             </DropdownToggle>
             <DropdownMenu $isOpen={isDropdownOpen}>
@@ -101,6 +101,7 @@ const Wrapper = styled.div`
 `;
 
 const LinkStyle = styled(Link)<{ $isActive: boolean }>`
+  width: auto;
   text-decoration: none;
   color: ${(props) =>
     props.$isActive ? getStyledColor('blue', 800) : getStyledColor('gray', 1000)};

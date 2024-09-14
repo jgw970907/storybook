@@ -7,6 +7,7 @@ const SlideContainer = styled.div`
   position: relative;
   width: 100%;
   overflow: hidden;
+  padding: 10px 0;
 `;
 
 const SlideWrapper = styled.div<{ currentIndex: number; cardWidth: number; gap: number }>`
@@ -88,6 +89,8 @@ export const CardSlide: React.FC<CardSlideProps> = ({ items }) => {
             id={item.id}
             title={item.title}
             imageUrl={item.images[0]?.path || 'https://picsum.photos/200/150'}
+            clicks={item.clicks}
+            createdAt={item.createdAt}
             updatedAt={item.updatedAt}
             category={item.category}
             authorName={item.authorName}
