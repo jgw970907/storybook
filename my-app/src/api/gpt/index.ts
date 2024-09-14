@@ -10,6 +10,7 @@ import {
 } from 'types/gptTypes';
 import { getAxiosInstance as Axios } from '../axios/index';
 import { UserType } from 'types/userTypes';
+import Cookies from 'js-cookie';
 
 export interface GptStoriesParams {
   take?: number;
@@ -129,4 +130,25 @@ export const getRandomGptStories = async () => {
 export const patchDisclosure = async (storyId: string) => {
   const res = await Axios(`/mystories/secret/${storyId}`).patch<{ message: string }>();
   return res;
+};
+
+export const incrementClicks = async (storyId: string) => {
+  try {
+    const res = await Axios(`/gpt/increment-clicks/${storyId}`).patchWithoutToken<{
+      clicks: number;
+      cookieName: string;
+    }>({ cookieName: `book_${storyId}_clicked` });
+    const clicks = res?.clicks;
+    const cookieName = res?.cookieName;
+    if (clicks && cookieName) {
+      const clicked = Cookies.get(cookieName);
+      if (!clicked) {
+        Cookies.set(cookieName, 'true', { expires: 1 });
+      }
+      return clicks;
+    }
+  } catch (error) {
+    console.error('Error incrementing clicks:', error);
+    throw error;
+  }
 };
