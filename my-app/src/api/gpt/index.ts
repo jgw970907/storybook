@@ -113,7 +113,7 @@ export const updateStory = async ({
 };
 
 export const deleteGptStory = async (id: string) => {
-  const res = await Axios('/gpt').remove<GptStory>({ id });
+  const res = await Axios(`/gpt/${id}`).remove<GptStory>();
   return res;
 };
 

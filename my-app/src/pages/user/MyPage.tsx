@@ -2,6 +2,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { QueryKeys } from 'constant';
 import { userQueries, likeQueries } from 'queries';
 import { useGetMyStories } from 'queries/gpt';
+import { deleteGptStory } from 'api/gpt';
 import React, { useState, useRef } from 'react';
 import { styled } from 'styled-components';
 import { Book } from 'components/user';
@@ -18,6 +19,8 @@ import { PaginationWrapper } from 'styles/AdminStyledTemp';
 import { usePatchDisclosure } from 'queries/gpt';
 import Bottom from 'components/layout/Bottom';
 import { LoaderWrapper } from 'styles/LoaderWrapper';
+import { FaRegTrashCan } from 'react-icons/fa6';
+import { getStyledColor } from 'utils';
 const MyPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [storyPage, setStoryPage] = useState(1);
@@ -87,7 +90,16 @@ const MyPage = () => {
       },
     );
   };
-
+  const deleteStory = async (id: string) => {
+    if (window.confirm('정말 삭제하시겠습니까?')) {
+      try {
+        await deleteGptStory(id);
+        alert('삭제되었습니다.');
+      } catch (error) {
+        alert('삭제 중 에러가 발생했습니다.');
+      }
+    }
+  };
   const patchPassword = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if (!password || !confirmPassword) {
@@ -310,6 +322,20 @@ const MyPage = () => {
                             story;
                           return (
                             <CardWrapper key={id}>
+                              <IconWrap>
+                                {user && user.role !== 'ADMIN' && (
+                                  <Icon>
+                                    <IconBtn onClick={() => deleteStory(id)}>
+                                      <FaRegTrashCan />
+                                    </IconBtn>
+                                  </Icon>
+                                )}
+                                <Icon>
+                                  <IconBtn onClick={() => patchDisclosure(id)}>
+                                    {isSecret ? <MdOutlinePublicOff /> : <MdOutlinePublic />}
+                                  </IconBtn>
+                                </Icon>
+                              </IconWrap>
                               <Card
                                 id={id}
                                 title={title}
@@ -325,11 +351,6 @@ const MyPage = () => {
                                 isMyPage={true}
                                 userId={userId}
                               />
-                              <Icon>
-                                <IconBtn onClick={() => patchDisclosure(id)}>
-                                  {isSecret ? <MdOutlinePublicOff /> : <MdOutlinePublic />}
-                                </IconBtn>
-                              </Icon>
                             </CardWrapper>
                           );
                         })}
@@ -473,11 +494,22 @@ const BookWrapper = styled.div<{ $isSuccess?: boolean }>`
 const CardWrapper = styled.div`
   position: relative;
 `;
+const IconWrap = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin: 10px 5px;
+  position: relative;
+  gap: 10px;
+`;
 const Icon = styled.div`
-  position: absolute;
-  top: -20px;
-  right: 10px;
-  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  border-radius: 50%;
+  &:hover {
+    background-color: ${getStyledColor('red', 800)};
+  }
 `;
 const IconBtn = styled.button`
   background-color: transparent;
