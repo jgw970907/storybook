@@ -224,6 +224,7 @@ export default function GptPromptPage() {
       );
     }
     setSelectedText(null);
+    setUserRequest('');
     setShowPopup(false);
   };
 
