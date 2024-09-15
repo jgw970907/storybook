@@ -34,7 +34,6 @@ export default function GptPromptPage() {
   const [popupPosition, setPopupPosition] = useState<{ top: number; left: number } | null>(null);
   const [images, setImages] = useState<File[] | null>(null);
   const [imagesSrc, setImagesSrc] = useState<string[]>([]);
-  // const [imageIds, setImageIds] = useState<string[]>([]);
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const {
     setTitle,
@@ -189,7 +188,6 @@ export default function GptPromptPage() {
     setSaveLoading(true);
     try {
       await patchStoryContent(storyId || '', story);
-      alert('스토리가 저장되었습니다.');
     } catch (error) {
       alert('스토리 변경 중 에러가 발생했습니다: ${error.message}');
     } finally {
@@ -197,6 +195,7 @@ export default function GptPromptPage() {
     }
   };
   const handleAppendContent = async () => {
+    await handleSaveContent();
     appendMutate(
       { storyId: storyId || '', userRequest: userRequest },
       {
@@ -224,6 +223,7 @@ export default function GptPromptPage() {
         },
       );
     }
+    setSelectedText(null);
     setShowPopup(false);
   };
 
@@ -305,7 +305,7 @@ export default function GptPromptPage() {
               value={promptResult}
               onChange={handleResultChange}
               rows={10}
-              style={{ width: '100%', padding: '10px', height: '300px' }}
+              style={{ width: '100%', padding: '10px', height: '300px', resize: 'vertical' }}
             />
           </div>
         </Section>
@@ -328,7 +328,7 @@ export default function GptPromptPage() {
             value={story}
             onChange={handleUserTextChange}
             rows={20} // rows 속성을 20으로 변경
-            style={{ width: '100%', padding: '10px', height: '600px' }} // height 스타일 추가
+            style={{ width: '100%', padding: '10px', height: '600px', resize: 'vertical' }} // height 스타일 추가
             onMouseUp={handleTextSelection}
           />
           <BtnWrap>
@@ -388,17 +388,27 @@ export default function GptPromptPage() {
               padding: '10px',
             }}
           >
-            <input
-              type="text"
+            <textarea
               placeholder="User Prompt"
               value={userRequest}
               onChange={(e) => setUserRequest(e.target.value)}
-              style={{ marginBottom: '10px', padding: '5px' }}
+              style={{
+                marginBottom: '10px',
+                padding: '5px',
+                width: '100%',
+                height: '100px',
+                resize: 'both',
+              }}
             />
             <Button
               btncolortype="primary"
               onClick={handleGptRequest}
-              disabled={changeStatus === 'loading'}
+              disabled={
+                changeStatus === 'loading' ||
+                appendStatus === 'loading' ||
+                saveLoading ||
+                uploadLoading
+              }
             >
               GPT로 요청하기
             </Button>
