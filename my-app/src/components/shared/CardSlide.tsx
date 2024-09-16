@@ -22,12 +22,16 @@ const Button = styled.button`
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0);
   color: white;
   border: none;
   padding: 10px;
   cursor: pointer;
   z-index: 1;
+  &:hover {
+    scale: 1.1;
+  }
+  transition: scale 0.3s ease;
 `;
 
 const PrevButton = styled(Button)`
