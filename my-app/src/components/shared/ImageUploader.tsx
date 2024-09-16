@@ -1,4 +1,4 @@
-import { useState, useRef, forwardRef, useImperativeHandle } from 'react';
+import { useState, useRef, forwardRef, useImperativeHandle, useEffect } from 'react';
 import styled from 'styled-components';
 import { FaFileExcel, FaFileCirclePlus } from 'react-icons/fa6';
 import { FaTrashAlt } from 'react-icons/fa';
@@ -6,29 +6,31 @@ import ImagePreview from './ImagePreview';
 import { pixelToRem, getStyledColor } from 'utils';
 
 export type ImageUploaderImperativeHandle = {
+  getFileData: () => File[];
   handleCancel: (index?: number) => void;
   setPath: (path: string) => void;
-  setFileData: (data: { name: string; type: string; size: string }[]) => void;
+  setFileData: (data: File[]) => void;
+  setNewImageFiles?: (files: File[]) => void;
 };
 
 interface Props {
-  onChange: (files: File[] | null) => void;
   imageIds?: string[];
   imagesSrc?: string[];
   bookId?: string;
   storyId?: string;
   handleDeleteImage?: (type: 'book' | 'story', id: string, imageId: string) => Promise<void>;
+  onChange?: (files: File[] | null) => void;
+  setNewImageFiles?: (files: File[]) => void;
 }
 
 const ImageUploader = (
-  { onChange, imageIds = [], bookId = '', storyId = '', imagesSrc = [], handleDeleteImage }: Props,
+  { imageIds = [], bookId = '', storyId = '', imagesSrc = [], handleDeleteImage, onChange }: Props,
   forwardedRef?: React.ForwardedRef<ImageUploaderImperativeHandle>,
 ) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [previewUrls, setPreviewUrls] = useState<string[]>([...imagesSrc]);
-  const [fileData, setFileData] = useState<{ name: string; type: string; size: string }[] | null>(
-    null,
-  );
+  const [fileData, setFileData] = useState<File[] | null>(null);
+
   const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB로 설정
   // 프리뷰 이미지 변경
   const previewChange = (imageFiles: File[]) => {
@@ -50,23 +52,25 @@ const ImageUploader = (
       const newFileData = fileData.filter((_, i) => i !== index);
       setPreviewUrls(newPreviewUrls);
       setFileData(newFileData.length > 0 ? newFileData : null);
-      onChange(newFileData.length > 0 ? newFileData.map((data) => new File([], data.name)) : null);
+      onChange?.(newFileData.length > 0 ? newFileData : null); // onChange 호출
     } else {
       if (inputRef.current) {
         inputRef.current.value = '';
       }
       setPreviewUrls([]);
       setFileData(null);
-      onChange(null);
+      onChange?.(null); // onChange 호출
     }
   };
   useImperativeHandle(forwardedRef, () => ({
+    getFileData: () => fileData?.map((data) => data) || [],
     handleCancel: () => handleCancel(),
     setPath: (path: string) => {
       setPreviewUrls([path]);
     },
-    setFileData: (data: { name: string; type: string; size: string }[]) => {
+    setFileData: (data: File[]) => {
       setFileData(data);
+      onChange?.(data); // onChange 호출
     },
   }));
 
@@ -93,19 +97,15 @@ const ImageUploader = (
 
     if (validFiles.length === 0) return;
 
-    onChange(validFiles);
     previewChange(validFiles);
 
-    const newFileData = validFiles.map((file) => {
-      const { name, size } = file;
-      const lastDotIndex = name.lastIndexOf('.');
-      const newName = lastDotIndex !== -1 ? name.substring(0, lastDotIndex) : name;
-      const newType = lastDotIndex !== -1 ? name.substring(lastDotIndex + 1) : '';
-      const newSize = formatBytes(size);
-      return { name: newName, type: newType, size: newSize };
-    });
+    const newFileData = validFiles.map((file) => file);
 
-    setFileData((prevData) => [...(prevData || []), ...newFileData].slice(0, 4));
+    setFileData((prev) => {
+      const updatedFileData = prev ? [...prev, ...newFileData] : newFileData;
+      onChange?.(updatedFileData); // onChange 호출
+      return updatedFileData;
+    });
   };
 
   const handleDelete = async (type: 'book' | 'story', id: string, imageId: string) => {
@@ -113,7 +113,11 @@ const ImageUploader = (
       await handleDeleteImage(type, id, imageId);
       // 이미지 삭제 후 상태 업데이트
       setPreviewUrls((prev) => prev.filter((url, index) => imageIds[index] !== imageId));
-      setFileData((prev) => prev?.filter((data, index) => imageIds[index] !== imageId) || null);
+      setFileData((prev) => {
+        const updatedFileData = prev?.filter((data, index) => imageIds[index] !== imageId) || null;
+        onChange?.(updatedFileData); // onChange 호출
+        return updatedFileData;
+      });
     }
   };
   return (
@@ -147,7 +151,7 @@ const ImageUploader = (
                   <ImageData>
                     <div>Name: {fileData[index]?.name}</div>
                     <div>Type: {fileData[index]?.type}</div>
-                    <div>Size: {fileData[index]?.size}</div>
+                    <div>Size: {fileData[index] ? formatBytes(fileData[index].size) : ''}</div>
                   </ImageData>
                 )}
                 <DeleteButton

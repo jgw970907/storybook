@@ -57,21 +57,32 @@ const MyPage = () => {
     true,
   );
 
-  const saveProfileImg = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const saveProfileImg = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if (!imageSrc) {
       alert('프로필 이미지를 선택하세요.');
       return;
     }
-    mutate(
-      { id: userId, profileImgPath: imageSrc },
-      {
-        onSuccess: () => {
-          alert('프로필 이미지가 성공적으로 변경되었습니다.');
-          setImageSrc('');
-        },
-      },
-    );
+    const fileData = imageRef.current?.getFileData();
+    if (fileData) {
+      try {
+        const res = await postImage(fileData[0]);
+        setImageSrc(res.imagePath);
+        mutate(
+          { id: userId, profileImgPath: res.imagePath },
+          {
+            onSuccess: () => {
+              alert('프로필 이미지가 성공적으로 변경되었습니다.');
+              setImageSrc('');
+            },
+          },
+        );
+      } catch (error) {
+        alert('이미지 업로드에 실패했습니다.');
+      }
+    } else {
+      alert('파일이 없습니다.');
+    }
   };
   const saveNickName = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -145,14 +156,7 @@ const MyPage = () => {
     return LikesBooks?.books.flatMap((data) => data).find((data) => data?.id === selectedBookId);
   };
   const selectedBook = findSelectedBook();
-  const postProfileImg = async (fileData: File | null) => {
-    if (fileData) {
-      const res = await postImage(fileData);
-      setImageSrc(res.imagePath);
-    } else {
-      alert('파일이 없습니다.');
-    }
-  };
+
   const patchDisclosure = (id: string) => {
     patchMutate(id);
   };
@@ -167,12 +171,7 @@ const MyPage = () => {
                 <tr>
                   <th>프로필 이미지 변경</th>
                   <td>
-                    <ImageUploader
-                      ref={imageRef}
-                      onChange={(fileData: File[] | null) =>
-                        postProfileImg(fileData ? fileData[0] : null)
-                      }
-                    />
+                    <ImageUploader ref={imageRef} />
                     <ProfileImgBtnWrap>
                       <Button onClick={() => saveProfileImg}>프로필 이미지 변경</Button>
                     </ProfileImgBtnWrap>

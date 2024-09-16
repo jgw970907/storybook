@@ -32,7 +32,7 @@ export default function GptPromptPage() {
   const [showPopup, setShowPopup] = useState(false);
   const [loading, setLoading] = useState(false);
   const [popupPosition, setPopupPosition] = useState<{ top: number; left: number } | null>(null);
-  const [images, setImages] = useState<File[] | null>(null);
+  // const [images, setImages] = useState<File[] | null>(null);
   const [imagesSrc, setImagesSrc] = useState<string[]>([]);
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const {
@@ -62,12 +62,6 @@ export default function GptPromptPage() {
             setStory(res.content);
             setCategory(res.category || '블로그');
             setIsPublic(res.isSecret);
-            const fileData = res.images.map((image) => ({
-              name: image.name,
-              type: String(image.type),
-              size: String(image.size),
-            }));
-            imageRef.current?.setFileData(fileData);
             imageRef.current?.setPath(res.images[0].path);
             setImagesSrc(res.images.map((image) => image.path));
             setImageIdsStore(res.images.map((image) => image.id));
@@ -96,7 +90,7 @@ export default function GptPromptPage() {
       const res = await deleteImage(type, storyId, imageId);
       alert(res?.message);
     } catch (error) {
-      console.error('Error:', error);
+      alert('이미지 삭제 중 문제가 발생했습니다.');
     }
   }, []);
   const handleTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -132,15 +126,16 @@ export default function GptPromptPage() {
   };
 
   const handleUpload = async () => {
-    let newImageIds = imageIdsStore;
     if (!story) {
       setErrorText('내용을 입력하세요');
       return;
     }
-    if (images && images.length > 0) {
-      const uploadResults = await postImages(images);
+    let newImageIds = [...imageIdsStore];
+    // ImageUploader에서 파일 데이터를 직접 가져오기
+    const filesToUpload = imageRef.current?.getFileData() || [];
+    if (filesToUpload.length > 0) {
+      const uploadResults = await postImages(filesToUpload);
       newImageIds = [...imageIdsStore, ...uploadResults.imageIds];
-
       setImageIdsStore(newImageIds);
     }
     try {
@@ -271,7 +266,6 @@ export default function GptPromptPage() {
           <SS.Label>썸네일</SS.Label>
           <ImageUploader
             ref={imageRef}
-            onChange={(fileData: File[] | null) => setImages(fileData ? fileData : null)}
             imagesSrc={imagesSrc}
             imageIds={imageIdsStore}
             handleDeleteImage={handleDeleteImage}

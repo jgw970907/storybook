@@ -10,8 +10,9 @@ import { styled } from 'styled-components';
 import { getDateStr } from 'utils';
 import { BOOK_CATEGORIES } from 'constant';
 import { getBook } from 'api/book';
+import { LoaderScreen } from 'styles/LoaderWrapper';
 
-const { usePatchBook, useDeleteBook, useGetBook } = bookQueries;
+const { usePatchBook, useDeleteBook } = bookQueries;
 const AdminEditItem = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -27,22 +28,12 @@ const AdminEditItem = () => {
   const [imageIds, setImageIds] = useState<string[]>([]);
   const [category, setCategory] = useState('');
   const [authorName, setAuthorName] = useState('');
-  const [newImagePaths, setNewImagePaths] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const paramId = id ?? '';
-  // const { data: book, isLoading } = useGetBook(paramId);
   const { mutate, status: patchStatus } = usePatchBook();
   const { mutate: remove } = useDeleteBook();
 
   useEffect(() => {
-    // if (book) {
-    //   setTitle(book.title || '');
-    //   setContent(book.content || '');
-    //   setCategory(book.category || '');
-    //   setAuthorName(book.authorName || '');
-    //   setImageIds(book.images?.map((data) => data.id) ?? []);
-    //   setImagesSrc(book.images?.map((data) => data.path) ?? []);
-    // }
     const fetchData = async () => {
       try {
         const book = await getBook(paramId);
@@ -51,20 +42,30 @@ const AdminEditItem = () => {
           setContent(book.content || '');
           setCategory(book.category || '');
           setAuthorName(book.authorName || '');
-          setImageIds(book.images?.map((data) => data.id) ?? []);
-          setImagesSrc(book.images?.map((data) => data.path) ?? []);
+          setImageIds(book.images?.map((data) => data.id));
+          imageRef.current?.setPath(book.images[0].path);
+          setImagesSrc(book.images?.map((data) => data.path));
           setCreatedAt(book.createdAt);
           setUsername(book.user.name);
           setClicks(book.clicks);
         }
       } catch (error) {
-        console.log(error);
+        alert('데이터를 불러오는데 실패했습니다.');
       } finally {
         setIsLoading(false);
       }
     };
     fetchData();
-  }, [paramId]);
+  }, [
+    paramId,
+    setTitle,
+    setContent,
+    setCategory,
+    setAuthorName,
+    setImageIds,
+    setImagesSrc,
+    setIsLoading,
+  ]);
 
   useEffect(() => {
     if (paramId === '') {
@@ -87,64 +88,66 @@ const AdminEditItem = () => {
   const handleChangeAuthorName = useCallback((e: ReactChangeEvent<HTMLInputElement>) => {
     setAuthorName(e.target.value);
   }, []);
+  useEffect(() => {
+    return () => {
+      setImagesSrc([]);
+      setTitle('');
+      setContent('');
+      setCategory('');
+      setAuthorName('');
+      setImageIds([]);
+    };
+  }, [setTitle, setContent, setCategory, setAuthorName, setImageIds, setImagesSrc]);
 
-  const handleSetImage = useCallback(async (fileData: File[] | null) => {
-    if (fileData && fileData.length > 0) {
-      const result = await postImages(fileData);
-      const uploadedImagePaths = result.imagePaths;
-      const uploadedImageIds = result.imageIds;
-      // 배열의 배열을 평탄화(flatten)하여 단일 배열로 변환
-      const validImagePaths = uploadedImagePaths.flat();
-      const validImageIds = uploadedImageIds.flat();
-      setImageIds((prev) => [...prev, ...validImageIds]);
-      setNewImagePaths(validImagePaths);
-    } else {
-      console.log('이미지 업로드가 취소되었거나 이미지가 선택되지 않았습니다.');
-    }
-  }, []);
-  const handleDeleteImage = useCallback(async (type: string, bookId: string, imageId: string) => {
+  const handleUpdate = useCallback(async () => {
+    setPatchLoading(true);
     try {
-      const res = await deleteImage(type, bookId, imageId);
-      alert(res?.message);
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
-  const handleFinalUpdate = useCallback(async () => {
-    try {
-      setPatchLoading(true);
-      if (newImagePaths.length > 0) {
-        await mutate({
-          id: paramId,
-          title,
-          content,
-          category,
-          authorName,
-          images: imageIds,
-        });
+      const newImageFiles = imageRef.current?.getFileData() || [];
+      let newImageIds = imageIds;
+      if (newImageFiles.length > 0) {
+        const uploadResults = await postImages(newImageFiles);
+        newImageIds = [...imageIds, ...uploadResults.imageIds];
+        setImageIds(newImageIds);
       }
+      mutate({
+        id: paramId,
+        title,
+        content,
+        category,
+        authorName,
+        images: newImageIds,
+      });
     } catch (error) {
-      console.error('Error during the update process:', error);
-      // 에러 발생 시 처리할 로직 추가 가능
+      alert('이미지 업로드에 실패했습니다.');
     } finally {
-      // 성공적으로 완료되었거나 에러가 발생했을 때 모두 실행
       setPatchLoading(false);
     }
 
     navigate(`/admin`);
-  }, [mutate, paramId, title, content, category, authorName, imageIds, newImagePaths, navigate]);
+  }, [mutate, paramId, title, content, category, authorName, imageIds, navigate]);
 
   const handleRemove = useCallback(() => {
     remove(paramId);
     navigate(`/admin`);
   }, [remove, paramId, navigate]);
-
+  const handleDeleteImage = useCallback(async (type: string, storyId: string, imageId: string) => {
+    try {
+      const res = await deleteImage(type, storyId, imageId);
+      alert(res?.message);
+    } catch (error) {
+      alert('이미지 삭제에 실패했습니다.');
+    }
+  }, []);
   if (paramId === '') {
     return <div>유효하지 않은 ID입니다.</div>;
   }
 
   if (isLoading || patchLoading) {
-    return <Loader />;
+    return (
+      <LoaderScreen>
+        <Loader />
+      </LoaderScreen>
+    );
   }
 
   return (
@@ -213,16 +216,13 @@ const AdminEditItem = () => {
         </S.Wrapper>
         <S.InputField $marginTop={20}>
           <S.Label style={{ color: 'black' }}>이미지</S.Label>
-          {imagesSrc[0] && (
-            <ImageUploader
-              ref={imageRef}
-              imageIds={imageIds}
-              imagesSrc={imagesSrc}
-              bookId={id}
-              handleDeleteImage={handleDeleteImage}
-              onChange={(fileData) => handleSetImage(fileData || [])}
-            />
-          )}
+          <ImageUploader
+            ref={imageRef}
+            imageIds={imageIds}
+            imagesSrc={imagesSrc}
+            bookId={id}
+            handleDeleteImage={handleDeleteImage}
+          />
         </S.InputField>
         <S.InputField
           style={{
@@ -233,7 +233,7 @@ const AdminEditItem = () => {
             gap: 20,
           }}
         >
-          <Button onClick={handleFinalUpdate} status={patchStatus}>
+          <Button onClick={handleUpdate} status={patchStatus}>
             수정
           </Button>
           <S.Button onClick={handleRemove} $variant="error">
