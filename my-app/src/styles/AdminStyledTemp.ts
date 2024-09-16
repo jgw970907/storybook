@@ -62,12 +62,18 @@ export const Button = styled.button<{ $variant?: Variant; color?: string }>`
   border-radius: 10px;
   font-weight: 500;
   white-space: nowrap;
+  cursor: pointer;
+  &:hover {
+    background-color: ${getStyledColor('red', 700)};
+    transition: background-color 0.2s ease-in;
+  }
   @media screen and (max-width: 1400px) {
     min-width: ${pixelToRem(60)};
     min-height: ${pixelToRem(30)};
     padding: 0px 6px;
     font-weight: 500;
   }
+
   ${({ $variant }) => {
     switch ($variant) {
       case 'primary':
