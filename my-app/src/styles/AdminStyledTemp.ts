@@ -7,13 +7,17 @@ export const Layout = styled.div`
   height: 100%;
   display: flex;
   justify-content: center;
+  padding: 40px;
 `;
 
 export const Container = styled.div`
+  width: 100%;
+  height: 100%;
+  min-height: 750px;
   border-radius: 4px;
   height: 100%;
   background-color: #fff;
-  padding: 30px 25px;
+  padding: 40px 40px;
 `;
 
 export const SubContainer = styled.div`
@@ -140,7 +144,13 @@ export const InputField = styled.div<{ $marginTop?: number }>`
     margin-top: 10px;
   }
 `;
-
+export const NoMessage = styled.div`
+  font-size: ${pixelToRem(20)};
+  font-weight: 700;
+  color: ${getStyledColor('gray', 900)};
+  text-align: center;
+  margin-top: 50px;
+`;
 export const Input = styled.input`
   width: 100%;
   max-width: ${pixelToRem(600)};

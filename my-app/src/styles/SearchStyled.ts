@@ -28,6 +28,7 @@ export const WrapperSearch = styled.div<{ backColorType: ButtonColorType }>`
   align-items: center;
   background-color: ${({ backColorType }) => getButtonColor(backColorType, 500)};
   margin-top: 20px;
+  border-radius: 20px;
 `;
 export const Search = styled.div`
   z-index: 1;

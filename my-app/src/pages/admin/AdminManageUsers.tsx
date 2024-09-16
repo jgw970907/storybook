@@ -7,6 +7,7 @@ import { useDeleteUser, useGetUserlist } from 'queries/users';
 import { Fragment } from 'react';
 import { useUserStore } from 'store/useUserStore';
 import * as S from 'styles/AdminStyledTemp';
+import { LoaderScreen } from 'styles/LoaderWrapper';
 
 const AdminManageUsers = () => {
   const { user } = useUserStore();
@@ -16,7 +17,11 @@ const AdminManageUsers = () => {
   const { currentPage, setCurrentPage, handleNextPage, handlePrevPage } = useAdminPagination();
 
   if (!users || isLoading) {
-    return <Loader />;
+    return (
+      <LoaderScreen>
+        <Loader />
+      </LoaderScreen>
+    );
   }
 
   const handleRemove = (id: string, name: string, role: string) => {

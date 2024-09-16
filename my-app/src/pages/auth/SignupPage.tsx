@@ -6,6 +6,7 @@ import { useUserStore } from 'store/useUserStore';
 import { signUp } from 'api/auth';
 import * as S from 'styles/LoginStyled';
 import SignupForm from 'components/auth/SignupForm';
+import Bottom from 'components/layout/Bottom';
 
 const SignupPage = () => {
   const navigate = useNavigate();
@@ -37,18 +38,21 @@ const SignupPage = () => {
   };
 
   return (
-    <S.Body>
-      <S.Layout>
-        <S.Title>회원가입</S.Title>
-        <SignupForm onSubmit={handleSubmit} />
-        <S.Wrapper $gap={20} $marginTop={40}>
-          <div>
-            <S.RegistText>이미 회원이신가요?</S.RegistText>
-            <S.StyledLink to="/login">로그인</S.StyledLink>
-          </div>
-        </S.Wrapper>
-      </S.Layout>
-    </S.Body>
+    <>
+      <S.Body>
+        <S.Layout>
+          <S.Title>회원가입</S.Title>
+          <SignupForm onSubmit={handleSubmit} />
+          <S.Wrapper $gap={20} $marginTop={40}>
+            <div>
+              <S.RegistText>이미 회원이신가요?</S.RegistText>
+              <S.StyledLink to="/login">로그인</S.StyledLink>
+            </div>
+          </S.Wrapper>
+        </S.Layout>
+      </S.Body>
+      <Bottom />
+    </>
   );
 };
 

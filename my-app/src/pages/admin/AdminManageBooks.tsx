@@ -13,6 +13,7 @@ import useAdminPagination from 'hooks/useAdminPagination';
 import AdminPagination from 'components/admin/AdminPagination';
 import AdminLayout from 'components/admin/AdminLayout';
 import AdminTable from 'components/admin/AdminTable';
+import { LoaderScreen } from 'styles/LoaderWrapper';
 const AdminManage = () => {
   const { useDeleteBook, useGetBooksAdmin } = bookQueries;
   const { currentPage, setCurrentPage, handleNavigate, handlePrevPage, handleNextPage } =
@@ -20,7 +21,7 @@ const AdminManage = () => {
   const { setSelectedBook } = useSelectedBook();
   const { mutate: remove } = useDeleteBook(currentPage);
 
-  const { data: books, status } = useGetBooksAdmin({
+  const { data: books, status: bookGetLoading } = useGetBooksAdmin({
     take: 10,
     page: currentPage,
     order__createdAt: 'DESC',
@@ -59,11 +60,15 @@ const AdminManage = () => {
     remove(id);
   };
 
-  if (status === 'loading' || !books) {
-    return <S.Layout>{status === 'loading' && <Loader />}</S.Layout>;
+  if (bookGetLoading === 'loading') {
+    return (
+      <LoaderScreen>
+        <Loader />
+      </LoaderScreen>
+    );
   }
 
-  return (
+  return books && books.data.length > 0 ? (
     <AdminLayout title="책 관리">
       <AdminTable headers={['No', '제목', '생성자', '조회수', '생성일', '수정 및 삭제']}>
         {books.data.map((book, index) => (
@@ -92,6 +97,10 @@ const AdminManage = () => {
           handleNextPage={handleNextPage}
         />
       </S.PaginationWrapper>
+    </AdminLayout>
+  ) : (
+    <AdminLayout title="책 관리">
+      <S.NoMessage>책이 없습니다.</S.NoMessage>
     </AdminLayout>
   );
 };

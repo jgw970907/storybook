@@ -10,6 +10,7 @@ import AdminPagination from 'components/admin/AdminPagination';
 import AdminLayout from 'components/admin/AdminLayout';
 import AdminTable from 'components/admin/AdminTable';
 import AdminManageBannedWords from 'components/admin/AdminManageBannedWords';
+import { LoaderScreen } from 'styles/LoaderWrapper';
 
 const take = 10;
 
@@ -36,12 +37,15 @@ const AdminManageReviews = () => {
   };
 
   if (isLoading) {
-    return <Loader />;
+    return (
+      <LoaderScreen>
+        <Loader />
+      </LoaderScreen>
+    );
   }
 
   return (
     <FlexAlign>
-      <AdminManageBannedWords />
       <AdminLayout title="리뷰 관리">
         <AdminTable headers={['No', '책이름', '댓글수', '상세보기']}>
           {comments?.map((comment, index) => (
@@ -98,6 +102,7 @@ const AdminManageReviews = () => {
           </ModalContent>
         </Modal>
       )}
+      <AdminManageBannedWords />
     </FlexAlign>
   );
 };
@@ -106,6 +111,7 @@ export default AdminManageReviews;
 
 const FlexAlign = styled.div`
   display: flex;
+  flex-direction: column;
   gap: 20px;
 `;
 

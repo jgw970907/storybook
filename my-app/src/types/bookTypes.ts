@@ -67,7 +67,8 @@ export type BookRes = {
     updatedAt: string;
     createdAt: string;
     order: number;
-    type: number;
+    type: string;
+    name: string;
     path: string;
     fbPath: string;
   }>;

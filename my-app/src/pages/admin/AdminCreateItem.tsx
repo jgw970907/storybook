@@ -18,9 +18,9 @@ const AdminCreateItem = () => {
     if (
       bookInfo.title.length === 0 ||
       bookInfo.content.length === 0 ||
-      bookInfo.images.length === 0 ||
       bookInfo.authorName.length === 0 ||
-      bookInfo.category.length === 0
+      bookInfo.category.length === 0 ||
+      bookInfo.images.length === 0
     ) {
       setIsInvalid(true);
     } else {
@@ -52,11 +52,11 @@ const AdminCreateItem = () => {
   };
 
   const onClick = async () => {
-    mutate({ ...bookInfo });
-    resetBookInfo();
+    mutate(bookInfo);
     if (imageRef.current) {
       imageRef.current.handleCancel();
     }
+    resetBookInfo();
   };
 
   return (

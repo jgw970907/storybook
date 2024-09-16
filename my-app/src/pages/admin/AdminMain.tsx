@@ -1,4 +1,5 @@
 import { AdminNav } from 'components/admin';
+import Bottom from 'components/layout/Bottom';
 
 import { Outlet } from 'react-router-dom';
 import { styled } from 'styled-components';
@@ -10,6 +11,7 @@ const AdminMain = () => {
       <AdminNav />
       <Main>
         <Outlet />
+        <Bottom />
       </Main>
     </Layout>
   );
@@ -30,6 +32,6 @@ const Main = styled.main`
   width: 100%;
   height: 100%;
   min-width: ${pixelToRem(290)};
-  padding: 20px;
+
   overflow-y: scroll;
 `;
