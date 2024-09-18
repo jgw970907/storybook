@@ -5,7 +5,7 @@ const BottomContainer = styled.div`
   width: 100%;
   background-color: #f8f9fa;
   bottom: 0;
-  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
 `;
 const BottomWrapper = styled.div`
   padding: 5rem;

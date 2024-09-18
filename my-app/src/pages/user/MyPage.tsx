@@ -163,7 +163,7 @@ const MyPage = () => {
   return (
     <Container>
       <section>
-        <div className="userTable">
+        <UserTable>
           <h1 className="tbody">내정보</h1>
           <form>
             <table>
@@ -258,7 +258,14 @@ const MyPage = () => {
                         {LikesBooks.books.map((data) => {
                           const { id, title, images, ...spread } = data;
                           return (
-                            <div key={id}>
+                            <div
+                              style={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                              }}
+                              key={id}
+                            >
                               <Book
                                 key={id}
                                 id={id}
@@ -380,7 +387,7 @@ const MyPage = () => {
               <p>나의 스토리가 없습니다.</p>
             )}{' '}
           </div>
-        </div>
+        </UserTable>
       </section>
       <Bottom />
     </Container>
@@ -388,48 +395,91 @@ const MyPage = () => {
 };
 
 export default MyPage;
+const UserTable = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+  padding: 20px;
+  margin: 30px auto;
 
-const Container = styled.div`
-  position: relative;
-  min-width: 1300px;
-  min-height: 100vh;
-  overflow: hidden;
-
-  .userTable {
-    min-height: 200px;
-    margin: 100px 100px 30px;
-    padding: 50px;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    border-collapse: collapse;
-    color: black;
-  }
-  .editNickname {
-    background-color: transparent;
+  .tbody {
+    font-size: 20px;
+    font-weight: bold;
   }
 
-  .userTable table {
-    border-collapse: collapse;
+  form {
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
   }
 
-  .userTable th {
-    width: 200px;
+  table {
+    width: 100%;
+    border-collapse: collapse;
   }
 
-  .userTable th,
-  .userTable td {
-    border: 1px solid #ddd; /* 테이블의 경계 선 스타일 및 색상 설정 */
-    padding: 8px;
+  th {
+    width: 100px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    background-color: #f2f2f2;
     text-align: left;
   }
 
-  .userTable .likesbook {
-    align-items: center;
+  td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
   }
 
-  .userTable th {
-    background-color: #f2f2f2; /* 헤더 배경색 설정 */
+  input {
+    width: 100%;
+    padding: 5px;
+    border: 1px solid #ddd;
+  }
+
+  .changeNickname {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .passwordtable {
+    width: 100%;
+    > table {
+    }
+  }
+  .passwordtable th {
+    border: none;
+    background-color: transparent;
+  }
+
+  .passwordtable table {
+    border-collapse: separate;
+  }
+
+  .passwordtable button {
+    margin: 15px 8px;
+  }
+
+  .likesbook {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+  }
+
+  .editNickname {
+    background-color: transparent;
   }
 
   .changeNickname {
@@ -453,18 +503,6 @@ const Container = styled.div`
     font-size: 12px;
     width: 270px;
   }
-  .passwordtable th {
-    border: none;
-    background-color: transparent;
-  }
-
-  .passwordtable table {
-    border-collapse: separate;
-  }
-
-  .passwordtable button {
-    margin: 15px 8px;
-  }
 
   h1 {
     color: black;
@@ -474,11 +512,18 @@ const Container = styled.div`
   }
 `;
 
+const Container = styled.div`
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  overflow: hidden;
+`;
+
 const Layout = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 40px 0;
+  margin: 10px 0;
   width: 100%;
 `;
 

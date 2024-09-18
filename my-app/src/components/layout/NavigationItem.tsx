@@ -122,6 +122,9 @@ const Text = styled.div`
   @media screen and (max-width: 1400px) {
     font-size: ${pixelToRem(12)};
   }
+  @media screen and (max-width: 768px) {
+    font-size: ${pixelToRem(10)};
+  }
 `;
 const Logout = styled.button`
   height: 100%;
@@ -138,6 +141,12 @@ const Logout = styled.button`
   @media screen and (max-width: 1400px) {
     font-size: ${pixelToRem(12)};
     align-self: flex-end;
+  }
+  @media screen and (max-width: 1400px) {
+    font-size: ${pixelToRem(12)};
+  }
+  @media screen and (max-width: 768px) {
+    font-size: ${pixelToRem(10)};
   }
 `;
 

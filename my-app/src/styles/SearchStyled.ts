@@ -29,6 +29,7 @@ export const WrapperSearch = styled.div<{ backColorType: ButtonColorType }>`
   background-color: ${({ backColorType }) => getButtonColor(backColorType, 500)};
   margin-top: 20px;
   border-radius: 20px;
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
 `;
 export const Search = styled.div`
   z-index: 1;

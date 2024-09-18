@@ -1,6 +1,6 @@
 import * as S from 'styles/SearchStyled';
 import Dropdown from './Dropdown';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Select, Option } from 'styles/AdminStyledTemp';
 interface SearchBarProps {
   setSearchTitle: (search: string) => void;
