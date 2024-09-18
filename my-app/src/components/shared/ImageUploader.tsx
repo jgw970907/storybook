@@ -30,7 +30,7 @@ const ImageUploader = (
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [previewUrls, setPreviewUrls] = useState<string[]>([...imagesSrc]);
   const [fileData, setFileData] = useState<File[] | null>(null);
-
+  const [deleteLoading, setDeleteLoading] = useState<boolean>(false);
   const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB로 설정
   // 프리뷰 이미지 변경
   const previewChange = (imageFiles: File[]) => {
@@ -109,15 +109,26 @@ const ImageUploader = (
   };
 
   const handleDelete = async (type: 'book' | 'story', id: string, imageId: string) => {
-    if (handleDeleteImage && id) {
-      await handleDeleteImage(type, id, imageId);
-      // 이미지 삭제 후 상태 업데이트
-      setPreviewUrls((prev) => prev.filter((url, index) => imageIds[index] !== imageId));
-      setFileData((prev) => {
-        const updatedFileData = prev?.filter((data, index) => imageIds[index] !== imageId) || null;
-        onChange?.(updatedFileData); // onChange 호출
-        return updatedFileData;
-      });
+    try {
+      setDeleteLoading(true);
+      if (imagesSrc.length === 0) {
+        handleCancel();
+      }
+      if (handleDeleteImage && id) {
+        await handleDeleteImage(type, id, imageId);
+        // 이미지 삭제 후 상태 업데이트
+        setPreviewUrls((prev) => prev.filter((url, index) => imageIds[index] !== imageId));
+        setFileData((prev) => {
+          const updatedFileData =
+            prev?.filter((data, index) => imageIds[index] !== imageId) || null;
+          onChange?.(updatedFileData); // onChange 호출
+          return updatedFileData;
+        });
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setDeleteLoading(false);
     }
   };
   return (
@@ -160,6 +171,7 @@ const ImageUploader = (
                       ? handleDelete(bookId ? 'book' : 'story', bookId || storyId, imageIds[index])
                       : handleCancel(index);
                   }}
+                  disabled={deleteLoading}
                 >
                   <FaTrashAlt />
                 </DeleteButton>
@@ -173,18 +185,20 @@ const ImageUploader = (
 
 export default forwardRef(ImageUploader);
 const ImagePreviews = styled.div`
-  width: 100%;
+  width: 300px;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1px;
 `;
 const ImageWrapper = styled.div`
   position: relative;
-  width: 100px;
-  height: 100px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   & > img {
-    width: 100%;
-    height: 100%;
+    width: 80px;
+    height: 80px;
     object-fit: cover;
   }
   &:hover div {
@@ -204,6 +218,9 @@ const DeleteButton = styled.button`
   }
   &:active {
     color: ${getStyledColor('red', 1000)};
+  }
+  &:disabled {
+    cursor: not-allowed;
   }
 `;
 const ImageData = styled.div`

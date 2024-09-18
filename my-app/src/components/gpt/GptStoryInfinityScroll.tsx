@@ -18,6 +18,7 @@ const StoryGrid = styled.div`
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 10px;
   padding: 20px;
+  width: 100%;
 `;
 
 const LoadingMessage = styled.div`
