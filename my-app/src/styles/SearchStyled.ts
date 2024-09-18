@@ -113,19 +113,19 @@ export const Button = styled.button<{ btncolortype: ButtonColorType }>`
   }
 
   @media screen and (max-width: 1400px) {
-    width: ${pixelToRem(70)};
-    height: ${pixelToRem(35)};
+    width: ${pixelToRem(100)};
+    height: ${pixelToRem(40)};
     font-size: ${pixelToRem(12)};
   }
 
   @media screen and (max-width: 1200px) {
-    width: ${pixelToRem(60)};
+    width: ${pixelToRem(80)};
     height: ${pixelToRem(30)};
     font-size: ${pixelToRem(10)};
   }
 
   @media screen and (max-width: 768px) {
-    width: ${pixelToRem(50)};
+    width: ${pixelToRem(70)};
     height: ${pixelToRem(25)};
     font-size: ${pixelToRem(8)};
   }

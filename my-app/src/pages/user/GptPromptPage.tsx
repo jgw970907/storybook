@@ -276,16 +276,16 @@ export default function GptPromptPage() {
           <h2>GPT-4o-mini를 통해 영감을 얻으세요</h2>
 
           <p>{errorText}</p>
-          <form onSubmit={handleGptChatSubmit} style={{ width: '100%' }}>
-            <textarea
+
+          <form onSubmit={handleGptChatSubmit}>
+            <TextArea
               disabled={gptChatStatus === 'loading'}
               value={prompt || gptResponse}
               onChange={(e) => setPrompt(e.target.value)}
               placeholder="Gpt에게 요청할 내용을 입력하세요."
               rows={5}
-              style={{ width: '100%', marginBottom: '10px', padding: '10px' }}
+              height="200px"
             />
-
             <BtnWrap>
               {gptChatStatus === 'loading' ? <Spinner width={'2rem'} /> : null}
               <Button btncolortype="gray" type="submit" disabled={gptChatStatus === 'loading'}>
@@ -294,15 +294,13 @@ export default function GptPromptPage() {
             </BtnWrap>
           </form>
 
-          <div style={{ width: '100%' }}>
-            <textarea
-              readOnly={true}
-              value={promptResult}
-              onChange={handleResultChange}
-              rows={10}
-              style={{ width: '100%', padding: '10px', height: '300px', resize: 'vertical' }}
-            />
-          </div>
+          <TextArea
+            readOnly={true}
+            value={promptResult}
+            onChange={handleResultChange}
+            rows={10}
+            height="300px"
+          />
         </Section>
 
         <Section>
@@ -312,7 +310,7 @@ export default function GptPromptPage() {
             데이터 유실을 방지하세요.
           </p>
 
-          <textarea
+          <TextArea
             disabled={
               appendStatus === 'loading' ||
               changeStatus === 'loading' ||
@@ -323,7 +321,7 @@ export default function GptPromptPage() {
             value={story}
             onChange={handleUserTextChange}
             rows={20} // rows 속성을 20으로 변경
-            style={{ width: '100%', padding: '10px', height: '600px', resize: 'vertical' }} // height 스타일 추가
+            height="600px"
             onMouseUp={handleTextSelection}
           />
           <BtnWrap>
@@ -383,17 +381,11 @@ export default function GptPromptPage() {
               padding: '10px',
             }}
           >
-            <textarea
+            <TextArea
               placeholder="User Prompt"
               value={userRequest}
               onChange={(e) => setUserRequest(e.target.value)}
-              style={{
-                marginBottom: '10px',
-                padding: '5px',
-                width: '100%',
-                height: '100px',
-                resize: 'both',
-              }}
+              height="100px"
             />
             <Button
               btncolortype="primary"
@@ -451,4 +443,13 @@ const Checkbox = styled.input`
 `;
 const Span = styled.span`
   font-size: 1rem;
+`;
+const TextArea = styled.textarea<{ height: string }>`
+  margin: 10px;
+  padding: 10px;
+  width: 100%;
+  min-height: ${({ height }) => height};
+  resize: both;
+  border: 2px solid black;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 `;
