@@ -70,17 +70,27 @@ const S = {
   `,
 
   Button: styled.button`
+    display: flex;
+    justify-content: center;
+    align-items: center;
     position: relative;
-    width: ${pixelToRem(100)};
-    padding: 14px 20px;
+    width: ${pixelToRem(80)};
+    height: ${pixelToRem(40)};
+    padding: ${pixelToRem(10)} ${pixelToRem(10)};
     border-radius: 4px;
     background-color: ${getStyledColor('white', 'high')};
     font-weight: 700;
-
+    font-size: ${pixelToRem(14)};
     transition:
       background-color 0.2s ease,
       color 0.2s ease;
-
+    &:hover {
+      color: ${getStyledColor('white', 'high')};
+      background-color: ${getStyledColor('purple', 800)};
+      transition:
+        background-color 0.2s ease,
+        color 0.2s ease;
+    }
     &:focus {
       color: ${getStyledColor('white', 'high')};
       background-color: ${getStyledColor('primary', 600)};
@@ -91,11 +101,23 @@ const S = {
       cursor: not-allowed;
       opacity: 0.7;
     }
+
     @media screen and (max-width: 1400px) {
-      width: ${pixelToRem(80)};
-      padding: 10px 16px;
-      border-radius: 3px;
+      width: ${pixelToRem(70)};
+      height: ${pixelToRem(35)};
       font-size: ${pixelToRem(12)};
+    }
+
+    @media screen and (max-width: 1200px) {
+      width: ${pixelToRem(60)};
+      height: ${pixelToRem(30)};
+      font-size: ${pixelToRem(10)};
+    }
+
+    @media screen and (max-width: 768px) {
+      width: ${pixelToRem(50)};
+      height: ${pixelToRem(25)};
+      font-size: ${pixelToRem(8)};
     }
   `,
   List: styled.ul`

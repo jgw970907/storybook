@@ -126,6 +126,7 @@ export default function GptPromptPage() {
   };
 
   const handleUpload = async () => {
+    setUploadLoading(true);
     if (!story) {
       setErrorText('내용을 입력하세요');
       return;
@@ -139,7 +140,6 @@ export default function GptPromptPage() {
       setImageIdsStore(newImageIds);
     }
     try {
-      setUploadLoading(true);
       await updateStory({
         title,
         storyId: storyId || '',
@@ -289,7 +289,7 @@ export default function GptPromptPage() {
             <BtnWrap>
               {gptChatStatus === 'loading' ? <Spinner width={'2rem'} /> : null}
               <Button btncolortype="gray" type="submit" disabled={gptChatStatus === 'loading'}>
-                Gpt 요청
+                Gpt로 응답받기
               </Button>{' '}
             </BtnWrap>
           </form>

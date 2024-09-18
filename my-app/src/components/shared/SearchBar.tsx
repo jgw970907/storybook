@@ -62,31 +62,39 @@ const SearchBar = ({
   return (
     <S.WrapperSearch backColorType={backColorType}>
       <S.Search>
-        <Select
-          size={'SMALL'}
-          value={searchOption}
-          onChange={(e) => setSearchOption(e.target.value)}
-        >
-          <Option size={'SMALL'} value="제목">
-            제목
-          </Option>
-          <Option size={'SMALL'} value="작가">
-            작가
-          </Option>
-        </Select>
-        <S.SearchInput
-          placeholder="검색어를 입력하세요"
-          value={searchState}
-          onChange={onChangeSearch}
-          onKeyDown={onKeyPressSearch}
-        />
-        <S.Button btncolortype={'primary'} onClick={onClickSearch} disabled={status === 'loading'}>
-          검색
-        </S.Button>
-        <S.Button btncolortype={'danger'} onClick={onClickReset} disabled={status === 'loading'}>
-          초기화
-        </S.Button>
-        <Dropdown order={order} setOrder={setOrder} />
+        <S.SearchLeft>
+          <Select
+            size={'SMALL'}
+            value={searchOption}
+            onChange={(e) => setSearchOption(e.target.value)}
+          >
+            <Option size={'SMALL'} value="제목">
+              제목
+            </Option>
+            <Option size={'SMALL'} value="작가">
+              작가
+            </Option>
+          </Select>
+          <S.SearchInput
+            placeholder="검색어를 입력하세요"
+            value={searchState}
+            onChange={onChangeSearch}
+            onKeyDown={onKeyPressSearch}
+          />
+        </S.SearchLeft>
+        <S.SearchRight>
+          <S.Button
+            btncolortype={'primary'}
+            onClick={onClickSearch}
+            disabled={status === 'loading'}
+          >
+            검색
+          </S.Button>
+          <S.Button btncolortype={'danger'} onClick={onClickReset} disabled={status === 'loading'}>
+            초기화
+          </S.Button>
+          <Dropdown order={order} setOrder={setOrder} />
+        </S.SearchRight>
       </S.Search>
     </S.WrapperSearch>
   );

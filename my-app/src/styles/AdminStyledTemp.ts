@@ -23,9 +23,9 @@ export const Container = styled.div`
 export const SubContainer = styled.div`
   border-radius: 4px;
   background-color: #fff;
-  padding: 20px 25px;
+  padding: ${pixelToRem(20)} ${pixelToRem(25)};
   @media screen and (max-width: 1400px) {
-    padding: 15px 20px;
+    padding: ${pixelToRem(15)} ${pixelToRem(20)};
   }
 `;
 
@@ -211,7 +211,7 @@ const sizeStyles = {
   LARGE: css`
     max-width: ${pixelToRem(400)};
     padding: 10px 20px;
-    font-size: ${pixelToRem(14)};
+    font-size: ${pixelToRem(15)};
   `,
 };
 
@@ -221,7 +221,7 @@ interface SelectProps {
 
 export const Select = styled.select<SelectProps>`
   font-weight: 700;
-  width: 100%;
+  width: 10rem;
   border-radius: 10px;
   color: ${getStyledColor('gray', 1200)};
   background-color: ${getStyledColor('gray', 500)};

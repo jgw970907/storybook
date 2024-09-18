@@ -15,7 +15,7 @@ const SectionTitle = styled.h2`
   gap: 0.3rem;
   width: 10rem;
   padding: 0.5rem 1rem;
-  font-size: 1.5rem;
+  font-size: 1rem;
   margin-top: 20px;
   margin-bottom: 10px;
   border-radius: 1rem;

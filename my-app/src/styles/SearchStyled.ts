@@ -22,7 +22,7 @@ export const WrapperSearch = styled.div<{ backColorType: ButtonColorType }>`
   z-index: 1;
   width: 100%;
   height: 100%;
-  padding: 20px;
+  padding: 5px;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
@@ -36,6 +36,11 @@ export const Search = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+
+  @media screen and (max-width: 768px) {
+    flex-direction: column;
+    gap: 10px;
+  }
 `;
 export const SearchInput = styled.input`
   width: 100%;
@@ -49,28 +54,32 @@ export const SearchInput = styled.input`
   transition: all 0.3s ease;
 
   @media screen and (max-width: 1400px) {
-    max-width: 350px;
+    max-width: 450px;
     height: 45px;
     font-size: ${pixelToRem(14)};
   }
 
   @media screen and (max-width: 768px) {
-    max-width: 300px;
+    max-width: 400px;
     height: 40px;
     font-size: ${pixelToRem(12)};
   }
 
   @media screen and (max-width: 480px) {
-    max-width: 250px;
+    max-width: 300px;
     height: 35px;
     font-size: ${pixelToRem(10)};
   }
 `;
 
 export const Button = styled.button<{ btncolortype: ButtonColorType }>`
-  width: 100px;
-  height: 40px;
+  width: ${pixelToRem(100)};
+  height: ${pixelToRem(40)};
+  padding: ${pixelToRem(10)} ${pixelToRem(10)};
   border-radius: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   color: ${getStyledColor('black', 500)};
   background-color: ${({ btncolortype }) => getButtonColor(btncolortype, 500)};
   font-size: ${pixelToRem(14)};
@@ -103,28 +112,22 @@ export const Button = styled.button<{ btncolortype: ButtonColorType }>`
   }
 
   @media screen and (max-width: 1400px) {
-    width: 80px;
-    height: 35px;
+    width: ${pixelToRem(70)};
+    height: ${pixelToRem(35)};
     font-size: ${pixelToRem(12)};
   }
 
-  @media screen and (max-width: 768px) {
-    width: 70px;
-    height: 30px;
+  @media screen and (max-width: 1200px) {
+    width: ${pixelToRem(60)};
+    height: ${pixelToRem(30)};
     font-size: ${pixelToRem(10)};
   }
 
-  @media screen and (max-width: 480px) {
-    width: 60px;
-    height: 25px;
+  @media screen and (max-width: 768px) {
+    width: ${pixelToRem(50)};
+    height: ${pixelToRem(25)};
     font-size: ${pixelToRem(8)};
   }
-`;
-export const SearchSelect = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-right: 10px;
 `;
 export const SearchOption = styled.span<{ selected: boolean }>`
   font-size: ${pixelToRem(14)};
@@ -138,4 +141,17 @@ export const SearchOption = styled.span<{ selected: boolean }>`
   &:hover {
     color: ${getStyledColor('black', 500)};
   }
+`;
+
+export const SearchRight = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+`;
+export const SearchLeft = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
 `;
