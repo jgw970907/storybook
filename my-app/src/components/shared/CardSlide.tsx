@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { Card } from './Card';
 import { storyArrayForInfi } from 'types/gptTypes';
-
+import { debounce } from 'lodash';
 const SlideContainer = styled.div`
   position: relative;
   width: 100%;
@@ -14,8 +14,12 @@ const SlideWrapper = styled.div<{ currentIndex: number; cardWidth: number; gap: 
   display: flex;
   transition: transform 0.3s ease-in-out;
   transform: ${({ currentIndex, cardWidth, gap }) =>
-    `translateX(-${currentIndex * (cardWidth + gap)}px)`}; // 카드의 너비와 갭 반영
-  gap: ${({ gap }) => `${gap}px`}; // 카드 사이의 간격
+    `translateX(-${currentIndex * (cardWidth + gap)}px)`};
+  gap: ${({ gap }) => `${gap}px`};
+
+  > div {
+    flex: 0 0 ${({ cardWidth }) => `${cardWidth}px`}; // 카드의 너비를 지정
+  }
 `;
 
 const Button = styled.button`
@@ -49,10 +53,22 @@ interface CardSlideProps {
 export const CardSlide: React.FC<CardSlideProps> = ({ items }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [cardWidth, setCardWidth] = useState(0);
-  const [gap, setGap] = useState(20); // 카드 사이의 간격
+  const [gap, setGap] = useState(20);
   const slideRef = useRef<HTMLDivElement>(null);
-  const [visibleCards, setVisibleCards] = useState(5); // 기본적으로 보이는 카드 개수
+  const [visibleCards, setVisibleCards] = useState(5);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth); // 창 너비 상태
 
+  // 창 너비를 추적하여 visibleCards 상태를 업데이트
+  useEffect(() => {
+    // debounce를 이용해 창 크기 변경 시 상태 업데이트를 지연
+    const handleResize = debounce(() => {
+      setWindowWidth(window.innerWidth);
+    }, 1000); // 200ms 지연
+
+    window.addEventListener('resize', handleResize);
+    console.log(gap, cardWidth, visibleCards, windowWidth);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [windowWidth]);
   // 카드 너비를 계산하여 상태로 저장
   useEffect(() => {
     const updateLayout = () => {
@@ -60,11 +76,17 @@ export const CardSlide: React.FC<CardSlideProps> = ({ items }) => {
         const slideWidth = slideRef.current.clientWidth;
 
         // 화면 크기에 따라 visibleCards와 카드 간격을 동적으로 조정
-        const newVisibleCards = window.innerWidth >= 1200 ? 5 : window.innerWidth >= 768 ? 3 : 1; // 화면 크기에 따라 보여질 카드 수 결정
-        const newGap = window.innerWidth >= 768 ? 20 : 10; // 모바일에서는 간격을 줄임
+        const newVisibleCards = windowWidth >= 1200 ? 5 : windowWidth >= 768 ? 3 : 1;
+        const newGap = windowWidth >= 768 ? 20 : 10;
+
         setGap(newGap);
         setVisibleCards(newVisibleCards);
-        setCardWidth((slideWidth - newGap * (newVisibleCards - 1)) / newVisibleCards); // 카드 너비 계산
+        setCardWidth((slideWidth - newGap * (newVisibleCards - 1)) / newVisibleCards);
+
+        // currentIndex를 재조정하여 범위를 벗어나지 않도록 처리
+        setCurrentIndex((prevIndex) =>
+          Math.min(prevIndex, items ? items.length - newVisibleCards : 0),
+        );
       }
     };
 
@@ -72,15 +94,15 @@ export const CardSlide: React.FC<CardSlideProps> = ({ items }) => {
     window.addEventListener('resize', updateLayout);
 
     return () => window.removeEventListener('resize', updateLayout);
-  }, []);
+  }, [items, windowWidth]);
 
   const handlePrev = () => {
     setCurrentIndex((prevIndex) => Math.max(prevIndex - 1, 0));
   };
 
   const handleNext = () => {
-    setCurrentIndex(
-      (prevIndex) => Math.min(prevIndex + 1, 10 - visibleCards), // 10개의 데이터만 표시
+    setCurrentIndex((prevIndex) =>
+      Math.min(prevIndex + 1, items ? items.length - visibleCards : 0),
     );
   };
 
@@ -100,11 +122,14 @@ export const CardSlide: React.FC<CardSlideProps> = ({ items }) => {
             authorName={item.authorName}
             isMyPage={false}
             userId={item.userId}
+            cardWidth={cardWidth}
           />
         ))}
       </SlideWrapper>
       {currentIndex > 0 && <PrevButton onClick={handlePrev}>&lt;</PrevButton>}
-      {currentIndex < 10 - visibleCards && <NextButton onClick={handleNext}>&gt;</NextButton>}
+      {currentIndex < items.length - visibleCards && (
+        <NextButton onClick={handleNext}>&gt;</NextButton>
+      )}
     </SlideContainer>
   ) : (
     <div>데이터가 없습니다.</div>

@@ -15,6 +15,7 @@ export const Card = ({
   authorName,
   userId,
   clicks,
+  cardWidth,
 }: {
   id: string;
   title: string;
@@ -27,6 +28,7 @@ export const Card = ({
   authorName?: string;
   userId: string;
   clicks?: number;
+  cardWidth?: number;
 }) => {
   const handleClick = (id: string) => {
     if (id) {
@@ -36,7 +38,7 @@ export const Card = ({
     }
   };
   return (
-    <CardStyle>
+    <CardStyle $cardWidth={cardWidth}>
       <StyledLink
         to={isMyPage ? `/gptpage/prompt/${id}` : `/gptpage/detail/${id}`}
         style={{ width: '100%' }}
@@ -64,8 +66,11 @@ export const Card = ({
     </CardStyle>
   );
 };
-const CardStyle = styled.div`
-  flex: 0 0 calc(20% - 16px); // Adjusted to account for gap
+const CardStyle = styled.div.attrs<{ $cardWidth?: number }>((props) => ({
+  style: {
+    width: props.$cardWidth ? `${props.$cardWidth}px` : 'auto',
+  },
+}))`
   box-sizing: border-box;
   cursor: pointer;
   border-radius: 20px;
@@ -75,12 +80,14 @@ const CardStyle = styled.div`
   flex-direction: column;
   align-items: center;
   height: 330px;
+
   &:hover {
     background-color: #f5f5f5;
     transform: scale(1.03);
     transition: all 0.3s ease;
   }
 `;
+
 const StyledLink = styled(RouterLink)`
   width: 100%;
   color: inherit; // 기본 글자색을 상속받음
@@ -101,7 +108,7 @@ const Author = styled.p`
   text-align: center;
   padding: 10px;
   font-weight: bold;
-  font-size: 1rem;
+  font-size: ${pixelToRem(14)};
   z-index: 1;
   transition:
     transform 0.2s,
@@ -111,23 +118,35 @@ const Author = styled.p`
     transform: scale(1.1);
     background-color: rgba(30, 9, 9, 0.8);
   }
+  @media screen and (max-width: 768px) {
+    font-size: ${pixelToRem(12)};
+  }
 `;
-const Title = styled.p`
+const Title = styled.div`
   width: 100%;
-  height: ${pixelToRem(40)};
+  height: 40px;
   text-align: center;
   padding: 10px;
   font-weight: bold;
   color: black;
-  font-size: 1rem;
+  font-size: ${pixelToRem(14)};
   text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+
+  @media screen and (max-width: 768px) {
+    font-size: ${pixelToRem(12)};
+  }
 `;
 
 const Text = styled.p`
   text-align: center;
   padding: 5px;
-  font-size: 0.9em;
+  font-size: 0.9rem;
   color: #757575;
+  @media screen and (max-width: 768px) {
+    font-size: ${pixelToRem(10)};
+  }
 `;
 
 const Status = styled.p`

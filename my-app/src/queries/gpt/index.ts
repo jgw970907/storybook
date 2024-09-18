@@ -112,7 +112,7 @@ export const useStoriesInfinityScroll = (
 export const useGetMyStories = (queries: GptMyStoriesParams, userId: string, ismypage: boolean) => {
   const { isLogin } = useUserStore.getState();
 
-  const key = [QueryKeys.USER, 'mystories', queries.page.toString()];
+  const key = [QueryKeys.USER, 'mystories', queries.page.toString(), userId];
 
   return useQuery({
     queryKey: key,
