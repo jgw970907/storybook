@@ -45,7 +45,7 @@ const MyPage = () => {
   const { mutate: patchMutate } = usePatchDisclosure(currentPage.toString());
   const {
     data: LikesBooks,
-    status,
+    status: getbookStatus,
     isSuccess,
   } = useGetBookLikes({ take: take, page: currentPage });
   const { data: MyStories, status: storyStatus } = useGetMyStories(
@@ -245,7 +245,7 @@ const MyPage = () => {
           <div className="likesbook">
             {/* 내가 좋아한 책같은 경우 한줄로 배치할 것이기 때문에 flex 사용 */}
             <h1>내가 좋아한 책</h1>
-            {status === 'loading' ? (
+            {getbookStatus === 'loading' ? (
               <LoaderWrapper>
                 <Loader />
               </LoaderWrapper>
@@ -253,7 +253,7 @@ const MyPage = () => {
               <>
                 <Layout>
                   <BookWrapper $isSuccess={isSuccess}>
-                    {storyStatus === 'success' && (
+                    {getbookStatus === 'success' && (
                       <>
                         {LikesBooks.books.map((data) => {
                           const { id, title, images, ...spread } = data;

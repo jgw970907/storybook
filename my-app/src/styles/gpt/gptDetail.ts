@@ -77,6 +77,9 @@ export const Ptag = styled.p`
   color: #333;
   font-family: 'GoormSansMedium';
   font-weight: 300;
+  @media screen and (max-width: 768px) {
+    font-size: 0.8rem;
+  }
 `;
 
 export const profileImg = styled.img<{ $size: string }>`
@@ -93,16 +96,26 @@ export const Title = styled.h1`
   font-family: 'GoormSansBold';
   font-weight: 800;
   padding-left: 1rem;
+  @media screen and (max-width: 768px) {
+    font-size: 1.5rem;
+  }
 `;
 
 export const HeaderWrapper = styled.div`
   width: 100%;
   display: flex;
-  gap: 1rem;
+  justify-content: center;
+  gap: 3rem;
   height: 500px;
   align-items: center;
-  justify-content: space-between;
   margin: 1rem;
+
+  @media screen and (max-width: 768px) {
+    flex-direction: column;
+    height: 100%;
+    align-items: center;
+    gap: 1.4rem;
+  }
 `;
 export const HeaderImageWrapper = styled.div`
   min-width: 300px;
@@ -172,5 +185,8 @@ export const BodyContainer = styled.div`
     background-color: #f1f1f1;
     padding: 0.2rem 0.4rem;
     border-radius: 4px;
+  }
+  @media screen and (max-width: 768px) {
+    font-size: 0.8rem;
   }
 `;
