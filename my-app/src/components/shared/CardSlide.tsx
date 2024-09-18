@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { Card } from './Card';
 import { storyArrayForInfi } from 'types/gptTypes';
-import { debounce } from 'lodash';
+
 const SlideContainer = styled.div`
   position: relative;
   width: 100%;
@@ -56,28 +56,15 @@ export const CardSlide: React.FC<CardSlideProps> = ({ items }) => {
   const [gap, setGap] = useState(20);
   const slideRef = useRef<HTMLDivElement>(null);
   const [visibleCards, setVisibleCards] = useState(5);
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth); // 창 너비 상태
 
-  // 창 너비를 추적하여 visibleCards 상태를 업데이트
-  useEffect(() => {
-    // debounce를 이용해 창 크기 변경 시 상태 업데이트를 지연
-    const handleResize = debounce(() => {
-      setWindowWidth(window.innerWidth);
-    }, 1000); // 200ms 지연
-
-    window.addEventListener('resize', handleResize);
-    console.log(gap, cardWidth, visibleCards, windowWidth);
-    return () => window.removeEventListener('resize', handleResize);
-  }, [windowWidth]);
-  // 카드 너비를 계산하여 상태로 저장
   useEffect(() => {
     const updateLayout = () => {
       if (slideRef.current) {
         const slideWidth = slideRef.current.clientWidth;
 
         // 화면 크기에 따라 visibleCards와 카드 간격을 동적으로 조정
-        const newVisibleCards = windowWidth >= 1200 ? 5 : windowWidth >= 768 ? 3 : 1;
-        const newGap = windowWidth >= 768 ? 20 : 10;
+        const newVisibleCards = window.innerWidth >= 1200 ? 5 : window.innerWidth >= 768 ? 3 : 1;
+        const newGap = window.innerWidth >= 768 ? 20 : 10;
 
         setGap(newGap);
         setVisibleCards(newVisibleCards);
@@ -94,7 +81,7 @@ export const CardSlide: React.FC<CardSlideProps> = ({ items }) => {
     window.addEventListener('resize', updateLayout);
 
     return () => window.removeEventListener('resize', updateLayout);
-  }, [items, windowWidth]);
+  }, [items]);
 
   const handlePrev = () => {
     setCurrentIndex((prevIndex) => Math.max(prevIndex - 1, 0));

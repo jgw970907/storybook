@@ -22,11 +22,6 @@ const SearchBar = ({
   const [searchState, setSearchState] = useState('');
   const [searchOption, setSearchOption] = useState('제목');
 
-  useEffect(() => {
-    console.log('searchState', searchState);
-    console.log('isTitle', searchOption);
-  }, [searchState, searchOption]);
-
   const onChangeSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchState(e.target.value);
   };

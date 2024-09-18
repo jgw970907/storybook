@@ -23,7 +23,6 @@ export const postBooks = async ({ title, content, images, authorName, category }
   // let iamgePaths: string[] = [];?
   if (images && images.length > 0) {
     const uploadResults = await postImages(images);
-    console.log(uploadResults);
     imageIds = uploadResults.imageIds;
     if (imageIds.length === 0) {
       throw new Error('Image upload failed');
