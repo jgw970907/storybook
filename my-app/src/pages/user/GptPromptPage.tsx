@@ -1,8 +1,8 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import * as S from 'styles/gpt/gptLayout';
 import * as SS from 'styles/AdminStyledTemp';
-import { useChangeStoryWithGpt, useAppendStoryContent, usePostGptChat } from 'queries/gpt';
-import { updateStory, patchStoryContent, getMyStory } from 'api/gpt';
+import { usePostGptChat } from 'queries/gpt';
+import { updateStory, getMyStory } from 'api/gpt';
 import { useUserStore } from 'store/useUserStore';
 import { useGptStore } from 'store/usegptStore';
 import { Input } from 'styles/AdminStyledTemp';
@@ -15,26 +15,21 @@ import { BOOK_CATEGORIES } from 'constant';
 import { deleteImage, postImages } from 'api/imageapi';
 import { getStyledColor, pixelToRem } from 'utils';
 import Bottom from 'components/layout/Bottom';
+import { GptTextEditor } from 'components/gpt/GptTextEditor';
 
 export default function GptPromptPage() {
   const { user } = useUserStore();
   const { storyId } = useParams();
-  const [saveLoading, setSaveLoading] = useState(false);
+
   const [uploadLoading, setUploadLoading] = useState(false);
   const [category, setCategory] = useState('');
   const [prompt, setPrompt] = useState('');
   const [errorText, setErrorText] = useState('');
   const [isPublic, setIsPublic] = useState(true);
-
   const [promptResult, setPromptResult] = useState<string | undefined>('');
-  const [userRequest, setUserRequest] = useState('');
-  const [selectedText, setSelectedText] = useState<string | null>(null);
-  const [showPopup, setShowPopup] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [popupPosition, setPopupPosition] = useState<{ top: number; left: number } | null>(null);
-  // const [images, setImages] = useState<File[] | null>(null);
   const [imagesSrc, setImagesSrc] = useState<string[]>([]);
-  const textAreaRef = useRef<HTMLTextAreaElement>(null);
+
   const {
     setTitle,
     title,
@@ -46,8 +41,6 @@ export default function GptPromptPage() {
     imageIdsStore,
   } = useGptStore();
   const { mutate: postgptChatMutate, status: gptChatStatus } = usePostGptChat();
-  const { mutate: changeMutate, status: changeStatus } = useChangeStoryWithGpt();
-  const { mutate: appendMutate, status: appendStatus } = useAppendStoryContent();
 
   const imageRef = useRef<ImageUploaderImperativeHandle>(null);
 
@@ -121,10 +114,6 @@ export default function GptPromptPage() {
     setPromptResult(e.target.value);
   };
 
-  const handleUserTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setStory(e.target.value);
-  };
-
   const handleUpload = async () => {
     setUploadLoading(true);
     if (!story) {
@@ -155,72 +144,6 @@ export default function GptPromptPage() {
     } finally {
       setUploadLoading(false);
     }
-  };
-
-  const handleTextSelection = () => {
-    const selected = window.getSelection()?.toString();
-
-    if (selected) {
-      setSelectedText(selected);
-      setShowPopup(true);
-
-      if (textAreaRef.current) {
-        const { top, left } = textAreaRef.current.getBoundingClientRect();
-
-        setPopupPosition({ top: top + window.scrollY + 20, left: left + window.scrollX });
-      }
-    } else {
-      setSelectedText(null);
-
-      setShowPopup(false);
-    }
-  };
-  const handleSaveContent = async () => {
-    if (!story) {
-      setErrorText('내용을 입력하세요');
-      return;
-    }
-    setSaveLoading(true);
-    try {
-      await patchStoryContent(storyId || '', story);
-    } catch (error) {
-      alert('스토리 변경 중 에러가 발생했습니다: ${error.message}');
-    } finally {
-      setSaveLoading(false);
-    }
-  };
-  const handleAppendContent = async () => {
-    await handleSaveContent();
-    appendMutate(
-      { storyId: storyId || '', userRequest: userRequest },
-      {
-        onSuccess: (res) => {
-          const appendedText = res?.content;
-          if (appendedText) {
-            setStory(story + appendedText);
-          }
-        },
-      },
-    );
-  };
-  const handleGptRequest = async () => {
-    if (selectedText) {
-      changeMutate(
-        { userText: selectedText, userRequest: userRequest, storyId: storyId || '' },
-        {
-          onSuccess: (res) => {
-            const modifiedText = res?.content;
-
-            if (modifiedText && story) {
-              setStory(story.replace(selectedText, modifiedText));
-            }
-          },
-        },
-      );
-    }
-    setSelectedText(null);
-    setUserRequest('');
-    setShowPopup(false);
   };
 
   return loading ? (
@@ -309,8 +232,15 @@ export default function GptPromptPage() {
             드래그를 통해 스토리를 변경할 수 있습니다. 원하는대로 요청하세요. 저장버튼을 수시로 눌러
             데이터 유실을 방지하세요.
           </p>
-
-          <TextArea
+          <GptTextEditor
+            story={story}
+            setStory={setStory}
+            setErrorText={setErrorText}
+            storyId={storyId}
+            handleUpload={handleUpload}
+            uploadLoading={uploadLoading}
+          />
+          {/* <TextArea
             disabled={
               appendStatus === 'loading' ||
               changeStatus === 'loading' ||
@@ -324,83 +254,8 @@ export default function GptPromptPage() {
             height="600px"
             onMouseUp={handleTextSelection}
           />
-          <BtnWrap>
-            {saveLoading ||
-            uploadLoading ||
-            changeStatus === 'loading' ||
-            appendStatus === 'loading' ? (
-              <Spinner width={'2rem'} />
-            ) : null}
-            <Button
-              btncolortype="primary"
-              onClick={handleSaveContent}
-              disabled={
-                appendStatus === 'loading' ||
-                changeStatus === 'loading' ||
-                saveLoading ||
-                uploadLoading
-              }
-            >
-              저장하기
-            </Button>
-            <Button
-              btncolortype="danger"
-              onClick={handleAppendContent}
-              disabled={
-                appendStatus === 'loading' ||
-                changeStatus === 'loading' ||
-                saveLoading ||
-                uploadLoading
-              }
-            >
-              Gpt로 생성
-            </Button>
-            <Button
-              btncolortype="success"
-              onClick={handleUpload}
-              disabled={
-                appendStatus === 'loading' ||
-                changeStatus === 'loading' ||
-                saveLoading ||
-                uploadLoading
-              }
-            >
-              게시하기
-            </Button>
-          </BtnWrap>
+        </Section> */}
         </Section>
-
-        {showPopup && popupPosition && (
-          <div
-            style={{
-              position: 'absolute',
-              top: popupPosition.top,
-              left: popupPosition.left,
-              background: 'white',
-              border: '1px solid black',
-              padding: '10px',
-            }}
-          >
-            <TextArea
-              placeholder="User Prompt"
-              value={userRequest}
-              onChange={(e) => setUserRequest(e.target.value)}
-              height="100px"
-            />
-            <Button
-              btncolortype="primary"
-              onClick={handleGptRequest}
-              disabled={
-                changeStatus === 'loading' ||
-                appendStatus === 'loading' ||
-                saveLoading ||
-                uploadLoading
-              }
-            >
-              GPT로 요청하기
-            </Button>
-          </div>
-        )}
       </S.GptLayout>
       <Bottom />
     </>
@@ -444,7 +299,7 @@ const Checkbox = styled.input`
 const Span = styled.span`
   font-size: 1rem;
 `;
-const TextArea = styled.textarea<{ height: string }>`
+export const TextArea = styled.textarea<{ height: string }>`
   margin: 10px;
   padding: 10px;
   width: 100%;

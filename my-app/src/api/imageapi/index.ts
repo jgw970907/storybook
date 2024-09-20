@@ -33,6 +33,25 @@ export const postImage = async (
     return { imageId: '', imagePath: '' };
   }
 };
+export const postEditorImage = async (
+  imageFile: FormData,
+): Promise<{ imageId: string; imagePath: string }> => {
+  try {
+    const res = await Axios(`/editor`).post<{
+      imageId: string;
+      imagePath: string;
+    }>(imageFile);
+    if (res && res.imageId && res.imagePath) {
+      return { imageId: res.imageId, imagePath: res.imagePath };
+    } else {
+      console.error('Error: Response data is undefined or invalid.');
+      return { imageId: '', imagePath: '' };
+    }
+  } catch (error) {
+    console.error('Error uploading image:', error);
+    return { imageId: '', imagePath: '' };
+  }
+};
 export const postImages = async (
   imageFiles: File[],
 ): Promise<{ imageIds: string[]; imagePaths: string[] }> => {
