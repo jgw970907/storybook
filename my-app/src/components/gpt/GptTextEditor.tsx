@@ -57,17 +57,14 @@ export const GptTextEditor = ({
     const selection = window.getSelection();
     const selected = selection?.toString();
 
-    if (selected) {
+    if (selected && selection) {
       setSelectedText(selected);
       setShowPopup(true);
 
-      // ReactQuill의 에디터 DOM 요소 가져오기
-      const editorContainer = quillRef.current?.getEditor().root;
-
-      if (editorContainer) {
-        const { top, left } = editorContainer.getBoundingClientRect();
-        setPopupPosition({ top: top + window.scrollY + 20, left: left + window.scrollX });
-      }
+      // 선택한 텍스트의 위치 가져오기
+      const range = selection.getRangeAt(0);
+      const { top, left } = range.getBoundingClientRect();
+      setPopupPosition({ top: top + window.scrollY + 20, left: left + window.scrollX });
     } else {
       setSelectedText(null);
       setShowPopup(false);
@@ -164,7 +161,7 @@ export const GptTextEditor = ({
         value={story}
         modules={modules}
         placeholder="내용을 입력하세요"
-        style={{ height: '500px', marginBottom: '50px' }}
+        style={{ height: '1000px', marginBottom: '50px' }}
       />
       <BtnWrap>
         <Button
@@ -203,7 +200,8 @@ export const GptTextEditor = ({
             left: popupPosition.left,
             background: 'white',
             border: '1px solid black',
-            padding: '10px',
+            padding: '30px',
+            borderRadius: '10px',
           }}
         >
           <TextArea
@@ -242,8 +240,10 @@ const BtnWrap = styled.div`
 `;
 const StyledQuill = styled(ReactQuill)`
   .ql-editor img {
-    max-width: 100%;
+    width: 50%;
     height: auto;
     position: relative;
+    margin-left: 25%;
+    margin-right: 25%;
   }
 `;
