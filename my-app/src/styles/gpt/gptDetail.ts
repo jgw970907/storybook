@@ -186,6 +186,11 @@ export const BodyContainer = styled.div`
     padding: 0.2rem 0.4rem;
     border-radius: 4px;
   }
+  img {
+    max-width: 100%;
+    height: auto;
+    position: relative;
+  }
   @media screen and (max-width: 768px) {
     font-size: 0.8rem;
   }

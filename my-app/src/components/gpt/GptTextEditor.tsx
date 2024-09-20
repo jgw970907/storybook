@@ -157,7 +157,7 @@ export const GptTextEditor = ({
   };
   return (
     <Container>
-      <ReactQuill
+      <StyledQuill
         ref={quillRef}
         onChange={setStory}
         theme="snow"
@@ -239,4 +239,11 @@ const BtnWrap = styled.div`
   justify-content: flex-end;
   padding: 40px;
   margin-bottom: 20px;
+`;
+const StyledQuill = styled(ReactQuill)`
+  .ql-editor img {
+    max-width: 100%;
+    height: auto;
+    position: relative;
+  }
 `;

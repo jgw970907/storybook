@@ -9,8 +9,8 @@ const Body: React.FC<BodyProps> = ({ content }) => {
   if (!content) {
     return <S.Container>내용이 없습니다.</S.Container>;
   }
-  // \n\n을 <br /><br />로 변환
-  const formattedContent = content.replace(/\n\n/g, '<br /><br />');
+
+  const formattedContent = content;
 
   return <S.BodyContainer dangerouslySetInnerHTML={{ __html: formattedContent }}></S.BodyContainer>;
 };
