@@ -29,7 +29,7 @@ export default function GptPromptPage() {
   const [promptResult, setPromptResult] = useState<string | undefined>('');
   const [loading, setLoading] = useState(false);
   const [imagesSrc, setImagesSrc] = useState<string[]>([]);
-
+  const [isFocused, setIsFocused] = useState(false);
   const {
     setTitle,
     title,
@@ -146,6 +146,13 @@ export default function GptPromptPage() {
     }
   };
 
+  const handleEditorFocus = () => {
+    setIsFocused(true);
+  };
+  const handleEditorBlur = () => {
+    setIsFocused(false);
+  };
+
   return loading ? (
     <Spinner />
   ) : (
@@ -208,6 +215,9 @@ export default function GptPromptPage() {
               placeholder="Gpt에게 요청할 내용을 입력하세요."
               rows={5}
               height="200px"
+              onBlur={handleEditorBlur}
+              onFocus={handleEditorFocus}
+              isFocused={isFocused}
             />
             <BtnWrap>
               {gptChatStatus === 'loading' ? <Spinner width={'2rem'} /> : null}
@@ -240,21 +250,6 @@ export default function GptPromptPage() {
             handleUpload={handleUpload}
             uploadLoading={uploadLoading}
           />
-          {/* <TextArea
-            disabled={
-              appendStatus === 'loading' ||
-              changeStatus === 'loading' ||
-              saveLoading ||
-              uploadLoading
-            }
-            ref={textAreaRef}
-            value={story}
-            onChange={handleUserTextChange}
-            rows={20} // rows 속성을 20으로 변경
-            height="600px"
-            onMouseUp={handleTextSelection}
-          />
-        </Section> */}
         </Section>
       </S.GptLayout>
       <Bottom />
@@ -299,12 +294,16 @@ const Checkbox = styled.input`
 const Span = styled.span`
   font-size: 1rem;
 `;
-export const TextArea = styled.textarea<{ height: string }>`
+export const TextArea = styled.textarea<{ height: string; isFocused?: boolean }>`
   margin: 10px;
   padding: 10px;
   width: 100%;
   min-height: ${({ height }) => height};
   resize: both;
-  border: 2px solid black;
+  outline: none;
+  margin: 0;
+  border-radius: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: ${({ isFocused }) => (isFocused ? '3px' : '2px')} solid
+    ${({ isFocused }) => (isFocused ? getStyledColor('teal', 800) : getStyledColor('gray', 800))};
 `;

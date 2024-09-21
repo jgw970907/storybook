@@ -7,6 +7,8 @@ import { Button } from 'styles/SearchStyled';
 import { useChangeStoryWithGpt, useAppendStoryContent } from 'queries/gpt';
 import { patchStoryContent } from 'api/gpt';
 import { TextArea } from 'pages/user/GptPromptPage';
+import Spinner from 'components/shared/Spinner';
+import { getStyledColor } from 'utils';
 export const GptTextEditor = ({
   story,
   setStory,
@@ -30,6 +32,12 @@ export const GptTextEditor = ({
   const [showPopup, setShowPopup] = useState(false);
   const [saveLoading, setSaveLoading] = useState(false);
   const [userRequest, setUserRequest] = useState('');
+  const [isFocused, setIsFocused] = useState(false);
+  const [editorFocused, setEditorFocused] = useState(false);
+  const handleFocus = () => setIsFocused(true);
+  const handleBlur = () => setIsFocused(false);
+  const handleEditorFocus = () => setEditorFocused(true);
+  const handleEditorBlur = () => setEditorFocused(false);
 
   const imageHandler = () => {
     const input = document.createElement('input');
@@ -153,17 +161,29 @@ export const GptTextEditor = ({
     );
   };
   return (
-    <Container>
+    <Container editorFocused={editorFocused}>
       <StyledQuill
         ref={quillRef}
         onChange={setStory}
+        onFocus={handleEditorFocus}
+        onBlur={handleEditorBlur}
         theme="snow"
         value={story}
         modules={modules}
         placeholder="내용을 입력하세요"
-        style={{ height: '1000px', marginBottom: '50px' }}
+        style={{
+          height: '1000px',
+          marginBottom: '50px',
+        }}
       />
       <BtnWrap>
+        {saveLoading ||
+        uploadLoading ||
+        appendStatus === 'loading' ||
+        changeStatus === 'loading' ? (
+          <Spinner width={'2rem'} />
+        ) : null}
+
         <Button
           btncolortype="primary"
           onClick={handleSaveContent}
@@ -199,7 +219,8 @@ export const GptTextEditor = ({
             top: popupPosition.top,
             left: popupPosition.left,
             background: 'white',
-            border: '1px solid black',
+            border: '3px solid gray',
+
             padding: '30px',
             borderRadius: '10px',
           }}
@@ -209,6 +230,9 @@ export const GptTextEditor = ({
             value={userRequest}
             onChange={(e) => setUserRequest(e.target.value)}
             height="100px"
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            isFocused={isFocused}
           />
           <Button
             btncolortype="primary"
@@ -228,8 +252,12 @@ export const GptTextEditor = ({
   );
 };
 
-const Container = styled.div`
+const Container = styled.div<{ editorFocused: boolean }>`
   width: 100%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 2px solid
+    ${({ editorFocused }) =>
+      editorFocused ? getStyledColor('teal', 800) : getStyledColor('gray', 800)};
 `;
 const BtnWrap = styled.div`
   display: flex;
