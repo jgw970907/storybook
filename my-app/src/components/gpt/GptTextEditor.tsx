@@ -34,6 +34,7 @@ export const GptTextEditor = ({
   const [userRequest, setUserRequest] = useState('');
   const [isFocused, setIsFocused] = useState(false);
   const [editorFocused, setEditorFocused] = useState(false);
+  const [prevStory, setPrevStory] = useState<string | undefined>(story);
   const handleFocus = () => setIsFocused(true);
   const handleBlur = () => setIsFocused(false);
   const handleEditorFocus = () => setEditorFocused(true);
@@ -50,12 +51,9 @@ export const GptTextEditor = ({
         const formData = new FormData();
         formData.append('editorImage', file);
         const res = await postEditorImage(formData);
-        console.log('Image upload response:', res); // 디버깅을 위한 로그 추가
         const range = quillRef.current?.getEditor().getSelection()?.index;
-        console.log('Current selection range:', range); // 디버깅을 위한 로그 추가
         if (range !== null && range !== undefined) {
           quillRef.current?.getEditor().insertEmbed(range, 'image', res.imagePath);
-          console.log('Image inserted at range:', range); // 디버깅을 위한 로그 추가
         }
       }
     };
@@ -93,6 +91,30 @@ export const GptTextEditor = ({
       }
     };
   }, []);
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      if (story !== '' && story !== undefined && story !== prevStory) {
+        patchStoryContent(storyId || '', story);
+        setPrevStory(story);
+      }
+    }, 60000);
+    return () => clearInterval(intervalId);
+  }, [story, storyId, prevStory]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.ctrlKey && e.key === 's') {
+        e.preventDefault(); // 브라우저 기본 동작 방지
+        handleSaveContent();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [story]);
   const modules = useMemo(() => {
     return {
       toolbar: {
@@ -147,18 +169,22 @@ export const GptTextEditor = ({
     setShowPopup(false);
   };
   const handleAppendContent = async () => {
+    const request = window.prompt('받고싶은 스토리에 대한 내용을 입력하세요:');
     await handleSaveContent();
-    appendMutate(
-      { storyId: storyId || '', userRequest: userRequest },
-      {
-        onSuccess: (res) => {
-          const appendedText = res?.content;
-          if (appendedText) {
-            setStory(story + appendedText);
-          }
+
+    if (request) {
+      appendMutate(
+        { storyId: storyId || '', userRequest: request },
+        {
+          onSuccess: (res) => {
+            const appendedText = res?.content;
+            if (appendedText) {
+              setStory(story + appendedText);
+            }
+          },
         },
-      },
-    );
+      );
+    }
   };
   return (
     <Container editorFocused={editorFocused}>
@@ -226,7 +252,7 @@ export const GptTextEditor = ({
           }}
         >
           <TextArea
-            placeholder="User Prompt"
+            placeholder="요청할 내용을 입력하세요"
             value={userRequest}
             onChange={(e) => setUserRequest(e.target.value)}
             height="100px"
@@ -244,7 +270,7 @@ export const GptTextEditor = ({
               uploadLoading
             }
           >
-            GPT로 요청하기
+            GPT로 변경하기
           </Button>
         </div>
       )}

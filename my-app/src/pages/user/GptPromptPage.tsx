@@ -238,9 +238,16 @@ export default function GptPromptPage() {
 
         <Section>
           <h2>당신만의 스토리를 만드세요</h2>
-          <p>
-            드래그를 통해 스토리를 변경할 수 있습니다. 원하는대로 요청하세요. 저장버튼을 수시로 눌러
-            데이터 유실을 방지하세요.
+          <p
+            style={{
+              color: 'gray',
+              fontSize: '1rem',
+              marginTop: '0',
+              marginBottom: '10px',
+            }}
+          >
+            드래그를 통해 스토리를 변경할 수 있습니다. 원하는대로 요청하세요.<br></br> 데이터는
+            <b> 1분</b>마다 저장되고 <b>ctrl + s</b>로 저장 가능합니다.
           </p>
           <GptTextEditor
             story={story}
