@@ -9,6 +9,8 @@ import { patchStoryContent } from 'api/gpt';
 import { TextArea } from 'pages/user/GptPromptPage';
 import Spinner from 'components/shared/Spinner';
 import { getStyledColor } from 'utils';
+import DOMPurify from 'isomorphic-dompurify';
+
 export const GptTextEditor = ({
   story,
   setStory,
@@ -94,7 +96,7 @@ export const GptTextEditor = ({
   useEffect(() => {
     const intervalId = setInterval(() => {
       if (story !== '' && story !== undefined && story !== prevStory) {
-        patchStoryContent(storyId || '', story);
+        handleSaveContent();
         setPrevStory(story);
       }
     }, 60000);
@@ -139,6 +141,14 @@ export const GptTextEditor = ({
       setErrorText('내용을 입력하세요');
       return;
     }
+
+    const purifiedStory = DOMPurify.sanitize(story);
+
+    if (purifiedStory !== story) {
+      setErrorText('HTML 내용에 문제가 있어 저장할 수 없습니다.');
+      return;
+    }
+
     setSaveLoading(true);
     try {
       await patchStoryContent(storyId || '', story);

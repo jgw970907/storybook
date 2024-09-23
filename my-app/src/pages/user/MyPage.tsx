@@ -21,6 +21,8 @@ import Bottom from 'components/layout/Bottom';
 import { LoaderWrapper } from 'styles/LoaderWrapper';
 import { FaRegTrashCan } from 'react-icons/fa6';
 import { getStyledColor } from 'utils';
+import { Navigate } from 'react-router-dom';
+
 const MyPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [storyPage, setStoryPage] = useState(1);
@@ -32,7 +34,7 @@ const MyPage = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedBookId, setSelectedBookId] = useState<string | null>(null);
   const [imageSrc, setImageSrc] = useState<string>('');
-  const { user } = useUserStore();
+  const { user, isLogin } = useUserStore();
 
   const userId: string = user?.id || '';
   const { usePatchUser } = userQueries;
@@ -160,6 +162,9 @@ const MyPage = () => {
   const patchDisclosure = (id: string) => {
     patchMutate(id);
   };
+  if (!isLogin) {
+    return <Navigate to="/login" replace />;
+  }
   return (
     <Container>
       <section>

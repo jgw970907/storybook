@@ -6,7 +6,7 @@ import { updateStory, getMyStory } from 'api/gpt';
 import { useUserStore } from 'store/useUserStore';
 import { useGptStore } from 'store/usegptStore';
 import { Input } from 'styles/AdminStyledTemp';
-import { useParams } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
 import Spinner from 'components/shared/Spinner';
 import { Button } from 'styles/SearchStyled';
 import ImageUploader, { ImageUploaderImperativeHandle } from 'components/shared/ImageUploader';
@@ -16,9 +16,9 @@ import { deleteImage, postImages } from 'api/imageapi';
 import { getStyledColor, pixelToRem } from 'utils';
 import Bottom from 'components/layout/Bottom';
 import { GptTextEditor } from 'components/gpt/GptTextEditor';
-
+import DOMPurify from 'isomorphic-dompurify';
 export default function GptPromptPage() {
-  const { user } = useUserStore();
+  const { user, isLogin } = useUserStore();
   const { storyId } = useParams();
 
   const [uploadLoading, setUploadLoading] = useState(false);
@@ -30,12 +30,15 @@ export default function GptPromptPage() {
   const [loading, setLoading] = useState(false);
   const [imagesSrc, setImagesSrc] = useState<string[]>([]);
   const [isFocused, setIsFocused] = useState(false);
+
   const {
+    userId,
     setTitle,
     title,
     story,
     setStory,
     gptResponse,
+    setUserId,
     setGptResponse,
     setImageIdsStore,
     imageIdsStore,
@@ -55,6 +58,7 @@ export default function GptPromptPage() {
             setStory(res.content);
             setCategory(res.category || '블로그');
             setIsPublic(res.isSecret);
+            setUserId(res.userId);
             imageRef.current?.setPath(res.images[0].path);
             setImagesSrc(res.images.map((image) => image.path));
             setImageIdsStore(res.images.map((image) => image.id));
@@ -67,7 +71,7 @@ export default function GptPromptPage() {
       }
     };
     fetchData();
-  }, [storyId, setTitle, setStory, setCategory, setIsPublic, setImageIdsStore]);
+  }, [storyId, setTitle, setStory, setCategory, setIsPublic, setImageIdsStore, setUserId]);
 
   useEffect(() => {
     return () => {
@@ -115,6 +119,16 @@ export default function GptPromptPage() {
   };
 
   const handleUpload = async () => {
+    if (!story) {
+      setErrorText('내용을 입력하세요');
+      return;
+    }
+    const purifiedStory = DOMPurify.sanitize(story);
+
+    if (purifiedStory !== story) {
+      setErrorText('HTML 내용에 문제가 있어 저장할 수 없습니다.');
+      return;
+    }
     setUploadLoading(true);
     if (!story) {
       setErrorText('내용을 입력하세요');
@@ -152,7 +166,9 @@ export default function GptPromptPage() {
   const handleEditorBlur = () => {
     setIsFocused(false);
   };
-
+  if (!isLogin || !user || user.id !== userId) {
+    return <Navigate to="/" replace />;
+  }
   return loading ? (
     <Spinner />
   ) : (

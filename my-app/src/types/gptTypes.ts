@@ -11,6 +11,7 @@ export interface GptPromptRequest {
   prompt: string;
 }
 export interface GptStory {
+  userId: string;
   id: string;
   title: string;
   content: string;
