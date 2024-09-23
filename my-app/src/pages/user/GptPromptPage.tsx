@@ -247,7 +247,7 @@ export default function GptPromptPage() {
             }}
           >
             드래그를 통해 스토리를 변경할 수 있습니다. 원하는대로 요청하세요.<br></br> 데이터는
-            <b> 1분</b>마다 저장되고 <b>ctrl + s</b>로 저장 가능합니다.
+            <b> 1분</b>마다 자동저장되고 <b>ctrl + s</b>로 저장 가능합니다.
           </p>
           <GptTextEditor
             story={story}

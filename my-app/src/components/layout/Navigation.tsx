@@ -4,7 +4,6 @@ import NavigationItem from './NavigationItem';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { getStyledColor } from 'utils';
 import { NavbarReadonly } from 'types';
-import Bottom from './Bottom';
 
 const NavbarSize: NavbarReadonly = {
   HEIGHT: 56,

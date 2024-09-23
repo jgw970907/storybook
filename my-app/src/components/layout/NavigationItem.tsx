@@ -32,6 +32,15 @@ const NavigationItem = () => {
     <Wrapper>
       {!isLogin && (
         <>
+          <LinkStyle to="/review" $isActive={location.pathname === '/review'}>
+            <Text>책 리뷰</Text>
+          </LinkStyle>
+          <LinkStyle
+            to="/"
+            $isActive={location.pathname === '/' || location.pathname.startsWith('/gptpage')}
+          >
+            <Text>스토리북</Text>
+          </LinkStyle>
           <LinkStyle to="/login" $isActive={location.pathname === '/login'}>
             <Text>로그인</Text>
           </LinkStyle>
