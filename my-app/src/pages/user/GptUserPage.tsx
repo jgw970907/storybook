@@ -71,7 +71,7 @@ const GptUserPage = () => {
                             updatedAt={updatedAt}
                             isSecret={isSecret}
                             category={category}
-                            isMyPage={true}
+                            isPrompt={true}
                           />
                         </CardWrapper>
                       );

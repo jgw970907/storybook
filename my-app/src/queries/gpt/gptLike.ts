@@ -61,6 +61,7 @@ export const useAddLike = ({ storyId }: { storyId: string }) => {
     },
     onSettled: () => {
       queryClient.invalidateQueries([QueryKeys.USER, 'gptlikes', storyId]);
+      queryClient.invalidateQueries([QueryKeys.USER, 'gptlikes']);
     },
   });
 };
@@ -105,6 +106,7 @@ export const useRemoveLike = ({ storyId }: { storyId: string }) => {
     },
     onSettled: () => {
       queryClient.invalidateQueries([QueryKeys.USER, 'gptlikes', storyId]);
+      queryClient.invalidateQueries([QueryKeys.USER, 'gptlikes']);
     },
   });
 };

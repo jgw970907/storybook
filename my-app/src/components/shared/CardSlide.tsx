@@ -107,7 +107,7 @@ export const CardSlide: React.FC<CardSlideProps> = ({ items }) => {
             updatedAt={item.updatedAt}
             category={item.category}
             authorName={item.authorName}
-            isMyPage={false}
+            isPrompt={false}
             userId={item.userId}
             cardWidth={cardWidth}
           />

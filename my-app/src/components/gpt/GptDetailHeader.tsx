@@ -10,6 +10,7 @@ import {
 import { FaHeart } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import { useUserStore } from 'store/useUserStore';
 
 const Header = ({
   storyId,
@@ -30,15 +31,18 @@ const Header = ({
   clicks?: number | undefined;
   isStorypage: boolean;
 }) => {
+  const { user: myuserinfo } = useUserStore();
+
   const { data: storyIsLikeData, status } =
-    storyId && user?.id ? getStoryIsLike(storyId, user.id) : { data: undefined, status: 'loading' };
+    storyId && myuserinfo?.id
+      ? getStoryIsLike(storyId, myuserinfo.id)
+      : { data: undefined, status: 'loading' };
   const navigate = useNavigate();
-  // const [isUpdating, setIsUpdating] = useState(false);
   const { mutate: addLike, status: addStatus } = useAddLike({ storyId: storyId || '' });
   const { mutate: removeLike, status: removeStatus } = useRemoveLike({ storyId: storyId || '' });
 
   const toggleLike = () => {
-    if (!user?.id || !storyId) {
+    if (!myuserinfo?.id || !storyId) {
       alert('사용자 정보가 없습니다. 다시 로그인해주세요.');
 
       navigate('/login');
@@ -46,9 +50,9 @@ const Header = ({
     }
 
     if (storyIsLikeData?.isLike) {
-      removeLike({ storyId, userId: user.id });
+      removeLike({ storyId, userId: myuserinfo?.id });
     } else {
-      addLike({ storyId, userId: user.id });
+      addLike({ storyId, userId: myuserinfo.id });
     }
   };
   return (

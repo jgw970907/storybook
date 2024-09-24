@@ -79,7 +79,7 @@ export const GptStoryInfinityScroll = ({
                       }
                       category={story.category}
                       authorName={story.authorName}
-                      isMyPage={false}
+                      isPrompt={false}
                       userId={story.userId}
                       clicks={story.clicks}
                     />

@@ -11,7 +11,7 @@ export const Card = ({
   createdAt,
   updatedAt,
   category,
-  isMyPage,
+  isPrompt,
   authorName,
   userId,
   clicks,
@@ -24,7 +24,7 @@ export const Card = ({
   createdAt?: string;
   updatedAt?: string;
   category?: string;
-  isMyPage?: boolean;
+  isPrompt?: boolean;
   authorName?: string;
   userId: string;
   clicks?: number;
@@ -40,7 +40,7 @@ export const Card = ({
   return (
     <CardStyle $cardWidth={cardWidth}>
       <StyledLink
-        to={isMyPage ? `/gptpage/prompt/${id}` : `/gptpage/detail/${id}`}
+        to={isPrompt ? `/gptpage/prompt/${id}` : `/gptpage/detail/${id}`}
         style={{ width: '100%' }}
         onClick={() => handleClick(id)}
       >
@@ -48,20 +48,20 @@ export const Card = ({
         <Title>{title}</Title>
         <Text>{category}</Text>
         {clicks !== undefined && <Text>{`조회수:${clicks}`}</Text>}
-        {createdAt && updatedAt && isMyPage && (
+        {createdAt && updatedAt && isPrompt && (
           <Text>
             {createdAt < updatedAt
               ? ` 수정됨: ${dateFormat(updatedAt)}`
               : `작성일: ${dateFormat(createdAt)}`}
           </Text>
         )}
-        {!isMyPage && (
+        {!isPrompt && (
           <StyledLink to={`/gptpage/user/${userId}`}>
             <Author>{authorName}</Author>
           </StyledLink>
         )}
 
-        {isMyPage && <Status>{isSecret ? '비공개' : '공개'}</Status>}
+        {isPrompt && <Status>{isSecret ? '비공개' : '공개'}</Status>}
       </StyledLink>
     </CardStyle>
   );

@@ -166,7 +166,13 @@ export default function GptPromptPage() {
   const handleEditorBlur = () => {
     setIsFocused(false);
   };
-  if (!isLogin || !user || user.id !== userId) {
+  if (!isLogin || !user || !userId) {
+    // userId가 설정되지 않았다면 로딩 상태 유지
+    return <Spinner />;
+  }
+
+  if (user.id !== userId) {
+    // userId가 설정된 이후에만 비교하여 Navigate 처리
     return <Navigate to="/" replace />;
   }
   return loading ? (
