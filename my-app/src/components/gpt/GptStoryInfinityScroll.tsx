@@ -82,6 +82,8 @@ export const GptStoryInfinityScroll = ({
                       isPrompt={false}
                       userId={story.userId}
                       clicks={story.clicks}
+                      likeCount={story.likeCount}
+                      createdAt={story.createdAt}
                     />
                   </Link>
                 ))}

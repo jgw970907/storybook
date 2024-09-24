@@ -26,7 +26,17 @@ const GptStoryLike = ({ userId }: { userId: string }) => {
                 {status === 'success' && (
                   <>
                     {data.books.map((story) => {
-                      const { id, title, createdAt, updatedAt, isSecret, category, images } = story;
+                      const {
+                        id,
+                        title,
+                        createdAt,
+                        updatedAt,
+                        isSecret,
+                        category,
+                        images,
+                        authorName,
+                        likeCount,
+                      } = story;
                       return (
                         <S.CardWrapper key={id}>
                           <S.IconWrap></S.IconWrap>
@@ -42,6 +52,8 @@ const GptStoryLike = ({ userId }: { userId: string }) => {
                             category={category}
                             isPrompt={false}
                             userId={userId}
+                            authorName={authorName}
+                            likeCount={likeCount}
                           />
                         </S.CardWrapper>
                       );

@@ -109,6 +109,7 @@ export const CardSlide: React.FC<CardSlideProps> = ({ items }) => {
             authorName={item.authorName}
             isPrompt={false}
             userId={item.userId}
+            likeCount={item.likeCount}
             cardWidth={cardWidth}
           />
         ))}

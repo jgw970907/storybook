@@ -21,6 +21,8 @@ export interface GptStory {
   category: string;
   images: ImagesType[];
   isSecret: boolean;
+  likeCount: number;
+  authorName: string;
 }
 export interface GptStoryRes {
   id: string;
@@ -45,6 +47,7 @@ export type storyArrayForInfi = Array<{
   userId: string;
   images: ImagesType[];
   authorName: string;
+  likeCount: number;
 }>;
 
 export interface GetGptStoriesResponse {

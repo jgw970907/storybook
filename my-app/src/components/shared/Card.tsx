@@ -3,6 +3,8 @@ import { Link as RouterLink } from 'react-router-dom';
 import dateFormat from 'utils/getDateStr';
 import { incrementClicks } from 'api/gpt';
 import { pixelToRem } from 'utils';
+import { FaRegHeart } from 'react-icons/fa';
+import { PiCursorClickDuotone } from 'react-icons/pi';
 export const Card = ({
   id,
   title,
@@ -16,6 +18,7 @@ export const Card = ({
   userId,
   clicks,
   cardWidth,
+  likeCount,
 }: {
   id: string;
   title: string;
@@ -29,6 +32,7 @@ export const Card = ({
   userId: string;
   clicks?: number;
   cardWidth?: number;
+  likeCount?: number;
 }) => {
   const handleClick = (id: string) => {
     if (id) {
@@ -46,15 +50,17 @@ export const Card = ({
       >
         <Image src={imageUrl} alt={title} />
         <Title>{title}</Title>
-        <Text>{category}</Text>
-        {clicks !== undefined && <Text>{`조회수:${clicks}`}</Text>}
-        {createdAt && updatedAt && isPrompt && (
-          <Text>
-            {createdAt < updatedAt
-              ? ` 수정됨: ${dateFormat(updatedAt)}`
-              : `작성일: ${dateFormat(createdAt)}`}
-          </Text>
+
+        {clicks !== undefined && (
+          <Align>
+            <Text>{category}/</Text>
+            <PiCursorClickDuotone />
+            <Text>{`:${clicks} /`}</Text>
+            <FaRegHeart />
+            <Text>{`:${likeCount}`}</Text>
+          </Align>
         )}
+        {createdAt && <Text>{`작성일: ${dateFormat(createdAt)}`}</Text>}
         {!isPrompt && (
           <StyledLink to={`/gptpage/user/${userId}`}>
             <Author>{authorName}</Author>
@@ -121,6 +127,11 @@ const Author = styled.p`
   @media screen and (max-width: 768px) {
     font-size: ${pixelToRem(12)};
   }
+`;
+const Align = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 const Title = styled.div`
   width: 100%;
