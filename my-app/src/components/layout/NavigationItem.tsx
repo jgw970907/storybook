@@ -9,8 +9,7 @@ import { useMakeTemplate } from 'queries/gpt';
 import { Button } from 'components/shared';
 const NavigationItem = () => {
   const location = useLocation();
-  const { isLogin } = useUserStore();
-  const { user } = useUserStore();
+  const { isLogin, user } = useUserStore();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const navigate = useNavigate();
   const { mutate, status } = useMakeTemplate();

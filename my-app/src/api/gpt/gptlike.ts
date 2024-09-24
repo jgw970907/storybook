@@ -21,7 +21,7 @@ export const removeLike = async ({ storyId, userId }: { storyId: string; userId:
 export const getMyFavoriteStories = async (params: MyFavoritesParams) => {
   const { take, page } = params;
   const res = await Axios(
-    `/myfavorites?take=${take}&page=${page}&order__createdAt=DESC`,
+    `/myfavorites/stories?take=${take}&page=${page}&order__createdAt=DESC`,
   ).get<MyFavorites>();
   return res;
 };

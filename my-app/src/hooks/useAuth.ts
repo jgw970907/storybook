@@ -3,14 +3,8 @@ import { jwtDecode } from 'jwt-decode';
 import { getAccessToken, fetchAccessToken } from '../utils/auth';
 import { getUser } from 'api/auth';
 import { useUserStore } from 'store/useUserStore';
-interface DecodedToken {
-  id: string;
-  exp: number;
-  // 다른 토큰 속성들...
-}
-
 export const useAuth = () => {
-  const { setIsLogin, setUser } = useUserStore.getState();
+  const { setIsLogin, setUser, logout } = useUserStore.getState();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -21,15 +15,25 @@ export const useAuth = () => {
           accessToken = await fetchAccessToken();
         }
 
-        const decodedToken: DecodedToken = jwtDecode(accessToken);
+        let decodedToken: any = jwtDecode(accessToken);
         if (decodedToken.exp * 1000 < Date.now()) {
           accessToken = await fetchAccessToken();
+          decodedToken = jwtDecode(accessToken);
         }
 
         const userData = await getUser();
         if (userData) {
           setIsLogin(true);
           setUser(userData);
+
+          // 타이머 설정
+          const expiresIn = decodedToken.exp * 1000 - Date.now();
+          const timer = setTimeout(() => {
+            logout();
+          }, expiresIn);
+
+          // 컴포넌트 언마운트 시 타이머 정리
+          return () => clearTimeout(timer);
         }
       } catch (error) {
         console.error('Authentication error:', error);
@@ -39,7 +43,7 @@ export const useAuth = () => {
     };
 
     initializeAuth();
-  }, []);
+  }, [setIsLogin, setUser, logout]);
 
   return { loading };
 };

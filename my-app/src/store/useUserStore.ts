@@ -7,6 +7,7 @@ interface UserStore {
   setIsLogin: (state: boolean) => void;
   setIsInit: (state: boolean) => void;
   setUser: (user: UserType | null) => void;
+  logout: () => void;
 }
 
 export const useUserStore = create<UserStore>((set) => ({
@@ -20,4 +21,9 @@ export const useUserStore = create<UserStore>((set) => ({
     set({ isInit: state });
   },
   setUser: (user) => set({ user }),
+  logout: () => {
+    set({ isLogin: false, user: null });
+    localStorage.removeItem('ACCESS_TOKEN');
+    localStorage.removeItem('REFRESH_TOKEN');
+  },
 }));

@@ -1,7 +1,6 @@
 import React, { Suspense } from 'react';
 import Navigation from './components/layout/Navigation';
 import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
-
 import { PrivateRoutes } from 'pages';
 import { ReviewPage, MyPage } from 'pages/user';
 import { LoginPage, SignupPage } from 'pages/auth';
