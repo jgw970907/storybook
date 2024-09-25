@@ -8,6 +8,7 @@ import {
   postComment,
   deleteCommentByRole,
   deleteComment,
+  getMyComments,
 } from 'api/comment';
 import { AxiosError } from 'axios';
 import { CommentGetRes } from 'types/commentTypes';
@@ -35,7 +36,7 @@ export const GetComments = (page: number, take = 10) => {
 
 export const PatchComment = (bookId: string) => {
   const queryClient = useQueryClient();
-  //주석..
+
   return useMutation({
     mutationKey: [QueryKeys.USER, 'comments', bookId],
     mutationFn: ({
@@ -49,6 +50,7 @@ export const PatchComment = (bookId: string) => {
     }) => patchComment({ bookId, commentId, comment }),
     onSuccess: () => {
       queryClient.invalidateQueries([QueryKeys.USER, 'comments', bookId]);
+      queryClient.invalidateQueries([QueryKeys.USER, 'mycomments']);
       alert('댓글 수정 성공!');
     },
     onError: (error: AxiosError) => {
@@ -66,6 +68,7 @@ export const PostComment = (bookId: string, user: UserType | null) => {
     },
     onMutate: async (comment: string) => {
       await queryClient.cancelQueries([QueryKeys.USER, 'comments', bookId]);
+
       const previousComments = queryClient.getQueryData<CommentGetRes>([
         QueryKeys.USER,
         'comments',
@@ -112,6 +115,7 @@ export const PostComment = (bookId: string, user: UserType | null) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries([QueryKeys.USER, 'comments', bookId]);
+      queryClient.invalidateQueries([QueryKeys.USER, 'mycomments']);
     },
     onError: (error: AxiosError) => {
       if (error.response && error.response.status === 400) {
@@ -172,6 +176,14 @@ export const DeleteComment = (bookId: string) => {
     },
     onSettled: () => {
       queryClient.invalidateQueries([QueryKeys.USER, 'comments', bookId]);
+      queryClient.invalidateQueries([QueryKeys.USER, 'mycomments']);
     },
+  });
+};
+export const GetMyComments = (userId: string) => {
+  return useQuery({
+    queryKey: [QueryKeys.USER, 'mycomments'],
+    queryFn: () => getMyComments({ userId }),
+    keepPreviousData: true,
   });
 };
