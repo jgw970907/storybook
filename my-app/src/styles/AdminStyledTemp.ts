@@ -468,3 +468,10 @@ export const PaginationWrapper = styled.div`
   justify-content: center;
   margin-top: 16px;
 `;
+
+export const ReviewContent = styled.div`
+  cursor: pointer;
+  &:hover {
+    text-decoration: underline;
+  }
+`;

@@ -57,7 +57,7 @@ const GptUserPage = () => {
                 {storyStatus === 'success' && (
                   <>
                     {Stories.data.stories.map((story) => {
-                      const { id, title, createdAt, updatedAt, isSecret, category, images } = story;
+                      const { id, title, createdAt, isSecret, category, images } = story;
                       return (
                         <CardWrapper key={id}>
                           <Card
@@ -68,7 +68,6 @@ const GptUserPage = () => {
                             }
                             userId={userId}
                             createdAt={createdAt}
-                            updatedAt={updatedAt}
                             isSecret={isSecret}
                             category={category}
                             isPrompt={true}

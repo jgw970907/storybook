@@ -5,13 +5,13 @@ import { incrementClicks } from 'api/gpt';
 import { pixelToRem } from 'utils';
 import { FaRegHeart } from 'react-icons/fa';
 import { PiCursorClickDuotone } from 'react-icons/pi';
+import { Align } from 'styles/common/CommonStyled';
 export const Card = ({
   id,
   title,
   imageUrl,
   isSecret,
   createdAt,
-  updatedAt,
   category,
   isPrompt,
   authorName,
@@ -25,7 +25,6 @@ export const Card = ({
   imageUrl: string;
   isSecret?: boolean;
   createdAt?: string;
-  updatedAt?: string;
   category?: string;
   isPrompt?: boolean;
   authorName?: string;
@@ -52,7 +51,7 @@ export const Card = ({
         <Title>{title}</Title>
 
         {clicks !== undefined && (
-          <Align>
+          <Align direction={'row'}>
             <Text>{category}/</Text>
             <PiCursorClickDuotone />
             <Text>{`:${clicks} /`}</Text>
@@ -128,11 +127,7 @@ const Author = styled.p`
     font-size: ${pixelToRem(12)};
   }
 `;
-const Align = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
+
 const Title = styled.div`
   width: 100%;
   height: 40px;

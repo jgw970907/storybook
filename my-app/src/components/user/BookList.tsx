@@ -33,10 +33,8 @@ const BookList = ({ data, fetchNextPage, hasNextPage, isFetchingNextPage }: Book
   const handleClick = (id: string) => {
     setModalOpen(true);
     unshowScroll();
-    setSelectedBookId(id); // 선택된 책의 ID를 상태에 저장
+    setSelectedBookId(id);
 
-    // const cookieName = `book_${id}_clicked`;
-    // const clicked = Cookies.get(cookieName);
     if (id) {
       incrementClicks(id);
     } else {

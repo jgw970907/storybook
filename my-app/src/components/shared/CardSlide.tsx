@@ -104,7 +104,6 @@ export const CardSlide: React.FC<CardSlideProps> = ({ items }) => {
             imageUrl={item.images[0]?.path || 'https://picsum.photos/200/150'}
             clicks={item.clicks}
             createdAt={item.createdAt}
-            updatedAt={item.updatedAt}
             category={item.category}
             authorName={item.authorName}
             isPrompt={false}

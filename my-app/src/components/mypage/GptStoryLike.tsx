@@ -47,7 +47,6 @@ const GptStoryLike = ({ userId }: { userId: string }) => {
                               images.length > 0 ? images[0].path : 'https://picsum.photos/200/150'
                             }
                             createdAt={createdAt}
-                            updatedAt={updatedAt}
                             isSecret={isSecret}
                             category={category}
                             isPrompt={false}

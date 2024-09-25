@@ -76,7 +76,6 @@ const GptMyStory = ({ userId, user }: { userId: string; user: UserType | null })
                               images.length > 0 ? images[0].path : 'https://picsum.photos/200/150'
                             }
                             createdAt={createdAt}
-                            updatedAt={updatedAt}
                             isSecret={isSecret}
                             category={category}
                             isPrompt={true}
