@@ -4,6 +4,7 @@ import GptStoryLike from './GptStoryLike';
 import { UserType } from 'types/userTypes';
 import { useState } from 'react';
 import styled from 'styled-components';
+import MyReview from './MyReview';
 type TabType = 'myStory' | 'likeStory' | 'likeBook' | 'myReview';
 type TabProps = {
   user: UserType | null;
@@ -27,6 +28,8 @@ const Tab = ({ user, userId }: TabProps) => {
         return <GptStoryLike userId={userId} />;
       case 'likeBook':
         return <ReviewLike />;
+      case 'myReview':
+        return <MyReview userId={userId} />;
       default:
         return null;
     }

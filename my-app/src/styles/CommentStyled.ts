@@ -61,6 +61,7 @@ export const CommentButtonContainer = styled.div`
   justify-content: flex-end;
   align-items: center;
   gap: 10px;
+  padding: 10px;
 `;
 
 export const CommentButton = styled.button<{ onClick: (commentId: string) => void }>`

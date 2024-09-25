@@ -4,6 +4,7 @@ import {
   CommentGetRes,
   CommentPostRes,
   PatchCommentReq,
+  MyCommentGetRes,
 } from '../../types/commentTypes';
 export const getCommentsForBook = async (
   bookId: string,
@@ -41,5 +42,9 @@ export const deleteCommentByRole = async (commentId: string, userId: string) => 
 };
 export const deleteComment = async (bookId: string, commentId: string) => {
   const res = await Axios(`/comment/${bookId}/${commentId}`).remove();
+  return res;
+};
+export const getMyComments = async ({ userId }: { userId: string }) => {
+  const res = await Axios(`/comment/my/${userId}`).get<MyCommentGetRes>();
   return res;
 };

@@ -11,6 +11,17 @@ export type CommentType = {
   content: string;
   user: UserType;
 };
+export type MyCommentType = {
+  id: string;
+  createdAt: string;
+  content: string;
+  bookId: string;
+  book: { title: string; category: string };
+};
+export type MyCommentGetRes = {
+  data: Array<MyCommentType>;
+  total: number;
+};
 export type CommentGetRes = {
   data: Array<CommentType>;
   total: number;

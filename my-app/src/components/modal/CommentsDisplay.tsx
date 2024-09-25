@@ -42,6 +42,7 @@ const CommentToggle = ({ comments, bookId, page, take, setPage }: CommentToggleP
       setPage((prev) => prev - 1);
     }
   };
+
   const handlePageClick = (pageNumber: number) => {
     setPage(pageNumber);
   };
@@ -89,19 +90,22 @@ const CommentToggle = ({ comments, bookId, page, take, setPage }: CommentToggleP
           </S.CommentItemContainer>
         );
       })}
+
       <S.Pagination>
         <S.PaginationButton onClick={handlePrevPage} disabled={page === 1}>
           이전
         </S.PaginationButton>
-        {Array.from({ length: totalPages }, (_, index) => (
-          <S.PaginationNumber
-            key={index + 1}
-            $isCurrentPage={page === index + 1}
-            onClick={() => handlePageClick(index + 1)}
-          >
-            {index + 1}
-          </S.PaginationNumber>
-        ))}
+        {[...Array(totalPages)].map((_, index) => {
+          return (
+            <S.PaginationButton
+              key={index}
+              onClick={() => handlePageClick(index + 1)}
+              disabled={page === index + 1}
+            >
+              {index + 1}
+            </S.PaginationButton>
+          );
+        })}
         <S.PaginationButton
           onClick={handleNextPage}
           disabled={page >= Math.ceil((comments?.total || 0) / take)}
