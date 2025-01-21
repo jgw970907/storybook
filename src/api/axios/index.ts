@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import injectInterceptors from './interceptors';
 
-const BASE_URL = process.env.REACT_APP_SERVER_URL;
+const BASE_URL = 'https://15.164.12.185:5000';
 const instance = injectInterceptors(axios.create({ baseURL: BASE_URL, withCredentials: true }));
 
 export const getAxiosInstance = (endpoint: string) => {
