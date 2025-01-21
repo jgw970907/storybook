@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import injectInterceptors from './interceptors';
 
-const BASE_URL = 'https://15.164.12.185';
+const BASE_URL = 'https://storybooksnow.com';
 const instance = injectInterceptors(axios.create({ baseURL: BASE_URL, withCredentials: true }));
 
 export const getAxiosInstance = (endpoint: string) => {
