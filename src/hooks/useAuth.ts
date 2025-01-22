@@ -17,7 +17,7 @@ export const useAuth = () => {
 
         const decodedToken: any = jwtDecode(accessToken);
         if (decodedToken.exp * 1000 < Date.now()) {
-          accessToken = await fetchAccessTokenWithRefresh();
+          throw new Error('Access token expired');
         }
 
         const userData = await getUser();
