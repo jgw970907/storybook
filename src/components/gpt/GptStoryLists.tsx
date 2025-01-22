@@ -32,6 +32,9 @@ const SpinnerWrap = styled.div<{ $height: string }>`
 export const GptStoryLists = () => {
   const { data: bestStories, status: bestloading } = useGetBestStories();
   const { data: randomStories, status: recommendloading } = useGetRandomStories();
+
+  const bestStoriesList = bestStories?.data?.stories || [];
+  const randomStoriesList = randomStories?.data?.stories || [];
   return (
     <div>
       <SectionTitle>
@@ -43,7 +46,7 @@ export const GptStoryLists = () => {
           <Spinner width="3rem" />{' '}
         </SpinnerWrap>
       ) : (
-        <CardSlide items={bestStories?.data?.stories} />
+        <CardSlide items={bestStoriesList} />
       )}
 
       <SectionTitle>
@@ -55,7 +58,7 @@ export const GptStoryLists = () => {
           <Spinner width="3rem" />{' '}
         </SpinnerWrap>
       ) : (
-        <CardSlide items={randomStories?.data?.stories} />
+        <CardSlide items={randomStoriesList} />
       )}
     </div>
   );
