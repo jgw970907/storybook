@@ -10,19 +10,25 @@ export const getRefreshToken = (): string | null =>
   secureLocalStorage.getItem(StorageKeys.REFRESH_TOKEN) as string | null;
 export const setRefreshToken = (token: string) =>
   secureLocalStorage.setItem(StorageKeys.REFRESH_TOKEN, token);
-
-export const fetchAccessToken = async (): Promise<string> => {
+export const clearToken = () => {
+  secureLocalStorage.removeItem(StorageKeys.ACCESS_TOKEN);
+  secureLocalStorage.removeItem(StorageKeys.REFRESH_TOKEN);
+};
+export const fetchAccessTokenWithRefresh = async (): Promise<string> => {
   const refreshToken = getRefreshToken();
 
-  if (!refreshToken) throw new Error('No refresh token available');
+  if (!refreshToken) {
+    clearToken();
+    throw new Error('Refresh token not found');
+  }
 
-  const response = await getAccessWithApi();
-
-  if (response) {
-    const accessToken = response;
+  try {
+    const res = await getAccessWithApi();
+    const accessToken = res;
     setAccessToken(accessToken);
     return accessToken;
-  } else {
-    throw new Error('Failed to refresh access token');
+  } catch {
+    clearToken();
+    throw new Error('Failed to fetch access token');
   }
 };

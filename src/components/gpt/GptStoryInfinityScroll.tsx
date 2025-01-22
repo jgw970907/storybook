@@ -61,9 +61,9 @@ export const GptStoryInfinityScroll = ({
       ) : (
         <ParentContainer>
           <StoryGrid>
-            {data?.pages.map((page, i) => (
+            {data?.pages?.map((page, i) => (
               <React.Fragment key={i}>
-                {page.data.map((story) => (
+                {page?.data?.map((story) => (
                   <Link
                     key={story.id}
                     to={`/gptpage/detail/${story.id}`}
@@ -73,7 +73,7 @@ export const GptStoryInfinityScroll = ({
                       id={story.id}
                       title={story.title}
                       imageUrl={
-                        story.images.length > 0
+                        story.images?.length > 0
                           ? story.images[0].path
                           : 'https://picsum.photos/200/150'
                       }

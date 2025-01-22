@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { jwtDecode } from 'jwt-decode';
-import { getAccessToken, fetchAccessToken } from '../utils/auth';
+import { getAccessToken, fetchAccessTokenWithRefresh } from '../utils/auth';
 import { getUser } from 'api/auth';
 import { useUserStore } from 'store/useUserStore';
 export const useAuth = () => {
@@ -12,12 +12,12 @@ export const useAuth = () => {
       try {
         let accessToken = getAccessToken();
         if (!accessToken) {
-          accessToken = await fetchAccessToken();
+          accessToken = await fetchAccessTokenWithRefresh();
         }
 
         let decodedToken: any = jwtDecode(accessToken);
         if (decodedToken.exp * 1000 < Date.now()) {
-          accessToken = await fetchAccessToken();
+          accessToken = await fetchAccessTokenWithRefresh();
           decodedToken = jwtDecode(accessToken);
         }
 
