@@ -36,7 +36,7 @@ const injectInterceptors = (instance: AxiosInstance): AxiosInstance => {
     async (error) => {
       const { config, response } = error;
       let isRefreshing = false;
-      if (response?.status === 401 || response?.status === 404) {
+      if (response?.status === 401) {
         if (!isRefreshing) {
           const accessToken = secureLocalStorage.getItem(StorageKeys.ACCESS_TOKEN) as string;
           const token = secureLocalStorage.getItem(StorageKeys.REFRESH_TOKEN);
