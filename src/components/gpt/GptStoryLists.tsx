@@ -43,7 +43,7 @@ export const GptStoryLists = () => {
           <Spinner width="3rem" />{' '}
         </SpinnerWrap>
       ) : (
-        <CardSlide items={bestStories?.data.stories} />
+        <CardSlide items={bestStories?.data?.stories} />
       )}
 
       <SectionTitle>
@@ -55,7 +55,7 @@ export const GptStoryLists = () => {
           <Spinner width="3rem" />{' '}
         </SpinnerWrap>
       ) : (
-        <CardSlide items={randomStories?.data.stories} />
+        <CardSlide items={randomStories?.data?.stories} />
       )}
     </div>
   );
