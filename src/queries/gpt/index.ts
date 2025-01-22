@@ -147,8 +147,8 @@ export const useGetBestStories = () => {
         throw error;
       }
     },
-    staleTime: 0, // 데이터를 항상 새로 요청하도록 설정
-    cacheTime: 0, // 캐시를 남기지 않음
+    staleTime: 1000 * 60 * 5, // 5분 동안 캐시 유지
+    retry: 1, // 요청 실패 시 1번만 재시도
   });
 };
 export const useGetRandomStories = () => {
@@ -166,8 +166,8 @@ export const useGetRandomStories = () => {
         throw error;
       }
     },
-    staleTime: 0, // 데이터를 항상 새로 요청하도록 설정
-    cacheTime: 0, // 캐시를 남기지 않음
+    staleTime: 1000 * 60 * 5, // 5분 동안 캐시 유지
+    retry: 1, // 요청 실패 시 1번만 재시도
   });
 };
 
