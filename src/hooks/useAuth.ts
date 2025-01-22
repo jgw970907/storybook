@@ -13,11 +13,21 @@ export const useAuth = () => {
         let accessToken = getAccessToken();
         if (!accessToken) {
           accessToken = await fetchAccessTokenWithRefresh();
+          if (!accessToken) {
+            console.warn('토큰 갱신 실패, 로그아웃 처리');
+            logout();
+            return; // 토큰 갱신이 실패하면 더 이상 진행하지 않음
+          }
         }
 
         let decodedToken: any = jwtDecode(accessToken);
         if (decodedToken.exp * 1000 < Date.now()) {
           accessToken = await fetchAccessTokenWithRefresh();
+          if (!accessToken) {
+            console.warn('토큰 갱신 실패, 로그아웃 처리');
+            logout();
+            return;
+          }
           decodedToken = jwtDecode(accessToken);
         }
 
@@ -37,6 +47,7 @@ export const useAuth = () => {
         }
       } catch (error) {
         console.error('Authentication error:', error);
+        logout();
       } finally {
         setLoading(false);
       }

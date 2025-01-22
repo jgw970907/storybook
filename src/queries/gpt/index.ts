@@ -135,15 +135,39 @@ export const useGetMyStory = (id: string) => {
 export const useGetBestStories = () => {
   return useQuery({
     queryKey: [QueryKeys.USER, 'beststories'],
-    queryFn: getBestGptStories,
+    queryFn: async () => {
+      try {
+        const response = await getBestGptStories();
+        if (!response || !response.data) {
+          throw new Error('Best stories 데이터를 불러올 수 없습니다.');
+        }
+        return response;
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
+    },
+    staleTime: 0, // 데이터를 항상 새로 요청하도록 설정
+    cacheTime: 0, // 캐시를 남기지 않음
   });
 };
 export const useGetRandomStories = () => {
   return useQuery({
     queryKey: [QueryKeys.USER, 'randomstories'],
-    queryFn: getRandomGptStories,
-    staleTime: 1000 * 60 * 3,
-    cacheTime: 1000 * 60 * 3,
+    queryFn: async () => {
+      try {
+        const response = await getRandomGptStories();
+        if (!response || !response.data) {
+          throw new Error('Random stories 데이터를 불러올 수 없습니다.');
+        }
+        return response;
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
+    },
+    staleTime: 0, // 데이터를 항상 새로 요청하도록 설정
+    cacheTime: 0, // 캐시를 남기지 않음
   });
 };
 
