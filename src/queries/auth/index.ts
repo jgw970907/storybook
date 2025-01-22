@@ -40,6 +40,6 @@ export const useGetUser = (flag: boolean) => {
   return useQuery({
     queryKey: [QueryKeys.USER_DATA],
     queryFn: getUser,
-    enabled: !!flag,
+    enabled: flag && !!secureLocalStorage.getItem(StorageKeys.ACCESS_TOKEN),
   });
 };

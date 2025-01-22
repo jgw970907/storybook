@@ -2,6 +2,7 @@ import qs from 'qs';
 import { AxiosError, AxiosInstance, InternalAxiosRequestConfig } from 'axios';
 import secureLocalStorage from 'react-secure-storage';
 import { StorageKeys } from 'constant';
+import { fetchAccessTokenWithRefresh } from 'utils/auth';
 
 const injectInterceptors = (instance: AxiosInstance): AxiosInstance => {
   instance.defaults.paramsSerializer = (params) => {
@@ -38,28 +39,28 @@ const injectInterceptors = (instance: AxiosInstance): AxiosInstance => {
       let isRefreshing = false;
       if (response?.status === 401 || response?.status === 404) {
         if (!isRefreshing) {
-          const accessToken = secureLocalStorage.getItem(StorageKeys.ACCESS_TOKEN) as string;
-          const token = secureLocalStorage.getItem(StorageKeys.REFRESH_TOKEN);
-          const refreshToken = token as string;
-
-          isRefreshing = true;
           try {
+            const refreshToken = secureLocalStorage.getItem(StorageKeys.REFRESH_TOKEN) as string;
             if (!refreshToken) {
-              return Promise.reject(error);
+              throw new Error('Refresh token not found');
             }
 
-            if (accessToken) {
-              config.headers['Authorization'] = `Bearer ${accessToken}`;
-            }
+            // 새 accessToken 요청
+            const newAccessToken = await fetchAccessTokenWithRefresh();
+            secureLocalStorage.setItem(StorageKeys.ACCESS_TOKEN, newAccessToken);
 
-            isRefreshing = true;
+            // 요청 헤더 업데이트 후 다시 요청
+            config.headers['Authorization'] = `Bearer ${newAccessToken}`;
             return instance.request(config);
           } catch (refreshError) {
-            isRefreshing = false;
+            console.error('Token refresh failed:', refreshError);
             alert('다시 로그인 해주세요.');
             secureLocalStorage.removeItem(StorageKeys.REFRESH_TOKEN);
+            secureLocalStorage.removeItem(StorageKeys.ACCESS_TOKEN);
             window.location.replace('/gptpage');
             return Promise.reject(refreshError);
+          } finally {
+            isRefreshing = false;
           }
         }
       }
